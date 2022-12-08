@@ -1,0 +1,27 @@
+{
+    "name": "@blog/main",
+    "version": "0.1.0",
+    "env": "",
+    "moduleDir": "modules",
+    "main": "@blog/main",
+    "modules": {
+        "@blog/main": {
+            "path": "main",
+            "dependencies": [
+                "@blog/global",
+                "@blog/config"
+            ]
+        },
+        "@blog/global": {
+            "path": "global",
+            "dependencies": []
+        },
+        "@blog/config": {
+            "path": "config",
+            "dependencies": [
+                "@blog/global"
+            ]
+        }
+    },
+    "dependencies": {}
+}

@@ -2,8 +2,7 @@ import {
   Module,
   customModule,
   Styles,
-  Panel,
-  moment
+  Panel
 } from '@ijstech/components';
 import { PageBlock, IConfig } from '@blog/global';
 import Config from '@blog/config';
@@ -104,16 +103,18 @@ export default class Blog extends Module implements PageBlock {
             ["areaImg"], ["areaDate"], ["areaDetails"]
           ]
         }
+        onClick={() => window.location.href = (this._data.viewAllUrl || '')}
       >
-        <i-image
-          class={imageStyle}
-          width='auto'
-          maxHeight={100}
-          overflow="hidden"
-          grid={{ area: "areaImg" }}
-          margin={{bottom: '1rem'}}
-          url={this._data.background}
-        ></i-image>
+        <i-panel overflow={{x: 'hidden', y: 'hidden'}} zIndex={1} position="relative" padding={{top: '56.25%'}}>
+          <i-image
+            class={imageStyle}
+            width='100%'
+            height="100%"
+            grid={{ area: "areaImg" }}
+            url={this._data.background}
+            position="absolute" left="0px" top="0px"
+          ></i-image>
+        </i-panel>
         <i-hstack grid={{ area: "areaDate" }} verticalAlignment="center" gap="0.5rem" margin={{bottom: '0.5rem'}}>
           <i-panel width={30} height={30} visible={!!this._data.avatar}>
             <i-image width="100%" height="100%" url={this._data.avatar} display="block" class={avatarStyle}></i-image>
@@ -123,7 +124,7 @@ export default class Blog extends Module implements PageBlock {
             <i-label caption={this._data.userName} font={{ size: '0.75rem', color: 'rgba(117,124,131,.68)' }}></i-label>
           </i-vstack>
         </i-hstack>
-        <i-vstack gap="0.5rem" grid={{ area: "areaDetails" }} verticalAlignment="center">
+        <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center" gap="0.25rem" padding={{bottom: '1rem'}}>
           <i-label caption={this._data.title} font={{ weight: 600, size: '1.125rem' }}></i-label>
           <i-label caption={this._data.description} font={{ size: '0.875rem' }}></i-label>
           <i-label

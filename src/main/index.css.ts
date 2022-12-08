@@ -25,7 +25,9 @@ export const cardItemStyle = Styles.style({
 export const imageStyle = Styles.style({
   $nest: {
     '> img': {
-      width: '100%'
+      width: '100%',
+      objectFit: 'cover',
+      objectPosition: 'center'
     }
   }
 })

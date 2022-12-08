@@ -31,7 +31,9 @@ define("@blog/main/index.css.ts", ["require", "exports", "@ijstech/components"],
     exports.imageStyle = components_1.Styles.style({
         $nest: {
             '> img': {
-                width: '100%'
+                width: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center'
             }
         }
     });
@@ -145,15 +147,16 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
             this.pnlCardBody.clearInnerHTML();
             this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, padding: { top: '0.5rem', bottom: '0.5rem', left: '0.5rem', right: '0.5rem' }, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, gap: { column: '1rem', row: '1rem' }, templateAreas: [
                     ["areaImg"], ["areaDate"], ["areaDetails"]
-                ] },
-                this.$render("i-image", { class: index_css_1.imageStyle, width: 'auto', maxHeight: 100, overflow: "hidden", grid: { area: "areaImg" }, margin: { bottom: '1rem' }, url: this._data.background }),
+                ], onClick: () => window.location.href = (this._data.viewAllUrl || '') },
+                this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, zIndex: 1, position: "relative", padding: { top: '56.25%' } },
+                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.background, position: "absolute", left: "0px", top: "0px" })),
                 this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.5rem", margin: { bottom: '0.5rem' } },
                     this.$render("i-panel", { width: 30, height: 30, visible: !!this._data.avatar },
                         this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", class: index_css_1.avatarStyle })),
                     this.$render("i-vstack", { verticalAlignment: "center" },
                         this.$render("i-label", { caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: 'rgba(117,124,131,.68)' } }),
                         this.$render("i-label", { caption: this._data.userName, font: { size: '0.75rem', color: 'rgba(117,124,131,.68)' } }))),
-                this.$render("i-vstack", { gap: "0.5rem", grid: { area: "areaDetails" }, verticalAlignment: "center" },
+                this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", gap: "0.25rem", padding: { bottom: '1rem' } },
                     this.$render("i-label", { caption: this._data.title, font: { weight: 600, size: '1.125rem' } }),
                     this.$render("i-label", { caption: this._data.description, font: { size: '0.875rem' } }),
                     this.$render("i-label", { caption: "Read More", link: { href: this._data.viewAllUrl, target: "_blank" }, font: { weight: 600, size: '0.75rem', color: Theme.colors.primary.main } }))));
@@ -166,8 +169,8 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
                     ["areaImg"], ["areaDetails"], ["areaDate"]
                 ], position: "relative", minHeight: 200, onClick: () => window.location.href = (this._data.viewAllUrl || '') },
                 this.$render("i-image", { class: index_css_1.imageOverlayStyle, width: '100%', height: '100%', grid: { area: "areaImg" }, url: this._data.background }),
-                this.$render("i-vstack", { gap: "1rem", background: { color: this._data.backgroundOverlay }, padding: { top: '0.75rem', bottom: '0.75rem', left: '0.75rem', right: '0.75rem' }, position: "absolute", width: "calc(100% - 1rem)", bottom: "0px", left: "0.5rem" },
-                    this.$render("i-vstack", { gap: "0.5rem", grid: { area: "areaDetails" }, verticalAlignment: "center" },
+                this.$render("i-vstack", { background: { color: this._data.backgroundOverlay }, padding: { top: '1rem', bottom: '1rem', left: '0.75rem', right: '0.75rem' }, position: "absolute", width: "calc(100% - 1rem)", bottom: "0.5rem", left: "0.5rem", gap: "0.5rem" },
+                    this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center" },
                         this.$render("i-label", { caption: this._data.title, font: { weight: 600, size: '1.25rem', color: fontColor } }),
                         this.$render("i-label", { caption: this._data.description, font: { size: '0.875rem', color: fontColor } })),
                     this.$render("i-hstack", { grid: { area: "areaDate" }, gap: "10px", verticalAlignment: "center" },

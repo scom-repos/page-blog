@@ -25,3 +25,7 @@ export const uploadStyle = Styles.style({
 export const pointerStyle = Styles.style({
   cursor: 'pointer'
 })
+
+export const noWrapStyle = Styles.style({
+  whiteSpace: 'nowrap'
+})

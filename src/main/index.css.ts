@@ -30,6 +30,17 @@ export const imageStyle = Styles.style({
   }
 })
 
+export const imageOverlayStyle = Styles.style({
+  $nest: {
+    '> img': {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      objectPosition: 'center'
+    }
+  }
+})
+
 export const avatarStyle = Styles.style({
   $nest: {
     '> img': {
@@ -37,19 +48,6 @@ export const avatarStyle = Styles.style({
       height: '100%',
       borderRadius: '50%',
       objectFit: 'cover'
-    }
-  }
-})
-
-export const actionButtonStyle = Styles.style({
-  boxShadow: 'none',
-  $nest: {
-    '&:hover': {
-      background: Theme.colors.primary.dark,
-      color: Theme.colors.primary.contrastText
-    },
-    '> i-icon:hover': {
-      fill: '#fff !important'
     }
   }
 })

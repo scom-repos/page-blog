@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 define("@blog/main/index.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.controlStyle = exports.actionButtonStyle = exports.avatarStyle = exports.imageStyle = exports.cardItemStyle = exports.cardStyle = void 0;
+    exports.controlStyle = exports.avatarStyle = exports.imageOverlayStyle = exports.imageStyle = exports.cardItemStyle = exports.cardStyle = void 0;
     const Theme = components_1.Styles.Theme.ThemeVars;
     exports.cardStyle = components_1.Styles.style({
         $nest: {
@@ -35,6 +35,16 @@ define("@blog/main/index.css.ts", ["require", "exports", "@ijstech/components"],
             }
         }
     });
+    exports.imageOverlayStyle = components_1.Styles.style({
+        $nest: {
+            '> img': {
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center'
+            }
+        }
+    });
     exports.avatarStyle = components_1.Styles.style({
         $nest: {
             '> img': {
@@ -42,18 +52,6 @@ define("@blog/main/index.css.ts", ["require", "exports", "@ijstech/components"],
                 height: '100%',
                 borderRadius: '50%',
                 objectFit: 'cover'
-            }
-        }
-    });
-    exports.actionButtonStyle = components_1.Styles.style({
-        boxShadow: 'none',
-        $nest: {
-            '&:hover': {
-                background: Theme.colors.primary.dark,
-                color: Theme.colors.primary.contrastText
-            },
-            '> i-icon:hover': {
-                fill: '#fff !important'
             }
         }
     });
@@ -137,7 +135,7 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
             return date.format('MMMM DD, YYYY');
         }
         renderUI() {
-            const isOverlay = this._data.overlay || false;
+            const isOverlay = this._data.backgroundOverlay || false;
             if (isOverlay)
                 this.renderOverlay();
             else
@@ -147,10 +145,10 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
             this.pnlCardBody.clearInnerHTML();
             this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, padding: { top: '0.5rem', bottom: '0.5rem', left: '0.5rem', right: '0.5rem' }, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, gap: { column: '1rem', row: '1rem' }, templateAreas: [
                     ["areaImg"], ["areaDate"], ["areaDetails"]
-                ], onClick: () => window.location.href = (this._data.viewAllUrl || '') },
+                ] },
                 this.$render("i-image", { class: index_css_1.imageStyle, width: 'auto', maxHeight: 100, overflow: "hidden", grid: { area: "areaImg" }, margin: { bottom: '1rem' }, url: this._data.background }),
                 this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.5rem", margin: { bottom: '0.5rem' } },
-                    this.$render("i-panel", { width: 30, height: 30 },
+                    this.$render("i-panel", { width: 30, height: 30, visible: !!this._data.avatar },
                         this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", class: index_css_1.avatarStyle })),
                     this.$render("i-vstack", { verticalAlignment: "center" },
                         this.$render("i-label", { caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: 'rgba(117,124,131,.68)' } }),
@@ -162,20 +160,23 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
         }
         renderOverlay() {
             this.pnlCardBody.clearInnerHTML();
+            const fontColor = this._data.textOverlay || Theme.text.primary;
+            const dateColor = this._data.textOverlay || 'rgba(117,124,131,.68)';
             this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, padding: { top: '0.5rem', bottom: '0.5rem', left: '0.5rem', right: '0.5rem' }, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, gap: { column: '1rem', row: '1rem' }, templateAreas: [
                     ["areaImg"], ["areaDetails"], ["areaDate"]
-                ], onClick: () => window.location.href = (this._data.viewAllUrl || '') },
-                this.$render("i-image", { class: index_css_1.imageStyle, width: 'auto', maxHeight: 100, overflow: "hidden", grid: { area: "areaImg" }, margin: { bottom: '1rem' }, url: this._data.background }),
-                this.$render("i-vstack", { gap: "0.5rem", grid: { area: "areaDetails" }, verticalAlignment: "center" },
-                    this.$render("i-label", { caption: this._data.title, font: { weight: 600, size: '1.25rem' } }),
-                    this.$render("i-label", { caption: this._data.description, font: { size: '0.875rem' } })),
-                this.$render("i-hstack", { grid: { area: "areaDate" }, gap: "10px", verticalAlignment: "center" },
-                    this.$render("i-hstack", { gap: "4px", visible: !!this._data.date, verticalAlignment: "center" },
-                        this.$render("i-icon", { name: "calendar", width: 12, height: 12, fill: 'rgba(117,124,131,.68)' }),
-                        this.$render("i-label", { caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: 'rgba(117,124,131,.68)' } })),
-                    this.$render("i-hstack", { gap: "4px", visible: !!this._data.userName, verticalAlignment: "center" },
-                        this.$render("i-icon", { name: "eye", width: 12, height: 12, fill: 'rgba(117,124,131,.68)' }),
-                        this.$render("i-label", { caption: this._data.userName, font: { size: '0.75rem', color: 'rgba(117,124,131,.68)' } })))));
+                ], position: "relative", minHeight: 200, onClick: () => window.location.href = (this._data.viewAllUrl || '') },
+                this.$render("i-image", { class: index_css_1.imageOverlayStyle, width: '100%', height: '100%', grid: { area: "areaImg" }, url: this._data.background }),
+                this.$render("i-vstack", { gap: "1rem", background: { color: this._data.backgroundOverlay }, padding: { top: '0.75rem', bottom: '0.75rem', left: '0.75rem', right: '0.75rem' }, position: "absolute", width: "calc(100% - 1rem)", bottom: "0px", left: "0.5rem" },
+                    this.$render("i-vstack", { gap: "0.5rem", grid: { area: "areaDetails" }, verticalAlignment: "center" },
+                        this.$render("i-label", { caption: this._data.title, font: { weight: 600, size: '1.25rem', color: fontColor } }),
+                        this.$render("i-label", { caption: this._data.description, font: { size: '0.875rem', color: fontColor } })),
+                    this.$render("i-hstack", { grid: { area: "areaDate" }, gap: "10px", verticalAlignment: "center" },
+                        this.$render("i-hstack", { gap: "4px", visible: !!this._data.date, verticalAlignment: "center" },
+                            this.$render("i-icon", { name: "calendar", width: 12, height: 12, fill: dateColor }),
+                            this.$render("i-label", { caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: dateColor } })),
+                        this.$render("i-hstack", { gap: "4px", visible: !!this._data.userName, verticalAlignment: "center" },
+                            this.$render("i-icon", { name: "eye", width: 12, height: 12, fill: dateColor }),
+                            this.$render("i-label", { caption: this._data.userName, font: { size: '0.75rem', color: dateColor } }))))));
         }
         render() {
             return (this.$render("i-panel", { id: "pnlBlock", class: index_css_1.cardStyle },

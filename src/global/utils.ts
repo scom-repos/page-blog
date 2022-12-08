@@ -6,7 +6,8 @@ interface IConfig {
   userName?: string;
   background?: string;
   avatar?: string;
-  overlay?: string
+  backgroundOverlay?: string;
+  textOverlay?: string
 }
 
 export { IConfig }

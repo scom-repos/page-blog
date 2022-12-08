@@ -7,7 +7,7 @@ import {
 } from '@ijstech/components';
 import { PageBlock, IConfig } from '@blog/global';
 import Config from '@blog/config';
-import { cardItemStyle, cardStyle, imageStyle, avatarStyle } from './index.css';
+import { cardItemStyle, cardStyle, imageStyle, avatarStyle, imageOverlayStyle } from './index.css';
 export { Config };
 
 const Theme = Styles.Theme.ThemeVars;
@@ -82,7 +82,7 @@ export default class Blog extends Module implements PageBlock {
   }
 
   renderUI() {
-    const isOverlay = this._data.overlay || false;
+    const isOverlay = this._data.backgroundOverlay || false;
     if (isOverlay)
       this.renderOverlay()
     else
@@ -104,7 +104,6 @@ export default class Blog extends Module implements PageBlock {
             ["areaImg"], ["areaDate"], ["areaDetails"]
           ]
         }
-        onClick={() => window.location.href = (this._data.viewAllUrl || '')}
       >
         <i-image
           class={imageStyle}
@@ -139,6 +138,8 @@ export default class Blog extends Module implements PageBlock {
 
   renderOverlay() {
     this.pnlCardBody.clearInnerHTML();
+    const fontColor = this._data.textOverlay || Theme.text.primary;
+    const dateColor = this._data.textOverlay || 'rgba(117,124,131,.68)';
     this.pnlCardBody.appendChild(
       <i-grid-layout
         width="100%"
@@ -152,31 +153,39 @@ export default class Blog extends Module implements PageBlock {
             ["areaImg"], ["areaDetails"], ["areaDate"]
           ]
         }
+        position="relative"
+        minHeight={200}
         onClick={() => window.location.href = (this._data.viewAllUrl || '')}
       >
         <i-image
-          class={imageStyle}
-          width='auto'
-          maxHeight={100}
-          overflow="hidden"
+          class={imageOverlayStyle}
+          width='100%'
+          height='100%'
           grid={{ area: "areaImg" }}
-          margin={{bottom: '1rem'}}
           url={this._data.background}
         ></i-image>
-        <i-vstack gap="0.5rem" grid={{ area: "areaDetails" }} verticalAlignment="center">
-          <i-label caption={this._data.title} font={{ weight: 600, size: '1.25rem' }}></i-label>
-          <i-label caption={this._data.description} font={{size: '0.875rem'}}></i-label>
+        <i-vstack
+          background={{ color: this._data.backgroundOverlay }}
+          padding={{ top: '1rem', bottom: '1rem', left: '0.75rem', right: '0.75rem' }}
+          position="absolute" width="calc(100% - 1rem)"
+          bottom="0.5rem" left="0.5rem"
+          gap="0.5rem"
+        >
+          <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center">
+            <i-label caption={this._data.title} font={{ weight: 600, size: '1.25rem', color: fontColor }}></i-label>
+            <i-label caption={this._data.description} font={{size: '0.875rem', color: fontColor}}></i-label>
+          </i-vstack>
+          <i-hstack grid={{ area: "areaDate" }} gap="10px" verticalAlignment="center">
+            <i-hstack gap="4px" visible={!!this._data.date} verticalAlignment="center">
+              <i-icon name="calendar" width={12} height={12} fill={dateColor}></i-icon>
+              <i-label caption={this.formatDate(this._data.date)} font={{ size: '0.75rem', color: dateColor }}></i-label>
+            </i-hstack>
+            <i-hstack gap="4px" visible={!!this._data.userName} verticalAlignment="center">
+              <i-icon name="eye" width={12} height={12} fill={dateColor}></i-icon>
+              <i-label caption={this._data.userName} font={{ size: '0.75rem', color: dateColor }}></i-label>
+            </i-hstack>
+          </i-hstack>
         </i-vstack>
-        <i-hstack grid={{ area: "areaDate" }} gap="10px" verticalAlignment="center">
-          <i-hstack gap="4px" visible={!!this._data.date} verticalAlignment="center">
-            <i-icon name="calendar" width={12} height={12} fill='rgba(117,124,131,.68)'></i-icon>
-            <i-label caption={this.formatDate(this._data.date)} font={{ size: '0.75rem', color: 'rgba(117,124,131,.68)' }}></i-label>
-          </i-hstack>
-          <i-hstack gap="4px" visible={!!this._data.userName} verticalAlignment="center">
-            <i-icon name="eye" width={12} height={12} fill='rgba(117,124,131,.68)'></i-icon>
-            <i-label caption={this._data.userName} font={{ size: '0.75rem', color: 'rgba(117,124,131,.68)' }}></i-label>
-          </i-hstack>
-        </i-hstack>
       </i-grid-layout>
     )
   }
@@ -190,13 +199,7 @@ export default class Blog extends Module implements PageBlock {
             verticalAlignment='center'
             horizontalAlignment='space-between'
             padding={{ top: '1.5rem', bottom: '1.5rem', left: '1.5rem', right: '1.5rem' }}
-          >
-            {/* <i-vstack gap="0.5rem">
-              <i-label id="lblTitle" font={{ size: '1.1rem', weight: 600 }}></i-label>
-              <i-label id="lblDesc" font={{ size: '0.875rem', color: Theme.colors.secondary.main }}></i-label>
-            </i-vstack>
-            <i-hstack id="pnlControls" class={controlStyle} gap="0.5rem"></i-hstack> */}
-          </i-hstack>
+          ></i-hstack>
           <i-panel id="pnlCardBody"></i-panel>
           <i-panel id="pnlCardFooter"></i-panel>
         </i-panel>

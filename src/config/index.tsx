@@ -8,7 +8,7 @@ import {
   Upload,
   moment
 } from '@ijstech/components';
-import { textareaStyle, uploadStyle } from './config.css';
+import { textareaStyle, uploadStyle, noWrapStyle } from './config.css';
 import { IConfig } from '@blog/global';
 
 declare global {
@@ -27,11 +27,12 @@ export default class Config extends Module {
   private edtViewAllUrl: Input;
   private edtDate: Datepicker;
   private edtUsername: Input;
-  private edtBackground: string;
-  private edtAvatar: string;
+  private edtBackground: string = '';
+  private edtAvatar: string = '';
   private edtBackgroundElm: Upload;
   private edtAvatarElm: Upload;
-  private edtOverlay: Input;
+  private edtOverlayBg: Input;
+  private edtOverlayColor: Input;
 
   get data() {
     const _data: IConfig = {
@@ -42,7 +43,8 @@ export default class Config extends Module {
       userName: this.edtUsername.value || '',
       background: this.edtBackground || '',
       avatar: this.edtAvatar || '',
-      overlay: this.edtOverlay.value || ''
+      backgroundOverlay: this.edtOverlayBg.value || '',
+      textOverlay: this.edtOverlayColor.value || '',
     };
     return _data
   }
@@ -52,7 +54,8 @@ export default class Config extends Module {
     this.edtDesc.value = config.description || "";
     this.edtViewAllUrl.value = config.viewAllUrl || "";
     this.edtUsername.value = config.userName || "";
-    this.edtOverlay.value = config.overlay || "";
+    this.edtOverlayBg.value = config.backgroundOverlay || "";
+    this.edtOverlayColor.value = config.textOverlay || "";
     this.edtDate.value = config.date || moment();
     if (config.background && this.edtBackgroundElm) {
       this.edtBackgroundElm.preview(config.background)
@@ -64,7 +67,7 @@ export default class Config extends Module {
 
   async onChangedImage(source: Upload, files: File[], prop: 'edtBackground' | 'edtAvatar') {
     const file = files[0];
-    this[prop] = await source.toBase64(file) as string || '';
+    this[prop] = file ? await source.toBase64(file) as string : '';
   }
 
   onRemovedImage(prop: 'edtBackground' | 'edtAvatar') {
@@ -103,7 +106,7 @@ export default class Config extends Module {
         <i-input id="edtViewAllUrl" width="100%"></i-input>
         <i-label caption="Avatar:"></i-label>
         <i-upload
-          id="edtAvatar"
+          id="edtAvatarElm"
           maxHeight={200}
           maxWidth={200}
           class={uploadStyle}
@@ -111,7 +114,16 @@ export default class Config extends Module {
           onRemoved={() => this.onRemovedImage('edtAvatar')}
         ></i-upload>
         <i-label caption="Text overlay:"></i-label>
-        <i-input id="edtOverlay" width="100%"></i-input>
+        <i-hstack verticalAlignment="center" gap="1rem" width="100%">
+          <i-hstack verticalAlignment="center" gap="8px" >
+            <i-label caption="Background Color:" class={noWrapStyle}></i-label>
+            <i-input id="edtOverlayBg" width="100px" inputType="color"></i-input>
+          </i-hstack>
+          <i-hstack verticalAlignment="center" gap="8px">
+            <i-label caption="Font Color:" class={noWrapStyle}></i-label>
+            <i-input id="edtOverlayColor" width="100px" inputType="color" value=""></i-input>
+          </i-hstack>
+        </i-hstack>
         <i-label caption="Date:"></i-label>
         <i-datepicker id="edtDate" width="100%"></i-datepicker>
         <i-label caption="User name:"></i-label>

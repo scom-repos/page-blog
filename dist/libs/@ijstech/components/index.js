@@ -10395,8 +10395,8 @@ var defaultTheme = {
   background: {
     default: "#fafafa",
     paper: "#fff",
-    main: "#181e3e",
-    modal: "#192046",
+    main: "#ffffff",
+    modal: "#ffffff",
     gradient: "linear-gradient(90deg, #a8327f 0%, #d4626a 100%)"
   },
   breakboints: {
@@ -11854,6 +11854,9 @@ var Component = class extends HTMLElement {
   }
   init() {
     this.initialized = true;
+    if (this.options["class"]) {
+      this.setAttribute("class", this.options["class"]);
+    }
     if (this._ready === void 0) {
       this._ready = true;
       if (this._readyCallback) {
@@ -13460,7 +13463,7 @@ var Control = class extends Component {
     this.style.fontFamily = value.name || "";
     this.style.fontStyle = value.style || "";
     this.style.textTransform = value.transform || "none";
-    this.style.fontWeight = value.bold ? "bold" : `${value.weight}` || "";
+    this.style.fontWeight = value.bold ? "bold" : `${value.weight || ""}`;
   }
   get display() {
     return this._display;
@@ -14113,7 +14116,7 @@ var Application = class {
     ;
     if (!modulePath) {
       if ((_b = options == null ? void 0 : options.modules) == null ? void 0 : _b[packageName])
-        modulePath = "modules/" + ((_c = options == null ? void 0 : options.modules) == null ? void 0 : _c[packageName].path) + "/index.js";
+        modulePath = ((options == null ? void 0 : options.rootDir) ? options.rootDir + "/" : "") + "modules/" + ((_c = options == null ? void 0 : options.modules) == null ? void 0 : _c[packageName].path) + "/index.js";
       else
         return null;
     } else if (modulePath == "*") {
@@ -15488,7 +15491,7 @@ var ComboBox = class extends Control {
       this.openList();
     const ulElm = this.createElement("ul", this.listElm);
     for (let item of this.items) {
-      const label = item.label;
+      const label = item.label || "";
       if (!this.searchStr || label.toLowerCase().includes(this.searchStr.toLowerCase())) {
         const liElm = this.createElement("li", ulElm);
         liElm.setAttribute("data-key", item.value);
@@ -16675,6 +16678,7 @@ var Input = class extends Control {
     const enabled = this.getAttribute("enabled", true);
     const background = this.getAttribute("background", true);
     this._clearBtnWidth = height - 2 || 0;
+    console.log(type);
     switch (type) {
       case "checkbox":
         this._inputControl = new Checkbox(this, {
@@ -16770,6 +16774,19 @@ var Input = class extends Control {
         }
         this.inputElm.style.resize = value === "auto-grow" ? "none" : value;
         this.inputElm.disabled = enabled === false;
+        this.inputElm.addEventListener("input", this._handleChange.bind(this));
+        this.inputElm.addEventListener("keydown", this._handleInputKeyDown.bind(this));
+        this.inputElm.addEventListener("keyup", this._handleInputKeyUp.bind(this));
+        this.inputElm.addEventListener("blur", this._handleOnBlur.bind(this));
+        this.inputElm.addEventListener("focus", this._handleOnFocus.bind(this));
+        break;
+      case "color":
+        this.captionSpanElm = this.createElement("span", this);
+        this.labelElm = this.createElement("label", this.captionSpanElm);
+        this.inputElm = this.createElement("input", this);
+        this.inputElm.style.height = "auto";
+        this.inputElm.disabled = enabled === false;
+        this.inputElm.setAttribute("type", "color");
         this.inputElm.addEventListener("input", this._handleChange.bind(this));
         this.inputElm.addEventListener("keydown", this._handleInputKeyDown.bind(this));
         this.inputElm.addEventListener("keyup", this._handleInputKeyUp.bind(this));
@@ -17982,7 +17999,8 @@ var Modal = class extends Container {
     });
   }
   get visible() {
-    return this.wrapperDiv.classList.contains(visibleStyle);
+    var _a;
+    return ((_a = this.wrapperDiv) == null ? void 0 : _a.classList.contains(visibleStyle)) || false;
   }
   set visible(value) {
     var _a, _b;

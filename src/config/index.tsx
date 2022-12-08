@@ -6,7 +6,8 @@ import {
   Input,
   Datepicker,
   Upload,
-  moment
+  moment,
+  Checkbox
 } from '@ijstech/components';
 import { textareaStyle, uploadStyle, noWrapStyle } from './config.css';
 import { IConfig } from '@blog/global';
@@ -33,6 +34,7 @@ export default class Config extends Module {
   private edtAvatarElm: Upload;
   private edtOverlayBg: Input;
   private edtOverlayColor: Input;
+  private isExternalCheck: Checkbox;
 
   get data() {
     const _data: IConfig = {
@@ -45,6 +47,7 @@ export default class Config extends Module {
       avatar: this.edtAvatar || '',
       backgroundOverlay: this.edtOverlayBg.value || '',
       textOverlay: this.edtOverlayColor.value || '',
+      isExternal: this.isExternalCheck.checked
     };
     return _data
   }
@@ -57,12 +60,11 @@ export default class Config extends Module {
     this.edtOverlayBg.value = config.backgroundOverlay || "";
     this.edtOverlayColor.value = config.textOverlay || "";
     this.edtDate.value = config.date || moment();
-    if (config.background && this.edtBackgroundElm) {
+    this.isExternalCheck.checked = config.isExternal || false;
+    if (config.background && this.edtBackgroundElm)
       this.edtBackgroundElm.preview(config.background)
-    }
-    if (config.avatar && this.edtAvatarElm) {
+    if (config.avatar && this.edtAvatarElm)
       this.edtAvatarElm.preview(config.avatar)
-    }
   }
 
   async onChangedImage(source: Upload, files: File[], prop: 'edtBackground' | 'edtAvatar') {
@@ -104,6 +106,7 @@ export default class Config extends Module {
         ></i-input>
         <i-label caption="Link:"></i-label>
         <i-input id="edtViewAllUrl" width="100%"></i-input>
+        <i-checkbox id="isExternalCheck" caption='External Link' checked={false}></i-checkbox>
         <i-label caption="Avatar:"></i-label>
         <i-upload
           id="edtAvatarElm"

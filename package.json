@@ -10,8 +10,8 @@
   "keywords": [],
   "license": "AGPL-3.0",
   "devDependencies": {
-      "@ijstech/cli": "^0.1.26",
-      "@ijstech/compiler": "^0.1.18",
-      "@ijstech/components": "^0.1.29"
+    "@ijstech/cli": "^0.1.28",
+    "@ijstech/compiler": "^0.1.22",
+    "@ijstech/components": "^0.1.34"
   }
 }

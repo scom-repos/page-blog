@@ -10445,6 +10445,14 @@ var defaultTheme = {
       main: "#ff9800"
     }
   },
+  layout: {
+    container: {
+      width: "100%",
+      maxWidth: "100%",
+      textAlign: "left",
+      overflow: "auto"
+    }
+  },
   shadows: {
     0: "none",
     1: "0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)",
@@ -10541,6 +10549,14 @@ var darkTheme = {
       dark: "#f57c00",
       light: "#ffb74d",
       main: "#ffa726"
+    }
+  },
+  layout: {
+    container: {
+      width: "100%",
+      maxWidth: "100%",
+      textAlign: "left",
+      overflow: "auto"
     }
   },
   divider: "rgba(255, 255, 255, 0.12)",
@@ -14094,15 +14110,6 @@ var Application = class {
   }
   async loadPackage(packageName, modulePath, options) {
     var _a, _b, _c;
-    if (RequireJS.defined(packageName)) {
-      if (!this.packages[packageName]) {
-        let m = window["require"](packageName);
-        if (m)
-          this.packages[packageName] = m.default || m;
-      }
-      return this.packages[packageName];
-    }
-    ;
     options = options || this._initOptions;
     if (options && options.modules && options.modules[packageName]) {
       let pack = options.modules[packageName];
@@ -14127,6 +14134,8 @@ var Application = class {
         libPath = libPath + "/";
       modulePath = modulePath.replace("{LIB}/", libPath);
     }
+    if (this.packages[modulePath])
+      return this.packages[modulePath];
     let script = await this.getScript(modulePath);
     if (script) {
       _currentDefineModule = null;
@@ -14139,8 +14148,10 @@ var Application = class {
       this.currentModulePath = "";
       this.currentModuleDir = "";
       let m = window["require"](packageName);
-      if (m)
+      if (m) {
+        this.packages[modulePath] = m.default || m;
         return m.default || m;
+      }
     }
     ;
     return null;
@@ -14200,8 +14211,8 @@ var Application = class {
         let dependencies = this._initOptions.modules[module2].dependencies;
         for (let i = 0; i < dependencies.length; i++) {
           let dep = dependencies[i];
-          if (!this.packages[dep]) {
-            let path = this.getModulePath(dep);
+          let path = this.getModulePath(dep);
+          if (!this.packages[path]) {
             await this.loadPackage(dep, path);
           }
           ;
@@ -16678,7 +16689,6 @@ var Input = class extends Control {
     const enabled = this.getAttribute("enabled", true);
     const background = this.getAttribute("background", true);
     this._clearBtnWidth = height - 2 || 0;
-    console.log(type);
     switch (type) {
       case "checkbox":
         this._inputControl = new Checkbox(this, {
@@ -21514,34 +21524,36 @@ cssRule("i-pagination", {
   color: Theme24.text.primary,
   "$nest": {
     ".pagination": {
-      display: "inline-flex"
+      display: "inline-flex",
+      flexWrap: "wrap",
+      justifyContent: "center"
     },
     ".pagination a": {
       color: Theme24.text.primary,
       float: "left",
-      padding: "8px 16px",
+      padding: "4px 8px",
+      textAlign: "center",
       textDecoration: "none",
       transition: "background-color .3s",
-      border: "1px solid #ddd"
+      border: "1px solid #ddd",
+      minWidth: 36
     },
     ".pagination a.active": {
       backgroundColor: "#4CAF50",
       color: "white",
-      border: "1px solid #4CAF50"
+      border: "1px solid #4CAF50",
+      cursor: "default"
     },
     ".pagination a.disabled": {
       color: Theme24.text.disabled,
       pointerEvents: "none"
-    },
-    ".pagination-main": {
-      display: "flex"
     }
   }
 });
 
 // packages/pagination/src/pagination.ts
 var pagerCount = 7;
-var pagerCountMobile = 3;
+var pagerCountMobile = 5;
 var defaultCurrentPage = 1;
 var pageSize = 10;
 var Pagination = class extends Control {
@@ -21624,10 +21636,10 @@ var Pagination = class extends Control {
     if (!this.enabled)
       return;
     const target = event.target;
-    target.innerHTML = direction === -1 ? "<<" : ">>";
+    target.innerHTML = direction === -1 ? "&laquo;" : "&raquo;";
   }
   renderEllipsis(step) {
-    let item = this.createElement("a", this._mainPagiElm);
+    let item = this.createElement("a", this._paginationDiv);
     item.id = step === -1 ? "prevMoreElm" : "nextMoreElm";
     item.setAttribute("href", "#");
     item.innerHTML = "...";
@@ -21647,7 +21659,7 @@ var Pagination = class extends Control {
     });
   }
   renderPage(index) {
-    let item = this.createElement("a", this._mainPagiElm);
+    let item = this.createElement("a", this._paginationDiv);
     this.pageItems.push(item);
     item.setAttribute("href", "#");
     item.innerHTML = `${index}`;
@@ -21700,7 +21712,10 @@ var Pagination = class extends Control {
   }
   renderPageItem(size) {
     this.visible = size > 0;
-    this._mainPagiElm.innerHTML = "";
+    this._paginationDiv.innerHTML = "";
+    if (this._prevElm) {
+      this._paginationDiv.appendChild(this._prevElm);
+    }
     this.pageItems = [];
     if (size > 0) {
       if (size > this.pagerCount) {
@@ -21720,9 +21735,12 @@ var Pagination = class extends Control {
     } else if (size < 0) {
       const _s = this.pageItems.length + size;
       for (let i = this.pageItems.length - 1; i >= _s; i--) {
-        this._mainPagiElm.removeChild(this.pageItems[i]);
+        this._paginationDiv.removeChild(this.pageItems[i]);
         this.pageItems.pop();
       }
+    }
+    if (this._nextElm) {
+      this._paginationDiv.append(this._nextElm);
     }
   }
   init() {
@@ -21730,7 +21748,7 @@ var Pagination = class extends Control {
     if (!this._paginationDiv) {
       this.pageItems = [];
       this._paginationDiv = this.createElement("div", this);
-      this._paginationDiv.classList.add("pagination");
+      this._paginationDiv.classList.add("pagination", "pagination-main");
       this._prevElm = this.createElement("a", this._paginationDiv);
       this._prevElm.setAttribute("href", "#");
       this._prevElm.innerHTML = "&laquo;";
@@ -21740,8 +21758,6 @@ var Pagination = class extends Control {
         e.stopPropagation();
         this._handleOnPrev(e);
       });
-      this._mainPagiElm = this.createElement("div", this._paginationDiv);
-      this._mainPagiElm.classList.add("pagination-main");
       this.currentPage = +this.getAttribute("currentPage", true, defaultCurrentPage);
       this.totalPages = +this.getAttribute("totalPages", true, 0);
       this.pageSize = +this.getAttribute("pageSize", true, pageSize);

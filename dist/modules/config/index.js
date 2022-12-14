@@ -55,6 +55,7 @@ define("@blog/config", ["require", "exports", "@ijstech/components", "@blog/conf
                 avatar: this.edtAvatar || '',
                 backgroundOverlay: this.edtOverlayBg.value || '',
                 textOverlay: this.edtOverlayColor.value || '',
+                isExternal: this.isExternalCheck.checked
             };
             return _data;
         }
@@ -66,12 +67,11 @@ define("@blog/config", ["require", "exports", "@ijstech/components", "@blog/conf
             this.edtOverlayBg.value = config.backgroundOverlay || "";
             this.edtOverlayColor.value = config.textOverlay || "";
             this.edtDate.value = config.date || components_2.moment();
-            if (config.background && this.edtBackgroundElm) {
+            this.isExternalCheck.checked = config.isExternal || false;
+            if (config.background && this.edtBackgroundElm)
                 this.edtBackgroundElm.preview(config.background);
-            }
-            if (config.avatar && this.edtAvatarElm) {
+            if (config.avatar && this.edtAvatarElm)
                 this.edtAvatarElm.preview(config.avatar);
-            }
         }
         async onChangedImage(source, files, prop) {
             const file = files[0];
@@ -94,6 +94,7 @@ define("@blog/config", ["require", "exports", "@ijstech/components", "@blog/conf
                 this.$render("i-input", { id: "edtDesc", class: config_css_1.textareaStyle, width: "100%", height: "auto", resize: "auto-grow", inputType: 'textarea' }),
                 this.$render("i-label", { caption: "Link:" }),
                 this.$render("i-input", { id: "edtViewAllUrl", width: "100%" }),
+                this.$render("i-checkbox", { id: "isExternalCheck", caption: 'External Link', checked: false }),
                 this.$render("i-label", { caption: "Avatar:" }),
                 this.$render("i-upload", { id: "edtAvatarElm", maxHeight: 200, maxWidth: 200, class: config_css_1.uploadStyle, onChanged: (source, files) => this.onChangedImage(source, files, 'edtAvatar'), onRemoved: () => this.onRemovedImage('edtAvatar') }),
                 this.$render("i-label", { caption: "Text overlay:" }),

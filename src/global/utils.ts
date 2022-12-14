@@ -7,7 +7,8 @@ interface IConfig {
   background?: string;
   avatar?: string;
   backgroundOverlay?: string;
-  textOverlay?: string
+  textOverlay?: string;
+  isExternal?: boolean;
 }
 
 export { IConfig }

@@ -6,7 +6,7 @@ import {
 } from '@ijstech/components';
 import { PageBlock, IConfig } from '@blog/global';
 import Config from '@blog/config';
-import { cardItemStyle, cardStyle, imageStyle, avatarStyle, imageOverlayStyle } from './index.css';
+import { cardItemStyle, cardStyle, imageStyle, avatarStyle, imageOverlayStyle, containerStyle } from './index.css';
 export { Config };
 
 const Theme = Styles.Theme.ThemeVars;
@@ -206,9 +206,11 @@ export default class Blog extends Module implements PageBlock {
     return (
       <i-panel id="pnlBlock" class={cardStyle}>
         <i-panel id="pnlCard">
-          <i-hstack id="pnlCardHeader"></i-hstack>
-          <i-panel id="pnlCardBody"></i-panel>
-          <i-panel id="pnlCardFooter"></i-panel>
+          <i-panel class={containerStyle}>
+            <i-hstack id="pnlCardHeader"></i-hstack>
+            <i-panel id="pnlCardBody"></i-panel>
+            <i-panel id="pnlCardFooter"></i-panel>
+          </i-panel>
         </i-panel>
         <pageblock-blog-config id="cardConfig" visible={false}></pageblock-blog-config>
       </i-panel>

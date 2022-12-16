@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 define("@blog/main/index.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.controlStyle = exports.avatarStyle = exports.imageOverlayStyle = exports.imageStyle = exports.cardItemStyle = exports.cardStyle = void 0;
+    exports.containerStyle = exports.controlStyle = exports.avatarStyle = exports.imageOverlayStyle = exports.imageStyle = exports.cardItemStyle = exports.cardStyle = void 0;
     const Theme = components_1.Styles.Theme.ThemeVars;
     exports.cardStyle = components_1.Styles.style({
         $nest: {
@@ -76,6 +76,13 @@ define("@blog/main/index.css.ts", ["require", "exports", "@ijstech/components"],
                 }
             }
         }
+    });
+    exports.containerStyle = components_1.Styles.style({
+        width: Theme.layout.container.width,
+        maxWidth: Theme.layout.container.maxWidth,
+        overflow: Theme.layout.container.overflow,
+        textAlign: Theme.layout.container.textAlign,
+        margin: '0 auto'
     });
 });
 define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config", "@blog/main/index.css.ts"], function (require, exports, components_2, config_1, index_css_1) {
@@ -193,9 +200,10 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
         render() {
             return (this.$render("i-panel", { id: "pnlBlock", class: index_css_1.cardStyle },
                 this.$render("i-panel", { id: "pnlCard" },
-                    this.$render("i-hstack", { id: "pnlCardHeader" }),
-                    this.$render("i-panel", { id: "pnlCardBody" }),
-                    this.$render("i-panel", { id: "pnlCardFooter" })),
+                    this.$render("i-panel", { class: index_css_1.containerStyle },
+                        this.$render("i-hstack", { id: "pnlCardHeader" }),
+                        this.$render("i-panel", { id: "pnlCardBody" }),
+                        this.$render("i-panel", { id: "pnlCardFooter" }))),
                 this.$render("pageblock-blog-config", { id: "cardConfig", visible: false })));
         }
     };

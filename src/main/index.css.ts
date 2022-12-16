@@ -74,3 +74,11 @@ export const controlStyle = Styles.style({
     }
   }
 })
+
+export const containerStyle = Styles.style({
+  width: Theme.layout.container.width,
+  maxWidth: Theme.layout.container.maxWidth,
+  overflow: Theme.layout.container.overflow,
+  textAlign: (Theme.layout.container.textAlign as any),
+  margin: '0 auto'
+})

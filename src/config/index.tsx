@@ -84,7 +84,11 @@ export default class Config extends Module {
   render() {
     return (
       <i-vstack id="pnlConfig" gap='0.5rem' padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}>
-        <i-label caption="Background:"></i-label>
+        <i-hstack>
+          <i-label caption="Background"></i-label>
+          <i-label caption="*" font={{ color: 'red' }} margin={{left: '4px'}}></i-label>
+          <i-label caption=":"></i-label>
+        </i-hstack>
         <i-upload
           id="edtBackgroundElm"
           maxHeight={200}
@@ -93,7 +97,11 @@ export default class Config extends Module {
           onChanged={(source: Upload, files: File[]) => this.onChangedImage(source, files, 'edtBackground')}
           onRemoved={() => this.onRemovedImage('edtBackground')}
         ></i-upload>
-        <i-label caption="Title:"></i-label>
+        <i-hstack>
+          <i-label caption="Title"></i-label>
+          <i-label caption="*" font={{ color: 'red' }} margin={{left: '4px'}}></i-label>
+          <i-label caption=":"></i-label>
+        </i-hstack>
         <i-input id="edtTitle" width="100%"></i-input>
         <i-label caption="Description:"></i-label>
         <i-input

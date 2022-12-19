@@ -86,9 +86,15 @@ define("@blog/config", ["require", "exports", "@ijstech/components", "@blog/conf
         }
         render() {
             return (this.$render("i-vstack", { id: "pnlConfig", gap: '0.5rem', padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' } },
-                this.$render("i-label", { caption: "Background:" }),
+                this.$render("i-hstack", null,
+                    this.$render("i-label", { caption: "Background" }),
+                    this.$render("i-label", { caption: "*", font: { color: 'red' }, margin: { left: '4px' } }),
+                    this.$render("i-label", { caption: ":" })),
                 this.$render("i-upload", { id: "edtBackgroundElm", maxHeight: 200, maxWidth: 200, class: config_css_1.uploadStyle, onChanged: (source, files) => this.onChangedImage(source, files, 'edtBackground'), onRemoved: () => this.onRemovedImage('edtBackground') }),
-                this.$render("i-label", { caption: "Title:" }),
+                this.$render("i-hstack", null,
+                    this.$render("i-label", { caption: "Title" }),
+                    this.$render("i-label", { caption: "*", font: { color: 'red' }, margin: { left: '4px' } }),
+                    this.$render("i-label", { caption: ":" })),
                 this.$render("i-input", { id: "edtTitle", width: "100%" }),
                 this.$render("i-label", { caption: "Description:" }),
                 this.$render("i-input", { id: "edtDesc", class: config_css_1.textareaStyle, width: "100%", height: "auto", resize: "auto-grow", inputType: 'textarea' }),

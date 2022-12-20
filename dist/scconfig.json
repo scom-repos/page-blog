@@ -9,7 +9,8 @@
             "path": "main",
             "dependencies": [
                 "@blog/global",
-                "@blog/config"
+                "@blog/config",
+                "@blog/alert"
             ]
         },
         "@blog/global": {
@@ -21,6 +22,10 @@
             "dependencies": [
                 "@blog/global"
             ]
+        },
+        "@blog/alert": {
+            "path": "alert",
+            "dependencies": []
         }
     },
     "dependencies": {}

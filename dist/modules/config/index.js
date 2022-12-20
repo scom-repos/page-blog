@@ -48,13 +48,12 @@ define("@blog/config", ["require", "exports", "@ijstech/components", "@blog/conf
             const _data = {
                 title: this.edtTitle.value || "",
                 description: this.edtDesc.value || "",
-                viewAllUrl: this.edtViewAllUrl.value || "",
+                linkUrl: this.edtLink.value || "",
                 date: this.edtDate.value || components_2.moment(),
                 userName: this.edtUsername.value || '',
-                background: this.edtBackground || '',
+                backgroundImage: this.edtBackground || '',
                 avatar: this.edtAvatar || '',
-                backgroundOverlay: this.edtOverlayBg.value || '',
-                textOverlay: this.edtOverlayColor.value || '',
+                textOverlay: this.textOverlayCheck.checked,
                 isExternal: this.isExternalCheck.checked
             };
             return _data;
@@ -62,14 +61,13 @@ define("@blog/config", ["require", "exports", "@ijstech/components", "@blog/conf
         set data(config) {
             this.edtTitle.value = config.title || "";
             this.edtDesc.value = config.description || "";
-            this.edtViewAllUrl.value = config.viewAllUrl || "";
+            this.edtLink.value = config.linkUrl || "";
             this.edtUsername.value = config.userName || "";
-            this.edtOverlayBg.value = config.backgroundOverlay || "";
-            this.edtOverlayColor.value = config.textOverlay || "";
             this.edtDate.value = config.date || components_2.moment();
+            this.textOverlayCheck.checked = config.textOverlay || false;
             this.isExternalCheck.checked = config.isExternal || false;
-            if (config.background && this.edtBackgroundElm)
-                this.edtBackgroundElm.preview(config.background);
+            if (config.backgroundImage && this.edtBackgroundElm)
+                this.edtBackgroundElm.preview(config.backgroundImage);
             if (config.avatar && this.edtAvatarElm)
                 this.edtAvatarElm.preview(config.avatar);
         }
@@ -87,7 +85,7 @@ define("@blog/config", ["require", "exports", "@ijstech/components", "@blog/conf
         render() {
             return (this.$render("i-vstack", { id: "pnlConfig", gap: '0.5rem', padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' } },
                 this.$render("i-hstack", null,
-                    this.$render("i-label", { caption: "Background" }),
+                    this.$render("i-label", { caption: "Background Image" }),
                     this.$render("i-label", { caption: "*", font: { color: 'red' }, margin: { left: '4px' } }),
                     this.$render("i-label", { caption: ":" })),
                 this.$render("i-upload", { id: "edtBackgroundElm", maxHeight: 200, maxWidth: 200, class: config_css_1.uploadStyle, onChanged: (source, files) => this.onChangedImage(source, files, 'edtBackground'), onRemoved: () => this.onRemovedImage('edtBackground') }),
@@ -98,19 +96,12 @@ define("@blog/config", ["require", "exports", "@ijstech/components", "@blog/conf
                 this.$render("i-input", { id: "edtTitle", width: "100%" }),
                 this.$render("i-label", { caption: "Description:" }),
                 this.$render("i-input", { id: "edtDesc", class: config_css_1.textareaStyle, width: "100%", height: "auto", resize: "auto-grow", inputType: 'textarea' }),
-                this.$render("i-label", { caption: "Link:" }),
-                this.$render("i-input", { id: "edtViewAllUrl", width: "100%" }),
+                this.$render("i-label", { caption: "Link URL:" }),
+                this.$render("i-input", { id: "edtLink", width: "100%" }),
                 this.$render("i-checkbox", { id: "isExternalCheck", caption: 'External Link', checked: false }),
+                this.$render("i-checkbox", { id: "textOverlayCheck", caption: 'Text Overlay', checked: false }),
                 this.$render("i-label", { caption: "Avatar:" }),
                 this.$render("i-upload", { id: "edtAvatarElm", maxHeight: 200, maxWidth: 200, class: config_css_1.uploadStyle, onChanged: (source, files) => this.onChangedImage(source, files, 'edtAvatar'), onRemoved: () => this.onRemovedImage('edtAvatar') }),
-                this.$render("i-label", { caption: "Text overlay:" }),
-                this.$render("i-hstack", { verticalAlignment: "center", gap: "1rem", width: "100%" },
-                    this.$render("i-hstack", { verticalAlignment: "center", gap: "8px" },
-                        this.$render("i-label", { caption: "Background Color:", class: config_css_1.noWrapStyle }),
-                        this.$render("i-input", { id: "edtOverlayBg", width: "100px", inputType: "color" })),
-                    this.$render("i-hstack", { verticalAlignment: "center", gap: "8px" },
-                        this.$render("i-label", { caption: "Font Color:", class: config_css_1.noWrapStyle }),
-                        this.$render("i-input", { id: "edtOverlayColor", width: "100px", inputType: "color", value: "" }))),
                 this.$render("i-label", { caption: "Date:" }),
                 this.$render("i-datepicker", { id: "edtDate", width: "100%" }),
                 this.$render("i-label", { caption: "User name:" }),

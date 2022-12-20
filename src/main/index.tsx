@@ -44,6 +44,11 @@ const configSchema = {
     }
   }
 }
+const defaultColors = {
+  dateColor: '#565656',
+  userNameColor: '#565656',
+  overlayBackgroundColor: '#fff'
+}
 
 @customModule
 export default class Blog extends Module implements PageBlock {
@@ -143,9 +148,9 @@ export default class Blog extends Module implements PageBlock {
       titleFontColor = Theme.text.primary,
       descriptionFontColor = Theme.text.primary,
       linkTextColor = Theme.colors.primary.main,
-      dateColor = '#565656',
-      userNameColor = '#565656',
-      overlayBackgroundColor
+      dateColor = defaultColors.dateColor,
+      userNameColor = defaultColors.userNameColor,
+      overlayBackgroundColor = defaultColors.overlayBackgroundColor
     } = config || {};
     this.titleLb.font = { weight: 700, size: '1.25rem', color: titleFontColor };
     this.descriptionLb.font = { size: '0.875rem', color: descriptionFontColor };
@@ -181,8 +186,8 @@ export default class Blog extends Module implements PageBlock {
       titleFontColor = Theme.text.primary,
       descriptionFontColor = Theme.text.primary,
       linkTextColor = Theme.colors.primary.main,
-      dateColor = '#565656',
-      userNameColor = '#565656'
+      dateColor = defaultColors.dateColor,
+      userNameColor = defaultColors.userNameColor
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
     this.pnlCardBody.appendChild(
@@ -247,9 +252,9 @@ export default class Blog extends Module implements PageBlock {
     const {
       titleFontColor = Theme.text.primary,
       descriptionFontColor = Theme.text.primary,
-      dateColor = '#565656',
-      userNameColor = '#565656',
-      overlayBackgroundColor = '#fff'
+      dateColor = defaultColors.dateColor,
+      userNameColor = defaultColors.userNameColor,
+      overlayBackgroundColor = defaultColors.overlayBackgroundColor
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
     this.pnlCardBody.appendChild(

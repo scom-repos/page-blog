@@ -1,14 +1,11 @@
-interface IConfig {
-  title?: string;
+export interface IConfig {
+  title: string;
+  backgroundImage: string;
   description?: string;
-  viewAllUrl?: string;
+  linkUrl?: string;
   date?: any;
   userName?: string;
-  background?: string;
   avatar?: string;
-  backgroundOverlay?: string;
-  textOverlay?: string;
+  textOverlay?: boolean;
   isExternal?: boolean;
 }
-
-export { IConfig }

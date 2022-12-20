@@ -91,13 +91,48 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
     exports.Config = void 0;
     exports.Config = config_1.default;
     const Theme = components_2.Styles.Theme.ThemeVars;
+    const configSchema = {
+        type: 'object',
+        required: [],
+        properties: {
+            titleFontColor: {
+                type: 'string',
+                format: 'color',
+            },
+            descriptionFontColor: {
+                type: 'string',
+                format: 'color',
+            },
+            linkTextColor: {
+                type: 'string',
+                format: 'color',
+            },
+            dateColor: {
+                type: 'string',
+                format: 'color',
+            },
+            userNameColor: {
+                type: 'string',
+                format: 'color',
+            },
+            overlayBackgroundColor: {
+                type: 'string',
+                format: 'color',
+            }
+        }
+    };
+    const defaultColors = {
+        dateColor: '#565656',
+        userNameColor: '#565656',
+        overlayBackgroundColor: '#fff'
+    };
     let Blog = class Blog extends components_2.Module {
         constructor() {
             super(...arguments);
-            // private pnlCardHeader: HStack;
-            // private pnlCardFooter: Panel;
-            // private pnlControls: HStack;
-            this._data = {};
+            this._data = {
+                title: '',
+                backgroundImage: ''
+            };
             this.defaultEdit = true;
         }
         getData() {
@@ -106,13 +141,21 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
         async setData(data) {
             this._data = data;
             this.cardConfig.data = data;
-            this.onUpdateBlock();
+            this.onUpdateBlock(this.tag);
         }
         getTag() {
             return this.tag;
         }
         async setTag(value) {
             this.tag = value;
+            this.onUpdateSettings(value);
+        }
+        getConfigSchema() {
+            return configSchema;
+        }
+        onConfigSave(config) {
+            this.tag = config;
+            this.onUpdateSettings(config);
         }
         async edit() {
             this.cardConfig.data = this._data;
@@ -121,7 +164,7 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
         }
         async confirm() {
             this._data = this.cardConfig.data;
-            this.onUpdateBlock();
+            this.onUpdateBlock(this.tag);
             this.pnlCard.visible = true;
             this.cardConfig.visible = false;
         }
@@ -132,11 +175,37 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
         async config() { }
         validate() {
             const data = this.cardConfig.data;
-            const emptyName = !data.title || !data.background;
-            return !emptyName;
+            const emptyProp = !data.title || !data.backgroundImage;
+            if (emptyProp) {
+                this.alertElm.message = {
+                    status: 'error',
+                    content: 'Required field is missing.'
+                };
+                this.alertElm.showModal();
+                return false;
+            }
+            return true;
         }
-        onUpdateBlock() {
-            this.renderUI();
+        onUpdateBlock(config) {
+            const isOverlay = this._data.textOverlay || false;
+            isOverlay ? this.renderOverlay(config) : this.renderNoOverlay(config);
+        }
+        onUpdateSettings(config) {
+            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, overlayBackgroundColor = defaultColors.overlayBackgroundColor } = config || {};
+            this.titleLb.font = { weight: 700, size: '1.25rem', color: titleFontColor };
+            this.descriptionLb.font = { size: '0.875rem', color: descriptionFontColor };
+            if (this.dateLb)
+                this.dateLb.font = { size: '0.75rem', color: dateColor };
+            if (this.dateIcon)
+                this.dateIcon.fill = dateColor;
+            if (this.usernameLb)
+                this.usernameLb.font = { size: '0.75rem', color: userNameColor };
+            if (this.usernameIcon)
+                this.usernameIcon.fill = userNameColor;
+            if (this.linkLb)
+                this.linkLb.font = { weight: 700, size: '0.875rem', color: linkTextColor };
+            if (this.overlayStack)
+                this.overlayStack.background = { color: overlayBackgroundColor };
         }
         formatDate(date) {
             if (!date)
@@ -144,67 +213,61 @@ define("@blog/main", ["require", "exports", "@ijstech/components", "@blog/config
             return date.format('MMMM DD, YYYY');
         }
         openLink() {
-            if (!this._data.viewAllUrl)
+            if (!this._data.linkUrl)
                 return;
             if (this._data.isExternal)
-                window.open(this._data.viewAllUrl);
+                window.open(this._data.linkUrl);
             else
-                window.location.href = this._data.viewAllUrl;
+                window.location.href = this._data.linkUrl;
         }
-        renderUI() {
-            const isOverlay = this._data.backgroundOverlay || false;
-            if (isOverlay)
-                this.renderOverlay();
-            else
-                this.renderNoOverlay();
-        }
-        renderNoOverlay() {
+        renderNoOverlay(config) {
+            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor } = config || {};
             this.pnlCardBody.clearInnerHTML();
-            this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, padding: { top: '0.5rem', bottom: '0.5rem', left: '0.5rem', right: '0.5rem' }, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, gap: { column: '1rem', row: '1rem' }, templateAreas: [
+            this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, templateAreas: [
                     ["areaImg"], ["areaDate"], ["areaDetails"]
                 ], onClick: () => this.openLink() },
                 this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '56.25%' } },
-                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.background, position: "absolute", left: "0px", top: "0px" })),
-                this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.5rem" },
-                    this.$render("i-panel", { width: 30, height: 30, visible: !!this._data.avatar },
-                        this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", class: index_css_1.avatarStyle })),
-                    this.$render("i-vstack", { verticalAlignment: "center" },
-                        this.$render("i-label", { caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: 'rgba(117,124,131,.68)' } }),
-                        this.$render("i-label", { caption: this._data.userName, font: { size: '0.75rem', color: 'rgba(117,124,131,.68)' } }))),
-                this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", gap: "0.25rem", padding: { bottom: '1rem' } },
-                    this.$render("i-label", { caption: this._data.title, font: { weight: 600, size: '1.125rem' } }),
-                    this.$render("i-label", { caption: this._data.description, font: { size: '0.875rem' } }),
-                    this.$render("i-label", { caption: "Read More", link: { href: this._data.viewAllUrl, target: this._data.isExternal ? "_blank" : "_self" }, font: { weight: 600, size: '0.75rem', color: Theme.colors.primary.main } }))));
+                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage, position: "absolute", left: "0px", top: "0px" })),
+                this.$render("i-panel", { padding: { top: '0.938rem', bottom: '0.938rem', left: '0.938rem', right: '0.938rem' } },
+                    this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '1.875rem' } },
+                        this.$render("i-panel", { width: 50, height: 50, visible: !!this._data.avatar },
+                            this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", class: index_css_1.avatarStyle })),
+                        this.$render("i-vstack", { verticalAlignment: "center" },
+                            this.$render("i-label", { id: "dateLb", caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: dateColor } }),
+                            this.$render("i-label", { id: "usernameLb", caption: this._data.userName, font: { size: '0.75rem', color: userNameColor } }))),
+                    this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", gap: "0.25rem", padding: { bottom: '1rem' } },
+                        this.$render("i-panel", { minHeight: "3rem" },
+                            this.$render("i-label", { id: "titleLb", caption: this._data.title, font: { weight: 700, size: '1.25rem', color: titleFontColor } }),
+                            this.$render("i-label", { id: "descriptionLb", caption: this._data.description, font: { size: '0.875rem', color: descriptionFontColor } })),
+                        this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: this._data.linkUrl, target: this._data.isExternal ? "_blank" : "_self" }, font: { weight: 700, size: '0.875rem', color: linkTextColor } })))));
         }
-        renderOverlay() {
+        renderOverlay(config) {
+            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, overlayBackgroundColor = defaultColors.overlayBackgroundColor } = config || {};
             this.pnlCardBody.clearInnerHTML();
-            const fontColor = this._data.textOverlay || Theme.text.primary;
-            const dateColor = this._data.textOverlay || 'rgba(117,124,131,.68)';
-            this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", minHeight: 200, class: index_css_1.cardItemStyle, padding: { top: '0.5rem', bottom: '0.5rem', left: '0.5rem', right: '0.5rem' }, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, gap: { column: '1rem', row: '1rem' }, templateAreas: [
+            this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", minHeight: 200, class: index_css_1.cardItemStyle, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, gap: { column: '1rem', row: '1rem' }, templateAreas: [
                     ["areaImg"], ["areaDetails"], ["areaDate"]
                 ], position: "relative", onClick: () => this.openLink() },
                 this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '50%' } },
-                    this.$render("i-image", { class: index_css_1.imageOverlayStyle, width: '100%', height: '100%', grid: { area: "areaImg" }, url: this._data.background, position: "absolute", left: "0px", top: "0px" })),
-                this.$render("i-vstack", { background: { color: this._data.backgroundOverlay }, padding: { top: '1rem', bottom: '1rem', left: '0.75rem', right: '0.75rem' }, position: "absolute", width: "calc(100% - 1rem)", zIndex: 9, bottom: "0.5rem", left: "0.5rem", gap: "0.5rem" },
-                    this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center" },
-                        this.$render("i-label", { caption: this._data.title, font: { weight: 600, size: '1.25rem', color: fontColor } }),
-                        this.$render("i-label", { caption: this._data.description, font: { size: '0.875rem', color: fontColor } })),
+                    this.$render("i-image", { class: index_css_1.imageOverlayStyle, width: '100%', height: '100%', grid: { area: "areaImg" }, url: this._data.backgroundImage, position: "absolute", left: "0px", top: "0px" })),
+                this.$render("i-vstack", { id: "overlayStack", background: { color: overlayBackgroundColor }, padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, position: "absolute", width: "100%", zIndex: 9, bottom: "0px", left: "0px", gap: "0.5rem" },
+                    this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", minHeight: "3rem" },
+                        this.$render("i-label", { id: "titleLb", caption: this._data.title, font: { weight: 700, size: '1.25rem', color: titleFontColor } }),
+                        this.$render("i-label", { id: "descriptionLb", caption: this._data.description, font: { size: '0.875rem', color: descriptionFontColor } })),
                     this.$render("i-hstack", { grid: { area: "areaDate" }, gap: "10px", verticalAlignment: "center" },
                         this.$render("i-hstack", { gap: "4px", visible: !!this._data.date, verticalAlignment: "center" },
-                            this.$render("i-icon", { name: "calendar", width: 12, height: 12, fill: dateColor }),
-                            this.$render("i-label", { caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: dateColor } })),
+                            this.$render("i-icon", { id: "dateIcon", name: "calendar", width: 12, height: 12, fill: dateColor }),
+                            this.$render("i-label", { id: "dateLb", caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: dateColor } })),
                         this.$render("i-hstack", { gap: "4px", visible: !!this._data.userName, verticalAlignment: "center" },
-                            this.$render("i-icon", { name: "eye", width: 12, height: 12, fill: dateColor }),
-                            this.$render("i-label", { caption: this._data.userName, font: { size: '0.75rem', color: dateColor } }))))));
+                            this.$render("i-icon", { id: "usernameIcon", name: "eye", width: 12, height: 12, fill: userNameColor }),
+                            this.$render("i-label", { id: "usernameLb", caption: this._data.userName, font: { size: '0.75rem', color: userNameColor } }))))));
         }
         render() {
             return (this.$render("i-panel", { id: "pnlBlock", class: index_css_1.cardStyle },
                 this.$render("i-panel", { id: "pnlCard" },
                     this.$render("i-panel", { class: index_css_1.containerStyle },
-                        this.$render("i-hstack", { id: "pnlCardHeader" }),
-                        this.$render("i-panel", { id: "pnlCardBody" }),
-                        this.$render("i-panel", { id: "pnlCardFooter" }))),
-                this.$render("pageblock-blog-config", { id: "cardConfig", visible: false })));
+                        this.$render("i-panel", { id: "pnlCardBody" }))),
+                this.$render("pageblock-blog-config", { id: "cardConfig", visible: false }),
+                this.$render("pageblock-blog-alert", { id: "alertElm" })));
         }
     };
     Blog = __decorate([

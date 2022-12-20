@@ -13,6 +13,9 @@
     },
     "@blog/config": {
       "path": "config"
+    },
+    "@blog/alert": {
+      "path": "alert"
     }
   }
 }

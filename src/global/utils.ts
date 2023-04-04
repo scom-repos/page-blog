@@ -1,3 +1,5 @@
+import { IconName, IDataSchema, IUISchema } from "@ijstech/components";
+
 export interface IConfig {
   title: string;
   backgroundImage: string;
@@ -8,4 +10,18 @@ export interface IConfig {
   avatar?: string;
   textOverlay?: boolean;
   isExternal?: boolean;
+}
+
+export interface ICommand {
+  execute(): void;
+  undo(): void;
+  redo(): void;
+}
+
+export interface IPageBlockAction {
+	name?: string;
+	icon?: IconName;
+	command?: (builder: any, userInputData: any) => ICommand;
+	userInputDataSchema?: IDataSchema;
+  userInputUISchema?: IUISchema;
 }

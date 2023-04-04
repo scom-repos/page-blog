@@ -12,8 +12,7 @@
     "declaration": false,
     "baseUrl": ".",
     "paths": {
-      "@ijstech/components": ["node_modules/@ijstech/components"],
-      "@blog/*": ["src/*"]
+      "@scom-banner/*": ["src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],

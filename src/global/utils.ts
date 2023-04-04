@@ -5,10 +5,9 @@ export interface IConfig {
   backgroundImage: string;
   description?: string;
   linkUrl?: string;
-  date?: any;
+  date?: string;
   userName?: string;
   avatar?: string;
-  textOverlay?: boolean;
   isExternal?: boolean;
 }
 

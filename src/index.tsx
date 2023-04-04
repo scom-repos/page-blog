@@ -9,7 +9,8 @@ import {
   ControlElement,
   customElements,
   Container,
-  IDataSchema
+  IDataSchema,
+  moment
 } from '@ijstech/components';
 import { PageBlock, IConfig, IPageBlockAction } from './global/index';
 import { cardItemStyle, cardStyle, imageStyle, avatarStyle, imageOverlayStyle, containerStyle } from './index.css';
@@ -284,29 +285,29 @@ export default class Blog extends Module implements PageBlock {
             position="absolute" left="0px" top="0px"
           ></i-image>
         </i-panel>
-        <i-panel padding={{ top: '0.938rem', bottom: '0.938rem', left: '0.938rem', right: '0.938rem' }}>
-          <i-hstack grid={{ area: "areaDate" }} verticalAlignment="center" gap="0.938rem" margin={{bottom: '1.875rem'}}>
+        <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}>
+          <i-hstack grid={{ area: "areaDate" }} verticalAlignment="center" gap="0.938rem" margin={{bottom: '0.75rem'}}>
             <i-panel width={50} height={50} visible={!!this._data.avatar}>
               <i-image width="100%" height="100%" url={this._data.avatar} display="block" class={avatarStyle}></i-image>
             </i-panel>
-            <i-vstack verticalAlignment="center" >
+            <i-vstack verticalAlignment="center" gap="0.25rem">
               <i-label
                 id="dateLb"
+                visible={!!this._data.date}
                 caption={this.formatDate(this._data.date)}
-                font={{ size: '0.75rem', color: dateColor }}
+                font={{ size: '0.8125rem', color: dateColor }}
               ></i-label>
               <i-label
                 id="usernameLb"
+                visible={!!this._data.userName}
                 caption={this._data.userName}
-                font={{ size: '0.75rem', color: userNameColor }}
+                font={{ size: '0.8125rem', color: userNameColor }}
               ></i-label>
             </i-vstack>
           </i-hstack>
-          <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center" gap="0.25rem" padding={{ bottom: '1rem' }}>
-            <i-panel minHeight="3rem">
-              <i-label id="titleLb" caption={this._data.title} font={{ weight: 700, size: '1.25rem', color: titleFontColor }}></i-label>
-              <i-label id="descriptionLb" caption={this._data.description} font={{ size: '0.875rem', color: descriptionFontColor }}></i-label>
-            </i-panel>
+          <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center" gap="0.5rem" padding={{ bottom: '1rem' }}>
+            <i-label id="titleLb" caption={this._data.title} font={{ weight: 700, size: '1.375rem', color: titleFontColor }}></i-label>
+            <i-label id="descriptionLb" caption={this._data.description} font={{ size: '0.875rem', color: descriptionFontColor }}></i-label>
             <i-label
               id="linkLb"
               caption="Read More"
@@ -321,7 +322,7 @@ export default class Blog extends Module implements PageBlock {
 
   private formatDate(date: any) {
     if (!date) return '';
-    return date.format('MMMM DD, YYYY');
+    return moment(date).format('MMMM DD, YYYY');
   }
 
   private openLink() {

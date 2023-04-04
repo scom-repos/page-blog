@@ -320,22 +320,21 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                 this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '56.25%' } },
                     this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage, position: "absolute", left: "0px", top: "0px" })),
                 this.$render("i-panel", { padding: { top: '0.938rem', bottom: '0.938rem', left: '0.938rem', right: '0.938rem' } },
-                    this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '1.875rem' } },
+                    this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!this._data.avatar },
                             this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", class: index_css_1.avatarStyle })),
-                        this.$render("i-vstack", { verticalAlignment: "center" },
-                            this.$render("i-label", { id: "dateLb", caption: this.formatDate(this._data.date), font: { size: '0.75rem', color: dateColor } }),
-                            this.$render("i-label", { id: "usernameLb", caption: this._data.userName, font: { size: '0.75rem', color: userNameColor } }))),
-                    this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", gap: "0.25rem", padding: { bottom: '1rem' } },
-                        this.$render("i-panel", { minHeight: "3rem" },
-                            this.$render("i-label", { id: "titleLb", caption: this._data.title, font: { weight: 700, size: '1.25rem', color: titleFontColor } }),
-                            this.$render("i-label", { id: "descriptionLb", caption: this._data.description, font: { size: '0.875rem', color: descriptionFontColor } })),
+                        this.$render("i-vstack", { verticalAlignment: "center", gap: "0.25rem" },
+                            this.$render("i-label", { id: "dateLb", visible: !!this._data.date, caption: this.formatDate(this._data.date), font: { size: '0.8125rem', color: dateColor } }),
+                            this.$render("i-label", { id: "usernameLb", visible: !!this._data.userName, caption: this._data.userName, font: { size: '0.8125rem', color: userNameColor } }))),
+                    this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' } },
+                        this.$render("i-label", { id: "titleLb", caption: this._data.title, font: { weight: 700, size: '1.375rem', color: titleFontColor } }),
+                        this.$render("i-label", { id: "descriptionLb", caption: this._data.description, font: { size: '0.875rem', color: descriptionFontColor } }),
                         this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: this._data.linkUrl, target: this._data.isExternal ? "_blank" : "_self" }, font: { weight: 700, size: '0.875rem', color: linkTextColor } })))));
         }
         formatDate(date) {
             if (!date)
                 return '';
-            return date.format('MMMM DD, YYYY');
+            return components_2.moment(date).format('MMMM DD, YYYY');
         }
         openLink() {
             if (!this._data.linkUrl)

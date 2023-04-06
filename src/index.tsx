@@ -81,7 +81,7 @@ const propertiesSchema: IDataSchema = {
 const defaultColors = {
   dateColor: '#565656',
   userNameColor: '#565656',
-  overlayBackgroundColor: '#fff'
+  backgroundColor: '#fff'
 }
 
 interface ScomBlogElement extends ControlElement {
@@ -259,7 +259,8 @@ export default class Blog extends Module implements PageBlock {
       descriptionFontColor = Theme.text.primary,
       linkTextColor = Theme.colors.primary.main,
       dateColor = defaultColors.dateColor,
-      userNameColor = defaultColors.userNameColor
+      userNameColor = defaultColors.userNameColor,
+      backgroundColor = defaultColors.backgroundColor
     } = config || {};
     this.pnlCardBody.clearInnerHTML();
     this.pnlCardBody.appendChild(
@@ -273,6 +274,7 @@ export default class Blog extends Module implements PageBlock {
             ["areaImg"], ["areaDate"], ["areaDetails"]
           ]
         }
+        overflow="hidden"
         onClick={() => this.openLink()}
       >
         <i-panel overflow={{x: 'hidden', y: 'hidden'}} position="relative" padding={{top: '56.25%'}}>
@@ -285,7 +287,7 @@ export default class Blog extends Module implements PageBlock {
             position="absolute" left="0px" top="0px"
           ></i-image>
         </i-panel>
-        <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}>
+        <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }} background={{ color: backgroundColor }}>
           <i-hstack grid={{ area: "areaDate" }} verticalAlignment="center" gap="0.938rem" margin={{bottom: '0.75rem'}}>
             <i-panel width={50} height={50} visible={!!this._data.avatar}>
               <i-image width="100%" height="100%" url={this._data.avatar} display="block" class={avatarStyle}></i-image>
@@ -322,7 +324,7 @@ export default class Blog extends Module implements PageBlock {
 
   private formatDate(date: any) {
     if (!date) return '';
-    return moment(date).format('MMMM DD, YYYY');
+    return moment(date, "DD/MM/YYYY").format('MMMM DD, YYYY');
   }
 
   private openLink() {
@@ -338,7 +340,7 @@ export default class Blog extends Module implements PageBlock {
       <i-panel id="pnlBlock" class={cardStyle}>
         <i-panel id="pnlCard">
           <i-panel class={containerStyle}>
-            <i-panel id="pnlCardBody"></i-panel>
+            <i-panel id="pnlCardBody" minHeight={48}></i-panel>
           </i-panel>
         </i-panel>
       </i-panel>

@@ -3,49 +3,46 @@ import {
   customModule,
   Styles,
   Panel,
-  Label,
-  VStack,
-  Icon,
   ControlElement,
   customElements,
   Container,
   IDataSchema,
   moment
 } from '@ijstech/components';
-import { PageBlock, IConfig, IPageBlockAction } from './global/index';
-import { cardItemStyle, cardStyle, imageStyle, avatarStyle, imageOverlayStyle, containerStyle } from './index.css';
+import { IConfig, IPageBlockAction } from './global/index';
+import { cardItemStyle, cardStyle, imageStyle, avatarStyle, containerStyle } from './index.css';
 
 const Theme = Styles.Theme.ThemeVars;
-const configSchema = {
-  type: 'object',
-  required: [],
-  properties: {
-    titleFontColor: {
-      type: 'string',
-      format: 'color',
-    },
-    descriptionFontColor: {
-      type: 'string',
-      format: 'color',
-    },
-    linkTextColor: {
-      type: 'string',
-      format: 'color',
-    },
-    dateColor: {
-      type: 'string',
-      format: 'color',
-    },
-    userNameColor: {
-      type: 'string',
-      format: 'color',
-    },
-    backgroundColor: {
-      type: 'string',
-      format: 'color',
-    }
-  }
-}
+// const configSchema = {
+//   type: 'object',
+//   required: [],
+//   properties: {
+//     titleFontColor: {
+//       type: 'string',
+//       format: 'color',
+//     },
+//     descriptionFontColor: {
+//       type: 'string',
+//       format: 'color',
+//     },
+//     linkTextColor: {
+//       type: 'string',
+//       format: 'color',
+//     },
+//     dateColor: {
+//       type: 'string',
+//       format: 'color',
+//     },
+//     userNameColor: {
+//       type: 'string',
+//       format: 'color',
+//     },
+//     backgroundColor: {
+//       type: 'string',
+//       format: 'color',
+//     }
+//   }
+// }
 
 const propertiesSchema: IDataSchema = {
   type: 'object',
@@ -98,8 +95,7 @@ declare global {
 
 @customModule
 @customElements('i-scom-blog')
-export default class Blog extends Module implements PageBlock {
-  private pnlCard: Panel;
+export default class Blog extends Module {
   private pnlCardBody: Panel;
 
   private _oldData: IConfig = {
@@ -111,7 +107,7 @@ export default class Blog extends Module implements PageBlock {
     backgroundImage: ''
   };
   private oldTag: any = {};
-  tag: any;
+  tag: any = {};
   defaultEdit: boolean = true;
   readonly onConfirm: () => Promise<void>;
   readonly onDiscard: () => Promise<void>;
@@ -130,85 +126,55 @@ export default class Blog extends Module implements PageBlock {
   init() {
     super.init();
     const data = this.getAttribute('data', true);
-    if (data) {
-      this.setData(data);
-    }
+    if (data) this.setData(data);
   }
 
-  getData() {
+  private getData() {
     return this._data;
   }
 
-  async setData(data: IConfig) {
+  private async setData(data: IConfig) {
     this._oldData = { ...this._data };
     this._data = data
     this.onUpdateBlock(this.tag);
   }
 
-  getTag() {
+  private getTag() {
     return this.tag;
   }
 
-  async setTag(value: any) {
-    this.tag = value;
-    this.onUpdateBlock(value);
-  }
-
-  getConfigSchema() {
-    return configSchema;
-  }
-
-  onConfigSave(config: any) {
-    this.tag = config;
-    this.onUpdateBlock(config);
-  }
-
-  async edit() {
-  }
-
-  async confirm() {
+  private async setTag(value: any) {
+    const newValue = value || {};
+    for (let prop in newValue) {
+      if (newValue.hasOwnProperty(prop)) {
+        this.tag[prop] = newValue[prop];
+      }
+    }
     this.onUpdateBlock(this.tag);
   }
 
-  async discard() {
-  }
+  // getConfigSchema() {
+  //   return configSchema;
+  // }
 
-  async config() {}
+  // onConfigSave(config: any) {
+  //   this.tag = config;
+  //   this.onUpdateBlock(config);
+  // }
 
-  getActions() {
-    const themeSchema: IDataSchema = {
-      type: 'object',
-      properties: {
-        titleFontColor: {
-          type: 'string',
-          format: 'color',
-        },
-        descriptionFontColor: {
-          type: 'string',
-          format: 'color',
-        },
-        linkTextColor: {
-          type: 'string',
-          format: 'color',
-        },
-        dateColor: {
-          type: 'string',
-          format: 'color',
-        },
-        userNameColor: {
-          type: 'string',
-          format: 'color',
-        },
-        backgroundColor: {
-          type: 'string',
-          format: 'color',
-        }
-      }
-    };
-    return this._getActions(propertiesSchema, themeSchema);
-  }
+  // async edit() {
+  // }
 
-  _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
+  // async confirm() {
+  //   this.onUpdateBlock(this.tag);
+  // }
+
+  // async discard() {
+  // }
+
+  // async config() {}
+
+  private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
     const actions: IPageBlockAction[] = [
       {
         name: 'Settings',
@@ -235,7 +201,7 @@ export default class Blog extends Module implements PageBlock {
           return {
             execute: async () => {
               if (!userInputData) return;
-              this.oldTag = { ...this.tag };
+              this.oldTag = JSON.parse(JSON.stringify(this.tag));
               this.setTag(userInputData);
               if (builder) builder.setTag(userInputData);
             },
@@ -251,6 +217,59 @@ export default class Blog extends Module implements PageBlock {
       }
     ];
     return actions;
+  }
+
+  getConfigurators() {
+    return [
+      {
+        name: 'Builder Configurator',
+        target: 'Builders',
+        getActions: () => {
+          const themeSchema: IDataSchema = {
+            type: 'object',
+            properties: {
+              titleFontColor: {
+                type: 'string',
+                format: 'color',
+              },
+              descriptionFontColor: {
+                type: 'string',
+                format: 'color',
+              },
+              linkTextColor: {
+                type: 'string',
+                format: 'color',
+              },
+              dateColor: {
+                type: 'string',
+                format: 'color',
+              },
+              userNameColor: {
+                type: 'string',
+                format: 'color',
+              },
+              backgroundColor: {
+                type: 'string',
+                format: 'color',
+              }
+            }
+          };
+          return this._getActions(propertiesSchema, themeSchema);
+        },
+        getData: this.getData.bind(this),
+        setData: this.setData.bind(this),
+        getTag: this.getTag.bind(this),
+        setTag: this.setTag.bind(this)
+      },
+      {
+        name: 'Emdedder Configurator',
+        target: 'Embedders',
+        getData: this.getData.bind(this),
+        setData: this.setData.bind(this),
+        getTag: this.getTag.bind(this),
+        setTag: this.setTag.bind(this)
+      }
+    ]
   }
 
   private onUpdateBlock(config: any) {

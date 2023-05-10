@@ -108,36 +108,36 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.ThemeVars;
-    const configSchema = {
-        type: 'object',
-        required: [],
-        properties: {
-            titleFontColor: {
-                type: 'string',
-                format: 'color',
-            },
-            descriptionFontColor: {
-                type: 'string',
-                format: 'color',
-            },
-            linkTextColor: {
-                type: 'string',
-                format: 'color',
-            },
-            dateColor: {
-                type: 'string',
-                format: 'color',
-            },
-            userNameColor: {
-                type: 'string',
-                format: 'color',
-            },
-            backgroundColor: {
-                type: 'string',
-                format: 'color',
-            }
-        }
-    };
+    // const configSchema = {
+    //   type: 'object',
+    //   required: [],
+    //   properties: {
+    //     titleFontColor: {
+    //       type: 'string',
+    //       format: 'color',
+    //     },
+    //     descriptionFontColor: {
+    //       type: 'string',
+    //       format: 'color',
+    //     },
+    //     linkTextColor: {
+    //       type: 'string',
+    //       format: 'color',
+    //     },
+    //     dateColor: {
+    //       type: 'string',
+    //       format: 'color',
+    //     },
+    //     userNameColor: {
+    //       type: 'string',
+    //       format: 'color',
+    //     },
+    //     backgroundColor: {
+    //       type: 'string',
+    //       format: 'color',
+    //     }
+    //   }
+    // }
     const propertiesSchema = {
         type: 'object',
         properties: {
@@ -185,6 +185,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                 backgroundImage: ''
             };
             this.oldTag = {};
+            this.tag = {};
             this.defaultEdit = true;
         }
         static async create(options, parent) {
@@ -195,9 +196,8 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
         init() {
             super.init();
             const data = this.getAttribute('data', true);
-            if (data) {
+            if (data)
                 this.setData(data);
-            }
         }
         getData() {
             return this._data;
@@ -211,56 +211,29 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             return this.tag;
         }
         async setTag(value) {
-            this.tag = value;
-            this.onUpdateBlock(value);
-        }
-        getConfigSchema() {
-            return configSchema;
-        }
-        onConfigSave(config) {
-            this.tag = config;
-            this.onUpdateBlock(config);
-        }
-        async edit() {
-        }
-        async confirm() {
+            const newValue = value || {};
+            for (let prop in newValue) {
+                if (newValue.hasOwnProperty(prop)) {
+                    this.tag[prop] = newValue[prop];
+                }
+            }
             this.onUpdateBlock(this.tag);
         }
-        async discard() {
-        }
-        async config() { }
-        getActions() {
-            const themeSchema = {
-                type: 'object',
-                properties: {
-                    titleFontColor: {
-                        type: 'string',
-                        format: 'color',
-                    },
-                    descriptionFontColor: {
-                        type: 'string',
-                        format: 'color',
-                    },
-                    linkTextColor: {
-                        type: 'string',
-                        format: 'color',
-                    },
-                    dateColor: {
-                        type: 'string',
-                        format: 'color',
-                    },
-                    userNameColor: {
-                        type: 'string',
-                        format: 'color',
-                    },
-                    backgroundColor: {
-                        type: 'string',
-                        format: 'color',
-                    }
-                }
-            };
-            return this._getActions(propertiesSchema, themeSchema);
-        }
+        // getConfigSchema() {
+        //   return configSchema;
+        // }
+        // onConfigSave(config: any) {
+        //   this.tag = config;
+        //   this.onUpdateBlock(config);
+        // }
+        // async edit() {
+        // }
+        // async confirm() {
+        //   this.onUpdateBlock(this.tag);
+        // }
+        // async discard() {
+        // }
+        // async config() {}
         _getActions(propertiesSchema, themeSchema) {
             const actions = [
                 {
@@ -291,7 +264,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                             execute: async () => {
                                 if (!userInputData)
                                     return;
-                                this.oldTag = Object.assign({}, this.tag);
+                                this.oldTag = JSON.parse(JSON.stringify(this.tag));
                                 this.setTag(userInputData);
                                 if (builder)
                                     builder.setTag(userInputData);
@@ -310,6 +283,58 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                 }
             ];
             return actions;
+        }
+        getConfigurators() {
+            return [
+                {
+                    name: 'Builder Configurator',
+                    target: 'Builders',
+                    getActions: () => {
+                        const themeSchema = {
+                            type: 'object',
+                            properties: {
+                                titleFontColor: {
+                                    type: 'string',
+                                    format: 'color',
+                                },
+                                descriptionFontColor: {
+                                    type: 'string',
+                                    format: 'color',
+                                },
+                                linkTextColor: {
+                                    type: 'string',
+                                    format: 'color',
+                                },
+                                dateColor: {
+                                    type: 'string',
+                                    format: 'color',
+                                },
+                                userNameColor: {
+                                    type: 'string',
+                                    format: 'color',
+                                },
+                                backgroundColor: {
+                                    type: 'string',
+                                    format: 'color',
+                                }
+                            }
+                        };
+                        return this._getActions(propertiesSchema, themeSchema);
+                    },
+                    getData: this.getData.bind(this),
+                    setData: this.setData.bind(this),
+                    getTag: this.getTag.bind(this),
+                    setTag: this.setTag.bind(this)
+                },
+                {
+                    name: 'Emdedder Configurator',
+                    target: 'Embedders',
+                    getData: this.getData.bind(this),
+                    setData: this.setData.bind(this),
+                    getTag: this.getTag.bind(this),
+                    setTag: this.setTag.bind(this)
+                }
+            ];
         }
         onUpdateBlock(config) {
             const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor } = config || {};

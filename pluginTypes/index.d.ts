@@ -56,8 +56,8 @@ declare module "@scom/scom-blog/index.css.ts" {
 }
 /// <amd-module name="@scom/scom-blog" />
 declare module "@scom/scom-blog" {
-    import { Module, ControlElement, Container, IDataSchema } from '@ijstech/components';
-    import { PageBlock, IConfig, IPageBlockAction } from "@scom/scom-blog/global/index.ts";
+    import { Module, ControlElement, Container } from '@ijstech/components';
+    import { IConfig, IPageBlockAction } from "@scom/scom-blog/global/index.ts";
     interface ScomBlogElement extends ControlElement {
         data?: IConfig;
     }
@@ -68,8 +68,7 @@ declare module "@scom/scom-blog" {
             }
         }
     }
-    export default class Blog extends Module implements PageBlock {
-        private pnlCard;
+    export default class Blog extends Module {
         private pnlCardBody;
         private _oldData;
         private _data;
@@ -82,47 +81,28 @@ declare module "@scom/scom-blog" {
         static create(options?: ScomBlogElement, parent?: Container): Promise<Blog>;
         constructor(parent?: Container, options?: ScomBlogElement);
         init(): void;
-        getData(): IConfig;
-        setData(data: IConfig): Promise<void>;
-        getTag(): any;
-        setTag(value: any): Promise<void>;
-        getConfigSchema(): {
-            type: string;
-            required: any[];
-            properties: {
-                titleFontColor: {
-                    type: string;
-                    format: string;
-                };
-                descriptionFontColor: {
-                    type: string;
-                    format: string;
-                };
-                linkTextColor: {
-                    type: string;
-                    format: string;
-                };
-                dateColor: {
-                    type: string;
-                    format: string;
-                };
-                userNameColor: {
-                    type: string;
-                    format: string;
-                };
-                backgroundColor: {
-                    type: string;
-                    format: string;
-                };
-            };
-        };
-        onConfigSave(config: any): void;
-        edit(): Promise<void>;
-        confirm(): Promise<void>;
-        discard(): Promise<void>;
-        config(): Promise<void>;
-        getActions(): IPageBlockAction[];
-        _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema): IPageBlockAction[];
+        private getData;
+        private setData;
+        private getTag;
+        private setTag;
+        private _getActions;
+        getConfigurators(): ({
+            name: string;
+            target: string;
+            getActions: () => IPageBlockAction[];
+            getData: any;
+            setData: any;
+            getTag: any;
+            setTag: any;
+        } | {
+            name: string;
+            target: string;
+            getData: any;
+            setData: any;
+            getTag: any;
+            setTag: any;
+            getActions?: undefined;
+        })[];
         private onUpdateBlock;
         private formatDate;
         private openLink;

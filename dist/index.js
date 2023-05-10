@@ -1,27 +1,12 @@
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define("@scom/scom-blog/global/utils.ts", ["require", "exports"], function (require, exports) {
+define("@scom/scom-blog/interface.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-});
-define("@scom/scom-blog/global/index.ts", ["require", "exports", "@scom/scom-blog/global/utils.ts"], function (require, exports, utils_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    __exportStar(utils_1, exports);
 });
 define("@scom/scom-blog/index.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_1) {
     "use strict";
@@ -104,7 +89,19 @@ define("@scom/scom-blog/index.css.ts", ["require", "exports", "@ijstech/componen
         margin: '0 auto'
     });
 });
-define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts"], function (require, exports, components_2, index_css_1) {
+define("@scom/scom-blog/data.json.ts", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    ///<amd-module name='@scom/scom-blog/data.json.ts'/> 
+    exports.default = {
+        "defaultBuilderData": {
+            title: 'Blog title',
+            description: 'Blog descripion',
+            backgroundImage: 'https://images.unsplash.com/photo-1637592036032-0a16278cc590?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+        }
+    };
+});
+define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts", "@scom/scom-blog/data.json.ts"], function (require, exports, components_2, index_css_1, data_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.ThemeVars;
@@ -322,7 +319,10 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                         return this._getActions(propertiesSchema, themeSchema);
                     },
                     getData: this.getData.bind(this),
-                    setData: this.setData.bind(this),
+                    setData: async (data) => {
+                        const defaultData = data_json_1.default.defaultBuilderData;
+                        await this.setData(Object.assign(Object.assign({}, defaultData), data));
+                    },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this)
                 },

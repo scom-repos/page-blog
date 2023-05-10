@@ -1,6 +1,22 @@
-/// <amd-module name="@scom/scom-blog/global/utils.ts" />
-declare module "@scom/scom-blog/global/utils.ts" {
+/// <amd-module name="@scom/scom-blog/interface.ts" />
+declare module "@scom/scom-blog/interface.ts" {
     import { IconName, IDataSchema, IUISchema } from "@ijstech/components";
+    export interface PageBlock {
+        getData: () => any;
+        setData: (data: any) => Promise<void>;
+        getTag: () => any;
+        setTag: (tag: any) => Promise<void>;
+        validate?: () => boolean;
+        defaultEdit?: boolean;
+        tag?: any;
+        readonly onEdit: () => Promise<void>;
+        readonly onConfirm: () => Promise<void>;
+        readonly onDiscard: () => Promise<void>;
+        edit: () => Promise<void>;
+        confirm: () => Promise<void>;
+        discard: () => Promise<void>;
+        config: () => Promise<void>;
+    }
     export interface IConfig {
         title: string;
         backgroundImage: string;
@@ -24,26 +40,6 @@ declare module "@scom/scom-blog/global/utils.ts" {
         userInputUISchema?: IUISchema;
     }
 }
-/// <amd-module name="@scom/scom-blog/global/index.ts" />
-declare module "@scom/scom-blog/global/index.ts" {
-    export interface PageBlock {
-        getData: () => any;
-        setData: (data: any) => Promise<void>;
-        getTag: () => any;
-        setTag: (tag: any) => Promise<void>;
-        validate?: () => boolean;
-        defaultEdit?: boolean;
-        tag?: any;
-        readonly onEdit: () => Promise<void>;
-        readonly onConfirm: () => Promise<void>;
-        readonly onDiscard: () => Promise<void>;
-        edit: () => Promise<void>;
-        confirm: () => Promise<void>;
-        discard: () => Promise<void>;
-        config: () => Promise<void>;
-    }
-    export * from "@scom/scom-blog/global/utils.ts";
-}
 /// <amd-module name="@scom/scom-blog/index.css.ts" />
 declare module "@scom/scom-blog/index.css.ts" {
     export const cardStyle: string;
@@ -54,10 +50,21 @@ declare module "@scom/scom-blog/index.css.ts" {
     export const controlStyle: string;
     export const containerStyle: string;
 }
+/// <amd-module name="@scom/scom-blog/data.json.ts" />
+declare module "@scom/scom-blog/data.json.ts" {
+    const _default: {
+        defaultBuilderData: {
+            title: string;
+            description: string;
+            backgroundImage: string;
+        };
+    };
+    export default _default;
+}
 /// <amd-module name="@scom/scom-blog" />
 declare module "@scom/scom-blog" {
     import { Module, ControlElement, Container } from '@ijstech/components';
-    import { IConfig, IPageBlockAction } from "@scom/scom-blog/global/index.ts";
+    import { IConfig, IPageBlockAction } from "@scom/scom-blog/interface.ts";
     interface ScomBlogElement extends ControlElement {
         data?: IConfig;
     }
@@ -91,7 +98,7 @@ declare module "@scom/scom-blog" {
             target: string;
             getActions: () => IPageBlockAction[];
             getData: any;
-            setData: any;
+            setData: (data: IConfig) => Promise<void>;
             getTag: any;
             setTag: any;
         } | {

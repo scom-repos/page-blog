@@ -9,8 +9,9 @@ import {
   IDataSchema,
   moment
 } from '@ijstech/components';
-import { IConfig, IPageBlockAction } from './global/index';
+import { IConfig, IPageBlockAction } from './interface';
 import { cardItemStyle, cardStyle, imageStyle, avatarStyle, containerStyle } from './index.css';
+import dataJson from './data.json';
 
 const Theme = Styles.Theme.ThemeVars;
 // const configSchema = {
@@ -257,7 +258,10 @@ export default class Blog extends Module {
           return this._getActions(propertiesSchema, themeSchema);
         },
         getData: this.getData.bind(this),
-        setData: this.setData.bind(this),
+        setData: async (data: IConfig) => {
+          const defaultData = dataJson.defaultBuilderData as any;
+          await this.setData({...defaultData, ...data})
+        },
         getTag: this.getTag.bind(this),
         setTag: this.setTag.bind(this)
       },

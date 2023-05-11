@@ -98,16 +98,10 @@ declare global {
 @customElements('i-scom-blog')
 export default class Blog extends Module {
   private pnlCardBody: Panel;
-
-  private _oldData: IConfig = {
-    title: '',
-    backgroundImage: ''
-  };
   private _data: IConfig = {
     title: '',
     backgroundImage: ''
   };
-  private oldTag: any = {};
   tag: any = {};
   defaultEdit: boolean = true;
   readonly onConfirm: () => Promise<void>;
@@ -135,7 +129,6 @@ export default class Blog extends Module {
   }
 
   private async setData(data: IConfig) {
-    this._oldData = { ...this._data };
     this._data = data
     this.onUpdateBlock(this.tag);
   }
@@ -181,14 +174,20 @@ export default class Blog extends Module {
         name: 'Settings',
         icon: 'cog',
         command: (builder: any, userInputData: any) => {
+          let _oldData: IConfig = {
+            title: '',
+            backgroundImage: ''
+          };
           return {
             execute: async () => {
+              _oldData = {...this._data};
               if (builder?.setData) builder.setData(userInputData);
               this.setData(userInputData);
             },
             undo: () => {
-              if (builder?.setData) builder.setData(this._oldData);
-              this.setData(this._oldData);
+              this._data = {..._oldData};
+              if (builder?.setData) builder.setData(_oldData);
+              this.setData(_oldData);
             },
             redo: () => { }
           }
@@ -199,17 +198,19 @@ export default class Blog extends Module {
         name: 'Theme Settings',
         icon: 'palette',
         command: (builder: any, userInputData: any) => {
+          let oldTag = {};
           return {
             execute: async () => {
               if (!userInputData) return;
-              this.oldTag = JSON.parse(JSON.stringify(this.tag));
-              this.setTag(userInputData);
+              oldTag = {...this.tag};
               if (builder) builder.setTag(userInputData);
+              else this.setTag(userInputData);
             },
             undo: () => {
               if (!userInputData) return;
-              this.setTag(this.oldTag);
-              if (builder) builder.setTag(this.oldTag);
+              this.tag = {...oldTag};
+              if (builder) builder.setTag(this.tag);
+              else this.setTag(this.tag);
             },
             redo: () => { }
           }
@@ -278,8 +279,8 @@ export default class Blog extends Module {
 
   private onUpdateBlock(config: any) {
     const {
-      titleFontColor = Theme.text.primary,
-      descriptionFontColor = Theme.text.primary,
+      titleFontColor = defaultColors.dateColor,
+      descriptionFontColor = defaultColors.dateColor,
       linkTextColor = Theme.colors.primary.main,
       dateColor = defaultColors.dateColor,
       userNameColor = defaultColors.userNameColor,
@@ -310,7 +311,7 @@ export default class Blog extends Module {
             position="absolute" left="0px" top="0px"
           ></i-image>
         </i-panel>
-        <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }} background={{ color: backgroundColor }}>
+        <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }} background={{ color: backgroundColor || defaultColors.backgroundColor }}>
           <i-hstack grid={{ area: "areaDate" }} verticalAlignment="center" gap="0.938rem" margin={{bottom: '0.75rem'}}>
             <i-panel width={50} height={50} visible={!!this._data.avatar}>
               <i-image width="100%" height="100%" url={this._data.avatar} display="block" class={avatarStyle}></i-image>
@@ -320,24 +321,24 @@ export default class Blog extends Module {
                 id="dateLb"
                 visible={!!this._data.date}
                 caption={this.formatDate(this._data.date)}
-                font={{ size: '0.8125rem', color: dateColor }}
+                font={{ size: '0.8125rem', color: dateColor || defaultColors.dateColor }}
               ></i-label>
               <i-label
                 id="usernameLb"
                 visible={!!this._data.userName}
                 caption={this._data.userName}
-                font={{ size: '0.8125rem', color: userNameColor }}
+                font={{ size: '0.8125rem', color: userNameColor || defaultColors.userNameColor }}
               ></i-label>
             </i-vstack>
           </i-hstack>
           <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center" gap="0.5rem" padding={{ bottom: '1rem' }}>
-            <i-label id="titleLb" caption={this._data.title} font={{ weight: 700, size: '1.375rem', color: titleFontColor }}></i-label>
-            <i-label id="descriptionLb" caption={this._data.description} font={{ size: '0.875rem', color: descriptionFontColor }}></i-label>
+            <i-label id="titleLb" caption={this._data.title} font={{ weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor }}></i-label>
+            <i-label id="descriptionLb" caption={this._data.description} font={{ size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor }}></i-label>
             <i-label
               id="linkLb"
               caption="Read More"
               link={{ href: this._data.linkUrl, target: this._data.isExternal ? "_blank" :  "_self" }}
-              font={{ weight: 700, size: '0.875rem', color: linkTextColor }}
+              font={{ weight: 700, size: '0.875rem', color: linkTextColor || defaultColors.dateColor }}
             ></i-label>
           </i-vstack>
         </i-panel>

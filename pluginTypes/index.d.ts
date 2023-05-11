@@ -77,9 +77,7 @@ declare module "@scom/scom-blog" {
     }
     export default class Blog extends Module {
         private pnlCardBody;
-        private _oldData;
         private _data;
-        private oldTag;
         tag: any;
         defaultEdit: boolean;
         readonly onConfirm: () => Promise<void>;

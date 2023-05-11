@@ -173,15 +173,10 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
     let Blog = class Blog extends components_2.Module {
         constructor(parent, options) {
             super(parent, options);
-            this._oldData = {
-                title: '',
-                backgroundImage: ''
-            };
             this._data = {
                 title: '',
                 backgroundImage: ''
             };
-            this.oldTag = {};
             this.tag = {};
             this.defaultEdit = true;
         }
@@ -200,7 +195,6 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             return this._data;
         }
         async setData(data) {
-            this._oldData = Object.assign({}, this._data);
             this._data = data;
             this.onUpdateBlock(this.tag);
         }
@@ -237,16 +231,22 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     name: 'Settings',
                     icon: 'cog',
                     command: (builder, userInputData) => {
+                        let _oldData = {
+                            title: '',
+                            backgroundImage: ''
+                        };
                         return {
                             execute: async () => {
+                                _oldData = Object.assign({}, this._data);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(userInputData);
                                 this.setData(userInputData);
                             },
                             undo: () => {
+                                this._data = Object.assign({}, _oldData);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(this._oldData);
-                                this.setData(this._oldData);
+                                    builder.setData(_oldData);
+                                this.setData(_oldData);
                             },
                             redo: () => { }
                         };
@@ -257,21 +257,25 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     name: 'Theme Settings',
                     icon: 'palette',
                     command: (builder, userInputData) => {
+                        let oldTag = {};
                         return {
                             execute: async () => {
                                 if (!userInputData)
                                     return;
-                                this.oldTag = JSON.parse(JSON.stringify(this.tag));
-                                this.setTag(userInputData);
+                                oldTag = Object.assign({}, this.tag);
                                 if (builder)
                                     builder.setTag(userInputData);
+                                else
+                                    this.setTag(userInputData);
                             },
                             undo: () => {
                                 if (!userInputData)
                                     return;
-                                this.setTag(this.oldTag);
+                                this.tag = Object.assign({}, oldTag);
                                 if (builder)
-                                    builder.setTag(this.oldTag);
+                                    builder.setTag(this.tag);
+                                else
+                                    this.setTag(this.tag);
                             },
                             redo: () => { }
                         };
@@ -337,24 +341,24 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             ];
         }
         onUpdateBlock(config) {
-            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor } = config || {};
+            const { titleFontColor = defaultColors.dateColor, descriptionFontColor = defaultColors.dateColor, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor } = config || {};
             this.pnlCardBody.clearInnerHTML();
             this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, templateAreas: [
                     ["areaImg"], ["areaDate"], ["areaDetails"]
                 ], overflow: "hidden", onClick: () => this.openLink() },
                 this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '56.25%' } },
                     this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage, position: "absolute", left: "0px", top: "0px" })),
-                this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: backgroundColor } },
+                this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: backgroundColor || defaultColors.backgroundColor } },
                     this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!this._data.avatar },
                             this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", class: index_css_1.avatarStyle })),
                         this.$render("i-vstack", { verticalAlignment: "center", gap: "0.25rem" },
-                            this.$render("i-label", { id: "dateLb", visible: !!this._data.date, caption: this.formatDate(this._data.date), font: { size: '0.8125rem', color: dateColor } }),
-                            this.$render("i-label", { id: "usernameLb", visible: !!this._data.userName, caption: this._data.userName, font: { size: '0.8125rem', color: userNameColor } }))),
+                            this.$render("i-label", { id: "dateLb", visible: !!this._data.date, caption: this.formatDate(this._data.date), font: { size: '0.8125rem', color: dateColor || defaultColors.dateColor } }),
+                            this.$render("i-label", { id: "usernameLb", visible: !!this._data.userName, caption: this._data.userName, font: { size: '0.8125rem', color: userNameColor || defaultColors.userNameColor } }))),
                     this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' } },
-                        this.$render("i-label", { id: "titleLb", caption: this._data.title, font: { weight: 700, size: '1.375rem', color: titleFontColor } }),
-                        this.$render("i-label", { id: "descriptionLb", caption: this._data.description, font: { size: '0.875rem', color: descriptionFontColor } }),
-                        this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: this._data.linkUrl, target: this._data.isExternal ? "_blank" : "_self" }, font: { weight: 700, size: '0.875rem', color: linkTextColor } })))));
+                        this.$render("i-label", { id: "titleLb", caption: this._data.title, font: { weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor } }),
+                        this.$render("i-label", { id: "descriptionLb", caption: this._data.description, font: { size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor } }),
+                        this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: this._data.linkUrl, target: this._data.isExternal ? "_blank" : "_self" }, font: { weight: 700, size: '0.875rem', color: linkTextColor || defaultColors.dateColor } })))));
         }
         formatDate(date) {
             if (!date)

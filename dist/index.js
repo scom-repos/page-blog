@@ -1,27 +1,12 @@
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define("@scom/scom-blog/global/utils.ts", ["require", "exports"], function (require, exports) {
+define("@scom/scom-blog/interface.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-});
-define("@scom/scom-blog/global/index.ts", ["require", "exports", "@scom/scom-blog/global/utils.ts"], function (require, exports, utils_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    __exportStar(utils_1, exports);
 });
 define("@scom/scom-blog/index.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_1) {
     "use strict";
@@ -104,7 +89,19 @@ define("@scom/scom-blog/index.css.ts", ["require", "exports", "@ijstech/componen
         margin: '0 auto'
     });
 });
-define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts"], function (require, exports, components_2, index_css_1) {
+define("@scom/scom-blog/data.json.ts", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    ///<amd-module name='@scom/scom-blog/data.json.ts'/> 
+    exports.default = {
+        "defaultBuilderData": {
+            title: 'Blog title',
+            description: 'Blog descripion',
+            backgroundImage: 'https://images.unsplash.com/photo-1637592036032-0a16278cc590?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+        }
+    };
+});
+define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts", "@scom/scom-blog/data.json.ts"], function (require, exports, components_2, index_css_1, data_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.ThemeVars;
@@ -176,15 +173,10 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
     let Blog = class Blog extends components_2.Module {
         constructor(parent, options) {
             super(parent, options);
-            this._oldData = {
-                title: '',
-                backgroundImage: ''
-            };
             this._data = {
                 title: '',
                 backgroundImage: ''
             };
-            this.oldTag = {};
             this.tag = {};
             this.defaultEdit = true;
         }
@@ -203,7 +195,6 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             return this._data;
         }
         async setData(data) {
-            this._oldData = Object.assign({}, this._data);
             this._data = data;
             this.onUpdateBlock(this.tag);
         }
@@ -240,16 +231,22 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     name: 'Settings',
                     icon: 'cog',
                     command: (builder, userInputData) => {
+                        let _oldData = {
+                            title: '',
+                            backgroundImage: ''
+                        };
                         return {
                             execute: async () => {
+                                _oldData = Object.assign({}, this._data);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(userInputData);
                                 this.setData(userInputData);
                             },
                             undo: () => {
+                                this._data = Object.assign({}, _oldData);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(this._oldData);
-                                this.setData(this._oldData);
+                                    builder.setData(_oldData);
+                                this.setData(_oldData);
                             },
                             redo: () => { }
                         };
@@ -260,21 +257,25 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     name: 'Theme Settings',
                     icon: 'palette',
                     command: (builder, userInputData) => {
+                        let oldTag = {};
                         return {
                             execute: async () => {
                                 if (!userInputData)
                                     return;
-                                this.oldTag = JSON.parse(JSON.stringify(this.tag));
-                                this.setTag(userInputData);
+                                oldTag = Object.assign({}, this.tag);
                                 if (builder)
                                     builder.setTag(userInputData);
+                                else
+                                    this.setTag(userInputData);
                             },
                             undo: () => {
                                 if (!userInputData)
                                     return;
-                                this.setTag(this.oldTag);
+                                this.tag = Object.assign({}, oldTag);
                                 if (builder)
-                                    builder.setTag(this.oldTag);
+                                    builder.setTag(this.tag);
+                                else
+                                    this.setTag(this.tag);
                             },
                             redo: () => { }
                         };
@@ -322,7 +323,10 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                         return this._getActions(propertiesSchema, themeSchema);
                     },
                     getData: this.getData.bind(this),
-                    setData: this.setData.bind(this),
+                    setData: async (data) => {
+                        const defaultData = data_json_1.default.defaultBuilderData;
+                        await this.setData(Object.assign(Object.assign({}, defaultData), data));
+                    },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this)
                 },
@@ -337,24 +341,24 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             ];
         }
         onUpdateBlock(config) {
-            const { titleFontColor = Theme.text.primary, descriptionFontColor = Theme.text.primary, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor } = config || {};
+            const { titleFontColor = defaultColors.dateColor, descriptionFontColor = defaultColors.dateColor, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor } = config || {};
             this.pnlCardBody.clearInnerHTML();
             this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, templateAreas: [
                     ["areaImg"], ["areaDate"], ["areaDetails"]
                 ], overflow: "hidden", onClick: () => this.openLink() },
                 this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '56.25%' } },
                     this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage, position: "absolute", left: "0px", top: "0px" })),
-                this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: backgroundColor } },
+                this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: backgroundColor || defaultColors.backgroundColor } },
                     this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!this._data.avatar },
                             this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", class: index_css_1.avatarStyle })),
                         this.$render("i-vstack", { verticalAlignment: "center", gap: "0.25rem" },
-                            this.$render("i-label", { id: "dateLb", visible: !!this._data.date, caption: this.formatDate(this._data.date), font: { size: '0.8125rem', color: dateColor } }),
-                            this.$render("i-label", { id: "usernameLb", visible: !!this._data.userName, caption: this._data.userName, font: { size: '0.8125rem', color: userNameColor } }))),
+                            this.$render("i-label", { id: "dateLb", visible: !!this._data.date, caption: this.formatDate(this._data.date), font: { size: '0.8125rem', color: dateColor || defaultColors.dateColor } }),
+                            this.$render("i-label", { id: "usernameLb", visible: !!this._data.userName, caption: this._data.userName, font: { size: '0.8125rem', color: userNameColor || defaultColors.userNameColor } }))),
                     this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' } },
-                        this.$render("i-label", { id: "titleLb", caption: this._data.title, font: { weight: 700, size: '1.375rem', color: titleFontColor } }),
-                        this.$render("i-label", { id: "descriptionLb", caption: this._data.description, font: { size: '0.875rem', color: descriptionFontColor } }),
-                        this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: this._data.linkUrl, target: this._data.isExternal ? "_blank" : "_self" }, font: { weight: 700, size: '0.875rem', color: linkTextColor } })))));
+                        this.$render("i-label", { id: "titleLb", caption: this._data.title, font: { weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor } }),
+                        this.$render("i-label", { id: "descriptionLb", caption: this._data.description, font: { size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor } }),
+                        this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: this._data.linkUrl, target: this._data.isExternal ? "_blank" : "_self" }, font: { weight: 700, size: '0.875rem', color: linkTextColor || defaultColors.dateColor } })))));
         }
         formatDate(date) {
             if (!date)

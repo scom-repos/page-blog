@@ -13,7 +13,7 @@ import { IConfig, IPageBlockAction } from './interface';
 import { cardItemStyle, cardStyle, imageStyle, avatarStyle, containerStyle } from './index.css';
 import dataJson from './data.json';
 
-const Theme = Styles.Theme.ThemeVars;
+const Theme = Styles.Theme.currentTheme;
 // const configSchema = {
 //   type: 'object',
 //   required: [],
@@ -122,6 +122,14 @@ export default class Blog extends Module {
     super.init();
     const data = this.getAttribute('data', true);
     if (data) this.setData(data);
+    this.setTag({
+      titleFontColor: defaultColors.dateColor,
+      descriptionFontColor: defaultColors.dateColor,
+      linkTextColor: Theme.colors.primary.main,
+      dateColor: defaultColors.dateColor,
+      userNameColor: defaultColors.userNameColor,
+      backgroundColor: defaultColors.backgroundColor
+    })
   }
 
   private getData() {
@@ -146,27 +154,6 @@ export default class Blog extends Module {
     }
     this.onUpdateBlock(this.tag);
   }
-
-  // getConfigSchema() {
-  //   return configSchema;
-  // }
-
-  // onConfigSave(config: any) {
-  //   this.tag = config;
-  //   this.onUpdateBlock(config);
-  // }
-
-  // async edit() {
-  // }
-
-  // async confirm() {
-  //   this.onUpdateBlock(this.tag);
-  // }
-
-  // async discard() {
-  // }
-
-  // async config() {}
 
   private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
     const actions: IPageBlockAction[] = [

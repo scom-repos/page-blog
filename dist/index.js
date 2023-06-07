@@ -104,7 +104,7 @@ define("@scom/scom-blog/data.json.ts", ["require", "exports"], function (require
 define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts", "@scom/scom-blog/data.json.ts"], function (require, exports, components_2, index_css_1, data_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    const Theme = components_2.Styles.Theme.ThemeVars;
+    const Theme = components_2.Styles.Theme.currentTheme;
     // const configSchema = {
     //   type: 'object',
     //   required: [],
@@ -171,6 +171,11 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
         backgroundColor: '#fff'
     };
     let Blog = class Blog extends components_2.Module {
+        static async create(options, parent) {
+            let self = new this(parent, options);
+            await self.ready();
+            return self;
+        }
         constructor(parent, options) {
             super(parent, options);
             this._data = {
@@ -180,16 +185,19 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             this.tag = {};
             this.defaultEdit = true;
         }
-        static async create(options, parent) {
-            let self = new this(parent, options);
-            await self.ready();
-            return self;
-        }
         init() {
             super.init();
             const data = this.getAttribute('data', true);
             if (data)
                 this.setData(data);
+            this.setTag({
+                titleFontColor: defaultColors.dateColor,
+                descriptionFontColor: defaultColors.dateColor,
+                linkTextColor: Theme.colors.primary.main,
+                dateColor: defaultColors.dateColor,
+                userNameColor: defaultColors.userNameColor,
+                backgroundColor: defaultColors.backgroundColor
+            });
         }
         getData() {
             return this._data;
@@ -210,21 +218,6 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             }
             this.onUpdateBlock(this.tag);
         }
-        // getConfigSchema() {
-        //   return configSchema;
-        // }
-        // onConfigSave(config: any) {
-        //   this.tag = config;
-        //   this.onUpdateBlock(config);
-        // }
-        // async edit() {
-        // }
-        // async confirm() {
-        //   this.onUpdateBlock(this.tag);
-        // }
-        // async discard() {
-        // }
-        // async config() {}
         _getActions(propertiesSchema, themeSchema) {
             const actions = [
                 {
@@ -363,7 +356,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
         formatDate(date) {
             if (!date)
                 return '';
-            return components_2.moment(date, "DD/MM/YYYY").format('MMMM DD, YYYY');
+            return (0, components_2.moment)(date, "DD/MM/YYYY").format('MMMM DD, YYYY');
         }
         openLink() {
             if (!this._data.linkUrl)
@@ -382,7 +375,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
     };
     Blog = __decorate([
         components_2.customModule,
-        components_2.customElements('i-scom-blog')
+        (0, components_2.customElements)('i-scom-blog')
     ], Blog);
     exports.default = Blog;
 });

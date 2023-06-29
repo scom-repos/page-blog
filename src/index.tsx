@@ -83,6 +83,7 @@ const defaultColors = {
 }
 
 interface ScomBlogElement extends ControlElement {
+  lazyLoad?: boolean;
   data?: IConfig;
 }
 
@@ -120,16 +121,19 @@ export default class Blog extends Module {
 
   init() {
     super.init();
-    const data = this.getAttribute('data', true);
-    if (data) this.setData(data);
-    this.setTag({
-      titleFontColor: defaultColors.dateColor,
-      descriptionFontColor: defaultColors.dateColor,
-      linkTextColor: Theme.colors.primary.main,
-      dateColor: defaultColors.dateColor,
-      userNameColor: defaultColors.userNameColor,
-      backgroundColor: defaultColors.backgroundColor
-    })
+    const lazyLoad = this.getAttribute('lazyLoad', true, false);
+    if (!lazyLoad) {
+      const data = this.getAttribute('data', true);
+      if (data) this.setData(data);
+      this.setTag({
+        titleFontColor: defaultColors.dateColor,
+        descriptionFontColor: defaultColors.dateColor,
+        linkTextColor: Theme.colors.primary.main,
+        dateColor: defaultColors.dateColor,
+        userNameColor: defaultColors.userNameColor,
+        backgroundColor: defaultColors.backgroundColor
+      });
+    }
   }
 
   private getData() {

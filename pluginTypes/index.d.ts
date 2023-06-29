@@ -66,6 +66,7 @@ declare module "@scom/scom-blog" {
     import { Module, ControlElement, Container } from '@ijstech/components';
     import { IConfig, IPageBlockAction } from "@scom/scom-blog/interface.ts";
     interface ScomBlogElement extends ControlElement {
+        lazyLoad?: boolean;
         data?: IConfig;
     }
     global {

@@ -6,6 +6,12 @@ services:
     volumes:
       - .:/app
     command: bash -c "cd /app && rm -rf node_modules && rm -f package-lock.json && npm i"
+  installTest:
+    image: node:18
+    user: node
+    volumes:
+      - .:/app
+    command: bash -c "cd /app/test && rm -rf node_modules && rm -f package-lock.json && npm i"
   build: 
     image: node:18
     user: root

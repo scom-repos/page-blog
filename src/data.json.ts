@@ -1,7 +1,7 @@
 export default {
-  "defaultBuilderData": {
-    title: 'Blog title',
-    description: 'Blog descripion',
-    backgroundImage: 'https://images.unsplash.com/photo-1637592036032-0a16278cc590?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
-  }
+  // "defaultBuilderData": {
+  //   title: 'Blog title',
+  //   description: 'Blog descripion',
+  //   backgroundImage: 'https://images.unsplash.com/photo-1637592036032-0a16278cc590?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+  // }
 }

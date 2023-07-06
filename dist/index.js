@@ -94,14 +94,14 @@ define("@scom/scom-blog/data.json.ts", ["require", "exports"], function (require
     Object.defineProperty(exports, "__esModule", { value: true });
     ///<amd-module name='@scom/scom-blog/data.json.ts'/> 
     exports.default = {
-        "defaultBuilderData": {
-            title: 'Blog title',
-            description: 'Blog descripion',
-            backgroundImage: 'https://images.unsplash.com/photo-1637592036032-0a16278cc590?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
-        }
+    // "defaultBuilderData": {
+    //   title: 'Blog title',
+    //   description: 'Blog descripion',
+    //   backgroundImage: 'https://images.unsplash.com/photo-1637592036032-0a16278cc590?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+    // }
     };
 });
-define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts", "@scom/scom-blog/data.json.ts"], function (require, exports, components_2, index_css_1, data_json_1) {
+define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts"], function (require, exports, components_2, index_css_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.currentTheme;
@@ -320,8 +320,9 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
-                        const defaultData = data_json_1.default.defaultBuilderData;
-                        await this.setData(Object.assign(Object.assign({}, defaultData), data));
+                        // const defaultData = dataJson.defaultBuilderData as any;
+                        // await this.setData({...defaultData, ...data})
+                        await this.setData(Object.assign({}, data));
                     },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this)
@@ -343,7 +344,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     ["areaImg"], ["areaDate"], ["areaDetails"]
                 ], overflow: "hidden", onClick: () => this.openLink() },
                 this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '56.25%' } },
-                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage, position: "absolute", left: "0px", top: "0px" })),
+                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage || 'https://placehold.co/600x400?text=No+Image', fallbackUrl: 'https://placehold.co/600x400?text=No+Image', position: "absolute", left: "0px", top: "0px" })),
                 this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: backgroundColor || defaultColors.backgroundColor } },
                     this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!this._data.avatar },

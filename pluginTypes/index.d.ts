@@ -52,13 +52,7 @@ declare module "@scom/scom-blog/index.css.ts" {
 }
 /// <amd-module name="@scom/scom-blog/data.json.ts" />
 declare module "@scom/scom-blog/data.json.ts" {
-    const _default: {
-        defaultBuilderData: {
-            title: string;
-            description: string;
-            backgroundImage: string;
-        };
-    };
+    const _default: {};
     export default _default;
 }
 /// <amd-module name="@scom/scom-blog" />

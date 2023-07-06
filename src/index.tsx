@@ -251,8 +251,9 @@ export default class Blog extends Module {
         },
         getData: this.getData.bind(this),
         setData: async (data: IConfig) => {
-          const defaultData = dataJson.defaultBuilderData as any;
-          await this.setData({...defaultData, ...data})
+          // const defaultData = dataJson.defaultBuilderData as any;
+          // await this.setData({...defaultData, ...data})
+          await this.setData({...data})
         },
         getTag: this.getTag.bind(this),
         setTag: this.setTag.bind(this)
@@ -298,7 +299,7 @@ export default class Blog extends Module {
             width='100%'
             height="100%"
             grid={{ area: "areaImg" }}
-            url={this._data.backgroundImage}
+            url={this._data.backgroundImage || 'https://placehold.co/600x400?text=No+Image'}
             position="absolute" left="0px" top="0px"
           ></i-image>
         </i-panel>

@@ -306,8 +306,8 @@ export default class Blog extends Module {
             </i-vstack>
           </i-hstack>
           <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center" gap="0.5rem" padding={{ bottom: '1rem' }}>
-            <i-label id="titleLb" caption={this._data.title} font={{ weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor }}></i-label>
-            <i-label id="descriptionLb" caption={this._data.description} font={{ size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor }}></i-label>
+            <i-label id="titleLb" caption={this._data.title || ''} font={{ weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor }}></i-label>
+            <i-label id="descriptionLb" caption={this._data.description || ''} font={{ size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor }}></i-label>
             <i-label
               id="linkLb"
               caption="Read More"

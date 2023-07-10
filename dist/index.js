@@ -4,6 +4,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 define("@scom/scom-blog/interface.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -141,11 +152,23 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             title: {
                 type: 'string'
             },
+            titleFontColor: {
+                type: 'string',
+                format: 'color',
+            },
             description: {
                 type: 'string'
             },
+            descriptionFontColor: {
+                type: 'string',
+                format: 'color',
+            },
             linkUrl: {
                 type: 'string'
+            },
+            linkTextColor: {
+                type: 'string',
+                format: 'color',
             },
             isExternal: {
                 type: 'boolean'
@@ -154,16 +177,116 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                 type: 'string',
                 format: 'date'
             },
+            dateColor: {
+                type: 'string',
+                format: 'color',
+            },
             backgroundImage: {
                 type: 'string'
             },
             userName: {
                 type: 'string'
             },
+            userNameColor: {
+                type: 'string',
+                format: 'color',
+            },
             avatar: {
                 type: 'string'
+            },
+            backgroundColor: {
+                type: 'string',
+                format: 'color',
             }
         }
+    };
+    const propertiesUISchema = {
+        type: "VerticalLayout",
+        elements: [
+            {
+                type: "HorizontalLayout",
+                elements: [
+                    {
+                        type: "Categorization",
+                        elements: [
+                            {
+                                type: "Category",
+                                label: "General settings",
+                                elements: [
+                                    {
+                                        type: "VerticalLayout",
+                                        elements: [
+                                            {
+                                                type: "Control",
+                                                scope: "#/properties/title",
+                                            },
+                                            {
+                                                type: "Control",
+                                                scope: "#/properties/description",
+                                            },
+                                            {
+                                                type: "Control",
+                                                scope: "#/properties/linkUrl",
+                                            },
+                                            {
+                                                type: "Control",
+                                                scope: "#/properties/isExternal",
+                                            },
+                                            {
+                                                type: "Control",
+                                                scope: "#/properties/date",
+                                            },
+                                            {
+                                                type: "Control",
+                                                scope: "#/properties/backgroundImage",
+                                            },
+                                            {
+                                                type: "Control",
+                                                scope: "#/properties/userName",
+                                            },
+                                            {
+                                                type: "Control",
+                                                scope: "#/properties/avatar",
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                            {
+                                type: "Category",
+                                label: "Theme settings",
+                                elements: [
+                                    {
+                                        type: "Control",
+                                        scope: "#/properties/titleFontColor",
+                                    },
+                                    {
+                                        type: "Control",
+                                        scope: "#/properties/descriptionFontColor",
+                                    },
+                                    {
+                                        type: "Control",
+                                        scope: "#/properties/linkTextColor",
+                                    },
+                                    {
+                                        type: "Control",
+                                        scope: "#/properties/dateColor",
+                                    },
+                                    {
+                                        type: "Control",
+                                        scope: "#/properties/userNameColor",
+                                    },
+                                    {
+                                        type: "Control",
+                                        scope: "#/properties/backgroundColor",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
     };
     const defaultColors = {
         dateColor: '#565656',
@@ -190,8 +313,11 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             const lazyLoad = this.getAttribute('lazyLoad', true, false);
             if (!lazyLoad) {
                 const data = this.getAttribute('data', true);
-                if (data)
-                    this.setData(data);
+                if (data) {
+                    const [generalSettings] = this.splitData(data);
+                    if (generalSettings)
+                        this.setData(generalSettings);
+                }
                 this.setTag({
                     titleFontColor: defaultColors.dateColor,
                     descriptionFontColor: defaultColors.dateColor,
@@ -221,6 +347,18 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             }
             this.onUpdateBlock(this.tag);
         }
+        splitData(userInputData) {
+            const { titleFontColor = defaultColors.dateColor, descriptionFontColor = defaultColors.dateColor, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor } = userInputData, generalSettings = __rest(userInputData, ["titleFontColor", "descriptionFontColor", "linkTextColor", "dateColor", "userNameColor", "backgroundColor"]);
+            const themeSettings = {
+                titleFontColor,
+                descriptionFontColor,
+                linkTextColor,
+                dateColor,
+                userNameColor,
+                backgroundColor
+            };
+            return [generalSettings, themeSettings];
+        }
         _getActions(propertiesSchema, themeSchema) {
             const actions = [
                 {
@@ -231,23 +369,40 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                             title: '',
                             backgroundImage: ''
                         };
+                        let _oldTag = {};
+                        const [generalSettings, themeSettings] = this.splitData(userInputData);
                         return {
                             execute: async () => {
                                 _oldData = Object.assign({}, this._data);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
-                                    builder.setData(userInputData);
-                                this.setData(userInputData);
+                                    builder.setData(generalSettings);
+                                this.setData(generalSettings);
+                                if (themeSettings) {
+                                    _oldTag = Object.assign({}, this.tag);
+                                    if (builder)
+                                        builder.setTag(themeSettings);
+                                    else
+                                        this.setTag(themeSettings);
+                                }
                             },
                             undo: () => {
                                 this._data = Object.assign({}, _oldData);
                                 if (builder === null || builder === void 0 ? void 0 : builder.setData)
                                     builder.setData(_oldData);
                                 this.setData(_oldData);
+                                if (themeSettings) {
+                                    this.tag = Object.assign({}, _oldTag);
+                                    if (builder)
+                                        builder.setTag(this.tag);
+                                    else
+                                        this.setTag(this.tag);
+                                }
                             },
                             redo: () => { }
                         };
                     },
-                    userInputDataSchema: propertiesSchema
+                    userInputDataSchema: propertiesSchema,
+                    userInputUISchema: propertiesUISchema
                 },
                 {
                     name: 'Theme Settings',
@@ -325,7 +480,8 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                         await this.setData(Object.assign({}, data));
                     },
                     getTag: this.getTag.bind(this),
-                    setTag: this.setTag.bind(this)
+                    setTag: this.setTag.bind(this),
+                    splitData: this.splitData.bind(this)
                 },
                 {
                     name: 'Emdedder Configurator',
@@ -333,7 +489,8 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     getData: this.getData.bind(this),
                     setData: this.setData.bind(this),
                     getTag: this.getTag.bind(this),
-                    setTag: this.setTag.bind(this)
+                    setTag: this.setTag.bind(this),
+                    splitData: this.splitData.bind(this)
                 }
             ];
         }
@@ -344,7 +501,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     ["areaImg"], ["areaDate"], ["areaDetails"]
                 ], overflow: "hidden", onClick: () => this.openLink() },
                 this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '56.25%' } },
-                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage || 'https://placehold.co/600x400?text=No+Image', fallbackUrl: 'https://placehold.co/600x400?text=No+Image', position: "absolute", left: "0px", top: "0px" })),
+                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage || 'https://placehold.co/600x400?text=No+Image', position: "absolute", left: "0px", top: "0px" })),
                 this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: backgroundColor || defaultColors.backgroundColor } },
                     this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!this._data.avatar },

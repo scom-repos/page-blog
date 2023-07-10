@@ -118,37 +118,76 @@ const propertiesUISchema: IUISchema = {
                   type: "VerticalLayout",
                   elements: [
                     {
-                      type: "Control",
-                      scope: "#/properties/title",
-                    },
-
-                    {
-                      type: "Control",
-                      scope: "#/properties/description",
-                    },
-                    {
-                      type: "Control",
-                      scope: "#/properties/linkUrl",
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/title",
+                        },
+                      ],
                     },
                     {
-                      type: "Control",
-                      scope: "#/properties/isExternal",
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/description",
+                        },
+                      ],
                     },
                     {
-                      type: "Control",
-                      scope: "#/properties/date",
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/linkUrl",
+                        },
+                      ],
                     },
                     {
-                      type: "Control",
-                      scope: "#/properties/backgroundImage",
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/isExternal",
+                        },
+                      ],
                     },
                     {
-                      type: "Control",
-                      scope: "#/properties/userName",
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/date",
+                        },
+                      ],
                     },
                     {
-                      type: "Control",
-                      scope: "#/properties/avatar",
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/backgroundImage",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/userName",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/avatar",
+                        },
+                      ],
                     },
                   ],
                 },
@@ -340,30 +379,30 @@ export default class Blog extends Module {
         },
         userInputDataSchema: propertiesSchema,
         userInputUISchema: propertiesUISchema
-      },
-      {
-        name: 'Theme Settings',
-        icon: 'palette',
-        command: (builder: any, userInputData: any) => {
-          let oldTag = {};
-          return {
-            execute: async () => {
-              if (!userInputData) return;
-              oldTag = {...this.tag};
-              if (builder) builder.setTag(userInputData);
-              else this.setTag(userInputData);
-            },
-            undo: () => {
-              if (!userInputData) return;
-              this.tag = {...oldTag};
-              if (builder) builder.setTag(this.tag);
-              else this.setTag(this.tag);
-            },
-            redo: () => { }
-          }
-        },
-        userInputDataSchema: themeSchema
       }
+      // {
+      //   name: 'Theme Settings',
+      //   icon: 'palette',
+      //   command: (builder: any, userInputData: any) => {
+      //     let oldTag = {};
+      //     return {
+      //       execute: async () => {
+      //         if (!userInputData) return;
+      //         oldTag = {...this.tag};
+      //         if (builder) builder.setTag(userInputData);
+      //         else this.setTag(userInputData);
+      //       },
+      //       undo: () => {
+      //         if (!userInputData) return;
+      //         this.tag = {...oldTag};
+      //         if (builder) builder.setTag(this.tag);
+      //         else this.setTag(this.tag);
+      //       },
+      //       redo: () => { }
+      //     }
+      //   },
+      //   userInputDataSchema: themeSchema
+      // }
     ];
     return actions;
   }
@@ -482,8 +521,8 @@ export default class Blog extends Module {
             </i-vstack>
           </i-hstack>
           <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center" gap="0.5rem" padding={{ bottom: '1rem' }}>
-            <i-label id="titleLb" caption={this._data.title} font={{ weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor }}></i-label>
-            <i-label id="descriptionLb" caption={this._data.description} font={{ size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor }}></i-label>
+            <i-label id="titleLb" caption={this._data.title || 'Blog title'} font={{ weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor }}></i-label>
+            <i-label id="descriptionLb" caption={this._data.description || ''} font={{ size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor }}></i-label>
             <i-label
               id="linkLb"
               caption="Read More"

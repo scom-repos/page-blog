@@ -116,36 +116,6 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_2.Styles.Theme.currentTheme;
-    // const configSchema = {
-    //   type: 'object',
-    //   required: [],
-    //   properties: {
-    //     titleFontColor: {
-    //       type: 'string',
-    //       format: 'color',
-    //     },
-    //     descriptionFontColor: {
-    //       type: 'string',
-    //       format: 'color',
-    //     },
-    //     linkTextColor: {
-    //       type: 'string',
-    //       format: 'color',
-    //     },
-    //     dateColor: {
-    //       type: 'string',
-    //       format: 'color',
-    //     },
-    //     userNameColor: {
-    //       type: 'string',
-    //       format: 'color',
-    //     },
-    //     backgroundColor: {
-    //       type: 'string',
-    //       format: 'color',
-    //     }
-    //   }
-    // }
     const propertiesSchema = {
         type: 'object',
         properties: {
@@ -181,7 +151,13 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                 type: 'string',
                 format: 'color',
             },
-            backgroundImage: {
+            backgroundImageCid: {
+                title: 'Background Image',
+                type: 'string',
+                format: 'data-cid'
+            },
+            backgroundImageUrl: {
+                title: 'Url',
                 type: 'string'
             },
             userName: {
@@ -343,7 +319,8 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             super(parent, options);
             this._data = {
                 title: '',
-                backgroundImage: ''
+                backgroundImageUrl: '',
+                backgroundImageCid: ''
             };
             this.tag = {};
             this.defaultEdit = true;
@@ -407,7 +384,8 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                     command: (builder, userInputData) => {
                         let _oldData = {
                             title: '',
-                            backgroundImage: ''
+                            backgroundImageUrl: '',
+                            backgroundImageCid: ''
                         };
                         let _oldTag = {};
                         const [generalSettings, themeSettings] = this.splitData(userInputData);
@@ -530,12 +508,16 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
         }
         onUpdateBlock(config) {
             const { titleFontColor = defaultColors.dateColor, descriptionFontColor = defaultColors.dateColor, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor } = config || {};
+            let url = this._data.backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
+            if (this._data.backgroundImageCid) {
+                url = "https://ipfs.scom.dev/ipfs/" + this._data.backgroundImageCid;
+            }
             this.pnlCardBody.clearInnerHTML();
             this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, templateAreas: [
                     ["areaImg"], ["areaDate"], ["areaDetails"]
                 ], overflow: "hidden", onClick: () => this.openLink() },
                 this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '56.25%' } },
-                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: this._data.backgroundImage || 'https://placehold.co/600x400?text=No+Image', position: "absolute", left: "0px", top: "0px" })),
+                    this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: url, position: "absolute", left: "0px", top: "0px" })),
                 this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: backgroundColor || defaultColors.backgroundColor } },
                     this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!this._data.avatar },
@@ -544,7 +526,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                             this.$render("i-label", { id: "dateLb", visible: !!this._data.date, caption: this.formatDate(this._data.date), font: { size: '0.8125rem', color: dateColor || defaultColors.dateColor } }),
                             this.$render("i-label", { id: "usernameLb", visible: !!this._data.userName, caption: this._data.userName, font: { size: '0.8125rem', color: userNameColor || defaultColors.userNameColor } }))),
                     this.$render("i-vstack", { grid: { area: "areaDetails" }, verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' } },
-                        this.$render("i-label", { id: "titleLb", caption: this._data.title || 'Blog title', font: { weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor } }),
+                        this.$render("i-label", { id: "titleLb", caption: this._data.title || '', font: { weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor } }),
                         this.$render("i-label", { id: "descriptionLb", caption: this._data.description || '', font: { size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor } }),
                         this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: this._data.linkUrl, target: this._data.isExternal ? "_blank" : "_self" }, font: { weight: 700, size: '0.875rem', color: linkTextColor || defaultColors.dateColor } })))));
         }

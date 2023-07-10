@@ -25,7 +25,8 @@ export interface PageBlock {
 
 export interface IConfig {
   title: string;
-  backgroundImage: string;
+  backgroundImageCid?: string;
+  backgroundImageUrl?: string;
   description?: string;
   linkUrl?: string;
   date?: string;

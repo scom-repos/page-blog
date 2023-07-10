@@ -15,36 +15,6 @@ import { cardItemStyle, cardStyle, imageStyle, avatarStyle, containerStyle } fro
 import dataJson from './data.json';
 
 const Theme = Styles.Theme.currentTheme;
-// const configSchema = {
-//   type: 'object',
-//   required: [],
-//   properties: {
-//     titleFontColor: {
-//       type: 'string',
-//       format: 'color',
-//     },
-//     descriptionFontColor: {
-//       type: 'string',
-//       format: 'color',
-//     },
-//     linkTextColor: {
-//       type: 'string',
-//       format: 'color',
-//     },
-//     dateColor: {
-//       type: 'string',
-//       format: 'color',
-//     },
-//     userNameColor: {
-//       type: 'string',
-//       format: 'color',
-//     },
-//     backgroundColor: {
-//       type: 'string',
-//       format: 'color',
-//     }
-//   }
-// }
 
 const propertiesSchema: IDataSchema = {
   type: 'object',
@@ -81,7 +51,13 @@ const propertiesSchema: IDataSchema = {
       type: 'string',
       format: 'color',
     },
-    backgroundImage: {
+    backgroundImageCid: {
+      title: 'Background Image',
+      type: 'string',
+      format: 'data-cid'
+    },
+    backgroundImageUrl: {
+      title: 'Url',
       type: 'string'
     },
     userName: {
@@ -255,7 +231,8 @@ export default class Blog extends Module {
   private pnlCardBody: Panel;
   private _data: IConfig = {
     title: '',
-    backgroundImage: ''
+    backgroundImageUrl: '',
+    backgroundImageCid: ''
   };
   tag: any = {};
   defaultEdit: boolean = true;
@@ -345,7 +322,8 @@ export default class Blog extends Module {
         command: (builder: any, userInputData: any) => {
           let _oldData: IConfig = {
             title: '',
-            backgroundImage: ''
+            backgroundImageUrl: '',
+            backgroundImageCid: ''
           };
           let _oldTag = {}
           const [generalSettings, themeSettings] = this.splitData(userInputData)
@@ -475,6 +453,10 @@ export default class Blog extends Module {
       userNameColor = defaultColors.userNameColor,
       backgroundColor = defaultColors.backgroundColor
     } = config || {};
+    let url = this._data.backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
+    if (this._data.backgroundImageCid) {
+      url = "https://ipfs.scom.dev/ipfs/" + this._data.backgroundImageCid;
+    }
     this.pnlCardBody.clearInnerHTML();
     this.pnlCardBody.appendChild(
       <i-grid-layout
@@ -496,7 +478,7 @@ export default class Blog extends Module {
             width='100%'
             height="100%"
             grid={{ area: "areaImg" }}
-            url={this._data.backgroundImage || 'https://placehold.co/600x400?text=No+Image'}
+            url={url}
             position="absolute" left="0px" top="0px"
           ></i-image>
         </i-panel>
@@ -521,7 +503,7 @@ export default class Blog extends Module {
             </i-vstack>
           </i-hstack>
           <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center" gap="0.5rem" padding={{ bottom: '1rem' }}>
-            <i-label id="titleLb" caption={this._data.title || 'Blog title'} font={{ weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor }}></i-label>
+            <i-label id="titleLb" caption={this._data.title || ''} font={{ weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor }}></i-label>
             <i-label id="descriptionLb" caption={this._data.description || ''} font={{ size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor }}></i-label>
             <i-label
               id="linkLb"

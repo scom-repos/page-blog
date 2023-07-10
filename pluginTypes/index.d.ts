@@ -19,7 +19,8 @@ declare module "@scom/scom-blog/interface.ts" {
     }
     export interface IConfig {
         title: string;
-        backgroundImage: string;
+        backgroundImageCid?: string;
+        backgroundImageUrl?: string;
         description?: string;
         linkUrl?: string;
         date?: string;

@@ -174,28 +174,43 @@ const propertiesUISchema: IUISchema = {
               label: "Theme settings",
               elements: [
                 {
-                  type: "Control",
-                  scope: "#/properties/titleFontColor",
-                },
-                {
-                  type: "Control",
-                  scope: "#/properties/descriptionFontColor",
-                },
-                {
-                  type: "Control",
-                  scope: "#/properties/linkTextColor",
-                },
-                {
-                  type: "Control",
-                  scope: "#/properties/dateColor",
-                },
-                {
-                  type: "Control",
-                  scope: "#/properties/userNameColor",
-                },
-                {
-                  type: "Control",
-                  scope: "#/properties/backgroundColor",
+                  type: "VerticalLayout",
+                  elements: [
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/titleFontColor",
+                        },
+                        {
+                          type: "Control",
+                          scope: "#/properties/descriptionFontColor",
+                        },
+                        {
+                          type: "Control",
+                          scope: "#/properties/linkTextColor",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/dateColor",
+                        },
+                        {
+                          type: "Control",
+                          scope: "#/properties/userNameColor",
+                        },
+                        {
+                          type: "Control",
+                          scope: "#/properties/backgroundColor",
+                        },
+                      ],
+                    },
+                  ],
                 },
               ],
             },

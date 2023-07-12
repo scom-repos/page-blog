@@ -33,6 +33,12 @@ export interface IConfig {
   userName?: string;
   avatar?: string;
   isExternal?: boolean;
+  titleFontColor?: string;
+  descriptionFontColor?: string;
+  linkTextColor?: string;
+  dateColor?: string;
+  userNameColor?: string;
+  backgroundColor?: string;
 }
 
 export interface ICommand {

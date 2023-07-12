@@ -27,6 +27,12 @@ declare module "@scom/scom-blog/interface.ts" {
         userName?: string;
         avatar?: string;
         isExternal?: boolean;
+        titleFontColor?: string;
+        descriptionFontColor?: string;
+        linkTextColor?: string;
+        dateColor?: string;
+        userNameColor?: string;
+        backgroundColor?: string;
     }
     export interface ICommand {
         execute(): void;
@@ -86,6 +92,7 @@ declare module "@scom/scom-blog" {
         private setData;
         private getTag;
         private setTag;
+        private splitData;
         private _getActions;
         getConfigurators(): ({
             name: string;
@@ -95,6 +102,7 @@ declare module "@scom/scom-blog" {
             setData: (data: IConfig) => Promise<void>;
             getTag: any;
             setTag: any;
+            splitData: any;
         } | {
             name: string;
             target: string;
@@ -102,6 +110,7 @@ declare module "@scom/scom-blog" {
             setData: any;
             getTag: any;
             setTag: any;
+            splitData: any;
             getActions?: undefined;
         })[];
         private onUpdateBlock;

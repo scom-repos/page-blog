@@ -7,7 +7,8 @@ import {
   customElements,
   Container,
   IDataSchema,
-  moment
+  moment,
+  IUISchema
 } from '@ijstech/components';
 import { IConfig, IPageBlockAction } from './interface';
 import { cardItemStyle, cardStyle, imageStyle, avatarStyle, containerStyle } from './index.css';
@@ -21,11 +22,23 @@ const propertiesSchema: IDataSchema = {
     title: {
       type: 'string'
     },
+    titleFontColor: {
+      type: 'string',
+      format: 'color',
+    },
     description: {
       type: 'string'
     },
+    descriptionFontColor: {
+      type: 'string',
+      format: 'color',
+    },
     linkUrl: {
       type: 'string'
+    },
+    linkTextColor: {
+      type: 'string',
+      format: 'color',
     },
     isExternal: {
       type: 'boolean'
@@ -33,6 +46,10 @@ const propertiesSchema: IDataSchema = {
     date: {
       type: 'string',
       format: 'date'
+    },
+    dateColor: {
+      type: 'string',
+      format: 'color',
     },
     backgroundImageCid: {
       title: 'Background Image',
@@ -46,10 +63,162 @@ const propertiesSchema: IDataSchema = {
     userName: {
       type: 'string'
     },
+    userNameColor: {
+      type: 'string',
+      format: 'color',
+    },
     avatar: {
       type: 'string'
+    },
+    backgroundColor: {
+      type: 'string',
+      format: 'color',
     }
   }
+};
+
+const propertiesUISchema: IUISchema = {
+  type: "VerticalLayout",
+  elements: [
+    {
+      type: "HorizontalLayout",
+      elements: [
+        {
+          type: "Categorization",
+          elements: [
+            {
+              type: "Category",
+              label: "General settings",
+              elements: [
+                {
+                  type: "VerticalLayout",
+                  elements: [
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/title",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/description",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/linkUrl",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/isExternal",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/date",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/backgroundImage",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/userName",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/avatar",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: "Category",
+              label: "Theme settings",
+              elements: [
+                {
+                  type: "VerticalLayout",
+                  elements: [
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/titleFontColor",
+                        },
+                        {
+                          type: "Control",
+                          scope: "#/properties/descriptionFontColor",
+                        },
+                        {
+                          type: "Control",
+                          scope: "#/properties/linkTextColor",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/dateColor",
+                        },
+                        {
+                          type: "Control",
+                          scope: "#/properties/userNameColor",
+                        },
+                        {
+                          type: "Control",
+                          scope: "#/properties/backgroundColor",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 const defaultColors = {
@@ -101,7 +270,10 @@ export default class Blog extends Module {
     const lazyLoad = this.getAttribute('lazyLoad', true, false);
     if (!lazyLoad) {
       const data = this.getAttribute('data', true);
-      if (data) this.setData(data);
+      if (data) {
+        const [generalSettings] = this.splitData(data)
+        if (generalSettings) this.setData(generalSettings);
+      }
       this.setTag({
         titleFontColor: defaultColors.dateColor,
         descriptionFontColor: defaultColors.dateColor,
@@ -118,7 +290,7 @@ export default class Blog extends Module {
   }
 
   private async setData(data: IConfig) {
-    this._data = data
+    this._data = data;
     this.onUpdateBlock(this.tag);
   }
 
@@ -136,6 +308,27 @@ export default class Blog extends Module {
     this.onUpdateBlock(this.tag);
   }
 
+  private splitData(userInputData: any) {
+    const {
+      titleFontColor = defaultColors.dateColor,
+      descriptionFontColor = defaultColors.dateColor,
+      linkTextColor = Theme.colors.primary.main,
+      dateColor = defaultColors.dateColor,
+      userNameColor = defaultColors.userNameColor,
+      backgroundColor = defaultColors.backgroundColor,
+      ...generalSettings
+    } = userInputData;
+    const themeSettings = {
+      titleFontColor,
+      descriptionFontColor,
+      linkTextColor,
+      dateColor,
+      userNameColor,
+      backgroundColor
+    }
+    return [generalSettings, themeSettings]
+  }
+
   private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
     const actions: IPageBlockAction[] = [
       {
@@ -147,45 +340,62 @@ export default class Blog extends Module {
             backgroundImageUrl: '',
             backgroundImageCid: ''
           };
+          let _oldTag = {}
+          const [generalSettings, themeSettings] = this.splitData(userInputData)
+
           return {
             execute: async () => {
               _oldData = {...this._data};
-              if (builder?.setData) builder.setData(userInputData);
-              this.setData(userInputData);
+
+              if (builder?.setData) builder.setData(generalSettings)              
+              this.setData(generalSettings);
+
+              if (themeSettings) {
+                _oldTag = {...this.tag};
+                if (builder) builder.setTag(themeSettings);
+                else this.setTag(themeSettings);
+              }
             },
             undo: () => {
               this._data = {..._oldData};
               if (builder?.setData) builder.setData(_oldData);
               this.setData(_oldData);
+              
+              if (themeSettings) {
+                this.tag = {..._oldTag};
+                if (builder) builder.setTag(this.tag);
+                else this.setTag(this.tag);
+              }              
             },
             redo: () => { }
           }
         },
-        userInputDataSchema: propertiesSchema
-      },
-      {
-        name: 'Theme Settings',
-        icon: 'palette',
-        command: (builder: any, userInputData: any) => {
-          let oldTag = {};
-          return {
-            execute: async () => {
-              if (!userInputData) return;
-              oldTag = {...this.tag};
-              if (builder) builder.setTag(userInputData);
-              else this.setTag(userInputData);
-            },
-            undo: () => {
-              if (!userInputData) return;
-              this.tag = {...oldTag};
-              if (builder) builder.setTag(this.tag);
-              else this.setTag(this.tag);
-            },
-            redo: () => { }
-          }
-        },
-        userInputDataSchema: themeSchema
+        userInputDataSchema: propertiesSchema,
+        userInputUISchema: propertiesUISchema
       }
+      // {
+      //   name: 'Theme Settings',
+      //   icon: 'palette',
+      //   command: (builder: any, userInputData: any) => {
+      //     let oldTag = {};
+      //     return {
+      //       execute: async () => {
+      //         if (!userInputData) return;
+      //         oldTag = {...this.tag};
+      //         if (builder) builder.setTag(userInputData);
+      //         else this.setTag(userInputData);
+      //       },
+      //       undo: () => {
+      //         if (!userInputData) return;
+      //         this.tag = {...oldTag};
+      //         if (builder) builder.setTag(this.tag);
+      //         else this.setTag(this.tag);
+      //       },
+      //       redo: () => { }
+      //     }
+      //   },
+      //   userInputDataSchema: themeSchema
+      // }
     ];
     return actions;
   }
@@ -234,7 +444,8 @@ export default class Blog extends Module {
           await this.setData({...data})
         },
         getTag: this.getTag.bind(this),
-        setTag: this.setTag.bind(this)
+        setTag: this.setTag.bind(this),
+        splitData: this.splitData.bind(this)
       },
       {
         name: 'Emdedder Configurator',
@@ -242,7 +453,8 @@ export default class Blog extends Module {
         getData: this.getData.bind(this),
         setData: this.setData.bind(this),
         getTag: this.getTag.bind(this),
-        setTag: this.setTag.bind(this)
+        setTag: this.setTag.bind(this),
+        splitData: this.splitData.bind(this)
       }
     ]
   }

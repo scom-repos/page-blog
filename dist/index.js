@@ -242,7 +242,16 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                                                 elements: [
                                                     {
                                                         type: "Control",
-                                                        scope: "#/properties/backgroundImage",
+                                                        scope: "#/properties/backgroundImageCid",
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/backgroundImageUrl",
                                                     },
                                                 ],
                                             },

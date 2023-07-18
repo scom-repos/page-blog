@@ -143,7 +143,16 @@ const propertiesUISchema: IUISchema = {
                       elements: [
                         {
                           type: "Control",
-                          scope: "#/properties/backgroundImage",
+                          scope: "#/properties/backgroundImageCid",
+                        },
+                      ],
+                    },
+                    {
+                      type: "HorizontalLayout",
+                      elements: [
+                        {
+                          type: "Control",
+                          scope: "#/properties/backgroundImageUrl",
                         },
                       ],
                     },

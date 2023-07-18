@@ -273,28 +273,43 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                                 label: "Theme settings",
                                 elements: [
                                     {
-                                        type: "Control",
-                                        scope: "#/properties/titleFontColor",
-                                    },
-                                    {
-                                        type: "Control",
-                                        scope: "#/properties/descriptionFontColor",
-                                    },
-                                    {
-                                        type: "Control",
-                                        scope: "#/properties/linkTextColor",
-                                    },
-                                    {
-                                        type: "Control",
-                                        scope: "#/properties/dateColor",
-                                    },
-                                    {
-                                        type: "Control",
-                                        scope: "#/properties/userNameColor",
-                                    },
-                                    {
-                                        type: "Control",
-                                        scope: "#/properties/backgroundColor",
+                                        type: "VerticalLayout",
+                                        elements: [
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/titleFontColor",
+                                                    },
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/descriptionFontColor",
+                                                    },
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/linkTextColor",
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                type: "HorizontalLayout",
+                                                elements: [
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/dateColor",
+                                                    },
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/userNameColor",
+                                                    },
+                                                    {
+                                                        type: "Control",
+                                                        scope: "#/properties/backgroundColor",
+                                                    },
+                                                ],
+                                            },
+                                        ],
                                     },
                                 ],
                             },
@@ -533,7 +548,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
         formatDate(date) {
             if (!date)
                 return '';
-            return (0, components_2.moment)(date, "DD/MM/YYYY").format('MMMM DD, YYYY');
+            return (0, components_2.moment)(date, "YYYY-MM-DD").format('MMMM DD, YYYY');
         }
         openLink() {
             if (!this._data.linkUrl)

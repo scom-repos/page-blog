@@ -534,7 +534,7 @@ export default class Blog extends Module {
 
   private formatDate(date: any) {
     if (!date) return '';
-    return moment(date, "DD/MM/YYYY").format('MMMM DD, YYYY');
+    return moment(date, "YYYY-MM-DD").format('MMMM DD, YYYY');
   }
 
   private openLink() {

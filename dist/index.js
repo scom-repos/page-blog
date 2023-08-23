@@ -403,8 +403,8 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
         _getActions(propertiesSchema, themeSchema) {
             const actions = [
                 {
-                    name: 'Settings',
-                    icon: 'cog',
+                    name: 'Edit',
+                    icon: 'edit',
                     command: (builder, userInputData) => {
                         let _oldData = {
                             title: '',

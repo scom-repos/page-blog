@@ -6,229 +6,14 @@ import {
   ControlElement,
   customElements,
   Container,
-  IDataSchema,
   moment,
-  IUISchema
+  IDataSchema
 } from '@ijstech/components';
 import { IConfig, IPageBlockAction } from './interface';
-import { cardItemStyle, cardStyle, imageStyle, avatarStyle, containerStyle } from './index.css';
-import dataJson from './data.json';
+import { cardItemStyle, cardStyle, imageStyle, containerStyle } from './index.css';
+import { propertiesSchema, propertiesUISchema } from './model/index';
 
 const Theme = Styles.Theme.currentTheme;
-
-const propertiesSchema: IDataSchema = {
-  type: 'object',
-  properties: {
-    title: {
-      type: 'string'
-    },
-    titleFontColor: {
-      type: 'string',
-      format: 'color',
-    },
-    description: {
-      type: 'string'
-    },
-    descriptionFontColor: {
-      type: 'string',
-      format: 'color',
-    },
-    linkUrl: {
-      type: 'string'
-    },
-    linkTextColor: {
-      type: 'string',
-      format: 'color',
-    },
-    isExternal: {
-      type: 'boolean'
-    },
-    date: {
-      type: 'string',
-      format: 'date'
-    },
-    dateColor: {
-      type: 'string',
-      format: 'color',
-    },
-    backgroundImageCid: {
-      title: 'Background Image',
-      type: 'string',
-      format: 'data-cid'
-    },
-    backgroundImageUrl: {
-      title: 'Url',
-      type: 'string'
-    },
-    userName: {
-      type: 'string'
-    },
-    userNameColor: {
-      type: 'string',
-      format: 'color',
-    },
-    avatar: {
-      type: 'string'
-    },
-    backgroundColor: {
-      type: 'string',
-      format: 'color',
-    }
-  }
-};
-
-const propertiesUISchema: IUISchema = {
-  type: "VerticalLayout",
-  elements: [
-    {
-      type: "HorizontalLayout",
-      elements: [
-        {
-          type: "Categorization",
-          elements: [
-            {
-              type: "Category",
-              label: "General settings",
-              elements: [
-                {
-                  type: "VerticalLayout",
-                  elements: [
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/title",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/description",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/linkUrl",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/isExternal",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/date",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/backgroundImageCid",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/backgroundImageUrl",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/userName",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/avatar",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              type: "Category",
-              label: "Theme settings",
-              elements: [
-                {
-                  type: "VerticalLayout",
-                  elements: [
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/titleFontColor",
-                        },
-                        {
-                          type: "Control",
-                          scope: "#/properties/descriptionFontColor",
-                        },
-                        {
-                          type: "Control",
-                          scope: "#/properties/linkTextColor",
-                        },
-                      ],
-                    },
-                    {
-                      type: "HorizontalLayout",
-                      elements: [
-                        {
-                          type: "Control",
-                          scope: "#/properties/dateColor",
-                        },
-                        {
-                          type: "Control",
-                          scope: "#/properties/userNameColor",
-                        },
-                        {
-                          type: "Control",
-                          scope: "#/properties/backgroundColor",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
 
 const defaultColors = {
   dateColor: '#565656',
@@ -382,29 +167,6 @@ export default class Blog extends Module {
         userInputDataSchema: propertiesSchema,
         userInputUISchema: propertiesUISchema
       }
-      // {
-      //   name: 'Theme Settings',
-      //   icon: 'palette',
-      //   command: (builder: any, userInputData: any) => {
-      //     let oldTag = {};
-      //     return {
-      //       execute: async () => {
-      //         if (!userInputData) return;
-      //         oldTag = {...this.tag};
-      //         if (builder) builder.setTag(userInputData);
-      //         else this.setTag(userInputData);
-      //       },
-      //       undo: () => {
-      //         if (!userInputData) return;
-      //         this.tag = {...oldTag};
-      //         if (builder) builder.setTag(this.tag);
-      //         else this.setTag(this.tag);
-      //       },
-      //       redo: () => { }
-      //     }
-      //   },
-      //   userInputDataSchema: themeSchema
-      // }
     ];
     return actions;
   }
@@ -448,8 +210,6 @@ export default class Blog extends Module {
         },
         getData: this.getData.bind(this),
         setData: async (data: IConfig) => {
-          // const defaultData = dataJson.defaultBuilderData as any;
-          // await this.setData({...defaultData, ...data})
           await this.setData({...data})
         },
         getTag: this.getTag.bind(this),
@@ -496,7 +256,12 @@ export default class Blog extends Module {
         overflow="hidden"
         onClick={() => this.openLink()}
       >
-        <i-panel overflow={{x: 'hidden', y: 'hidden'}} position="relative" padding={{top: '56.25%'}}>
+        <i-panel
+          overflow={{x: 'hidden', y: 'hidden'}}
+          position="relative"
+          width={'100%'}
+          padding={{top: '56.25%'}}
+        >
           <i-image
             class={imageStyle}
             width='100%'
@@ -509,7 +274,12 @@ export default class Blog extends Module {
         <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }} background={{ color: backgroundColor || defaultColors.backgroundColor }}>
           <i-hstack grid={{ area: "areaDate" }} verticalAlignment="center" gap="0.938rem" margin={{bottom: '0.75rem'}}>
             <i-panel width={50} height={50} visible={!!this._data.avatar}>
-              <i-image width="100%" height="100%" url={this._data.avatar} display="block" class={avatarStyle}></i-image>
+              <i-image
+                width="100%" height="100%"
+                url={this._data.avatar}
+                display="block" objectFit='cover'
+                border={{radius: '50%'}}
+              ></i-image>
             </i-panel>
             <i-vstack verticalAlignment="center" gap="0.25rem">
               <i-label

@@ -1,19 +1,22 @@
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
 };
 define("@scom/scom-blog/interface.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -100,22 +103,10 @@ define("@scom/scom-blog/index.css.ts", ["require", "exports", "@ijstech/componen
         margin: '0 auto'
     });
 });
-define("@scom/scom-blog/data.json.ts", ["require", "exports"], function (require, exports) {
+define("@scom/scom-blog/model/formSchema.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    ///<amd-module name='@scom/scom-blog/data.json.ts'/> 
-    exports.default = {
-    // "defaultBuilderData": {
-    //   title: 'Blog title',
-    //   description: 'Blog descripion',
-    //   backgroundImage: 'https://images.unsplash.com/photo-1637592036032-0a16278cc590?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
-    // }
-    };
-});
-define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts"], function (require, exports, components_2, index_css_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    const Theme = components_2.Styles.Theme.currentTheme;
+    exports.propertiesUISchema = exports.propertiesSchema = void 0;
     const propertiesSchema = {
         type: 'object',
         properties: {
@@ -176,6 +167,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             }
         }
     };
+    exports.propertiesSchema = propertiesSchema;
     const propertiesUISchema = {
         type: "VerticalLayout",
         elements: [
@@ -328,6 +320,18 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             },
         ],
     };
+    exports.propertiesUISchema = propertiesUISchema;
+});
+define("@scom/scom-blog/model/index.ts", ["require", "exports", "@scom/scom-blog/model/formSchema.ts"], function (require, exports, formSchema_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    ///<amd-module name='@scom/scom-blog/model/index.ts'/> 
+    __exportStar(formSchema_1, exports);
+});
+define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/scom-blog/index.css.ts", "@scom/scom-blog/model/index.ts"], function (require, exports, components_2, index_css_1, index_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    const Theme = components_2.Styles.Theme.currentTheme;
     const defaultColors = {
         dateColor: '#565656',
         userNameColor: '#565656',
@@ -389,7 +393,7 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             this.onUpdateBlock(this.tag);
         }
         splitData(userInputData) {
-            const { titleFontColor = defaultColors.dateColor, descriptionFontColor = defaultColors.dateColor, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor } = userInputData, generalSettings = __rest(userInputData, ["titleFontColor", "descriptionFontColor", "linkTextColor", "dateColor", "userNameColor", "backgroundColor"]);
+            const { titleFontColor = defaultColors.dateColor, descriptionFontColor = defaultColors.dateColor, linkTextColor = Theme.colors.primary.main, dateColor = defaultColors.dateColor, userNameColor = defaultColors.userNameColor, backgroundColor = defaultColors.backgroundColor, ...generalSettings } = userInputData;
             const themeSettings = {
                 titleFontColor,
                 descriptionFontColor,
@@ -415,12 +419,12 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                         const [generalSettings, themeSettings] = this.splitData(userInputData);
                         return {
                             execute: async () => {
-                                _oldData = Object.assign({}, this._data);
-                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
+                                _oldData = { ...this._data };
+                                if (builder?.setData)
                                     builder.setData(generalSettings);
                                 this.setData(generalSettings);
                                 if (themeSettings) {
-                                    _oldTag = Object.assign({}, this.tag);
+                                    _oldTag = { ...this.tag };
                                     if (builder)
                                         builder.setTag(themeSettings);
                                     else
@@ -428,12 +432,12 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                                 }
                             },
                             undo: () => {
-                                this._data = Object.assign({}, _oldData);
-                                if (builder === null || builder === void 0 ? void 0 : builder.setData)
+                                this._data = { ..._oldData };
+                                if (builder?.setData)
                                     builder.setData(_oldData);
                                 this.setData(_oldData);
                                 if (themeSettings) {
-                                    this.tag = Object.assign({}, _oldTag);
+                                    this.tag = { ..._oldTag };
                                     if (builder)
                                         builder.setTag(this.tag);
                                     else
@@ -444,31 +448,8 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                         };
                     },
                     userInputDataSchema: propertiesSchema,
-                    userInputUISchema: propertiesUISchema
+                    userInputUISchema: index_1.propertiesUISchema
                 }
-                // {
-                //   name: 'Theme Settings',
-                //   icon: 'palette',
-                //   command: (builder: any, userInputData: any) => {
-                //     let oldTag = {};
-                //     return {
-                //       execute: async () => {
-                //         if (!userInputData) return;
-                //         oldTag = {...this.tag};
-                //         if (builder) builder.setTag(userInputData);
-                //         else this.setTag(userInputData);
-                //       },
-                //       undo: () => {
-                //         if (!userInputData) return;
-                //         this.tag = {...oldTag};
-                //         if (builder) builder.setTag(this.tag);
-                //         else this.setTag(this.tag);
-                //       },
-                //       redo: () => { }
-                //     }
-                //   },
-                //   userInputDataSchema: themeSchema
-                // }
             ];
             return actions;
         }
@@ -507,13 +488,11 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
                                 }
                             }
                         };
-                        return this._getActions(propertiesSchema, themeSchema);
+                        return this._getActions(index_1.propertiesSchema, themeSchema);
                     },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
-                        // const defaultData = dataJson.defaultBuilderData as any;
-                        // await this.setData({...defaultData, ...data})
-                        await this.setData(Object.assign({}, data));
+                        await this.setData({ ...data });
                     },
                     getTag: this.getTag.bind(this),
                     setTag: this.setTag.bind(this),
@@ -540,12 +519,12 @@ define("@scom/scom-blog", ["require", "exports", "@ijstech/components", "@scom/s
             this.pnlCardBody.appendChild(this.$render("i-grid-layout", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: { radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }, templateAreas: [
                     ["areaImg"], ["areaDate"], ["areaDetails"]
                 ], overflow: "hidden", onClick: () => this.openLink() },
-                this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", padding: { top: '56.25%' } },
+                this.$render("i-panel", { overflow: { x: 'hidden', y: 'hidden' }, position: "relative", width: '100%', padding: { top: '56.25%' } },
                     this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", grid: { area: "areaImg" }, url: url, position: "absolute", left: "0px", top: "0px" })),
                 this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: backgroundColor || defaultColors.backgroundColor } },
                     this.$render("i-hstack", { grid: { area: "areaDate" }, verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!this._data.avatar },
-                            this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", class: index_css_1.avatarStyle })),
+                            this.$render("i-image", { width: "100%", height: "100%", url: this._data.avatar, display: "block", objectFit: 'cover', border: { radius: '50%' } })),
                         this.$render("i-vstack", { verticalAlignment: "center", gap: "0.25rem" },
                             this.$render("i-label", { id: "dateLb", visible: !!this._data.date, caption: this.formatDate(this._data.date), font: { size: '0.8125rem', color: dateColor || defaultColors.dateColor } }),
                             this.$render("i-label", { id: "usernameLb", visible: !!this._data.userName, caption: this._data.userName, font: { size: '0.8125rem', color: userNameColor || defaultColors.userNameColor } }))),

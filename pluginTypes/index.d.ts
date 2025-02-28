@@ -1,22 +1,6 @@
 /// <amd-module name="@scom/scom-blog/interface.ts" />
 declare module "@scom/scom-blog/interface.ts" {
     import { IconName, IDataSchema, IUISchema } from "@ijstech/components";
-    export interface PageBlock {
-        getData: () => any;
-        setData: (data: any) => Promise<void>;
-        getTag: () => any;
-        setTag: (tag: any) => Promise<void>;
-        validate?: () => boolean;
-        defaultEdit?: boolean;
-        tag?: any;
-        readonly onEdit: () => Promise<void>;
-        readonly onConfirm: () => Promise<void>;
-        readonly onDiscard: () => Promise<void>;
-        edit: () => Promise<void>;
-        confirm: () => Promise<void>;
-        discard: () => Promise<void>;
-        config: () => Promise<void>;
-    }
     export interface IConfig {
         title: string;
         backgroundImageCid?: string;
@@ -57,10 +41,16 @@ declare module "@scom/scom-blog/index.css.ts" {
     export const controlStyle: string;
     export const containerStyle: string;
 }
-/// <amd-module name="@scom/scom-blog/data.json.ts" />
-declare module "@scom/scom-blog/data.json.ts" {
-    const _default: {};
-    export default _default;
+/// <amd-module name="@scom/scom-blog/model/formSchema.ts" />
+declare module "@scom/scom-blog/model/formSchema.ts" {
+    import { IUISchema, IDataSchema } from "@ijstech/components";
+    const propertiesSchema: IDataSchema;
+    const propertiesUISchema: IUISchema;
+    export { propertiesSchema, propertiesUISchema };
+}
+/// <amd-module name="@scom/scom-blog/model/index.ts" />
+declare module "@scom/scom-blog/model/index.ts" {
+    export * from "@scom/scom-blog/model/formSchema.ts";
 }
 /// <amd-module name="@scom/scom-blog" />
 declare module "@scom/scom-blog" {

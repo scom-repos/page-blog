@@ -1,5 +1,5 @@
 {
-  "name": "@scom/scom-blog",
+  "name": "@scom/page-blog",
   "author": "IJS Technologies",
   "version": "0.1.8",
   "main": "dist/index.js",

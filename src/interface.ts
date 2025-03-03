@@ -5,17 +5,31 @@ export interface IConfig {
   backgroundImageCid?: string;
   backgroundImageUrl?: string;
   description?: string;
-  linkUrl?: string;
+  link?: string;
   date?: string;
   userName?: string;
   avatar?: string;
   isExternal?: boolean;
-  titleFontColor?: string;
-  descriptionFontColor?: string;
-  linkTextColor?: string;
+}
+
+interface IColors {
+  titleColor?: string;
+  descriptionColor?: string;
+  linkColor?: string;
   dateColor?: string;
   userNameColor?: string;
   backgroundColor?: string;
+}
+
+export interface ISettings {
+  titleFontSize?: string;
+  descriptionFontSize?: string;
+  linkTextSize?: string;
+  dateFontSize?: string;
+  userNameFontSize?: string;
+  boxShadow?: string;
+  light?: IColors;
+  dark?: IColors;
 }
 
 export interface ICommand {

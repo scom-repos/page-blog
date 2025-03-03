@@ -5,21 +5,14 @@ import {
   Panel,
   ControlElement,
   customElements,
-  Container,
-  moment,
-  IDataSchema
+  Container
 } from '@ijstech/components';
-import { IConfig, IPageBlockAction } from './interface';
+import { IConfig, ISettings } from './interface';
 import { cardItemStyle, cardStyle, imageStyle, containerStyle } from './index.css';
-import { propertiesSchema, propertiesUISchema } from './model/index';
+import { Model } from './model/index';
+import { defaultSettings, formatDate } from './utils';
 
-const Theme = Styles.Theme.currentTheme;
-
-const defaultColors = {
-  dateColor: '#565656',
-  userNameColor: '#565656',
-  backgroundColor: '#fff'
-}
+const Theme = Styles.Theme.ThemeVars;
 
 interface ScomBlogElement extends ControlElement {
   lazyLoad?: boolean;
@@ -29,25 +22,24 @@ interface ScomBlogElement extends ControlElement {
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      ['i-scom-blog']: ScomBlogElement;
+      ['i-scom-page-blog']: ScomBlogElement;
     }
   }
 }
 
 @customModule
-@customElements('i-scom-blog')
-export default class Blog extends Module {
-  private pnlCardBody: Panel;
-  private _data: IConfig = {
-    title: '',
-    backgroundImageUrl: '',
-    backgroundImageCid: ''
-  };
-  tag: any = {};
-  defaultEdit: boolean = true;
-  readonly onConfirm: () => Promise<void>;
-  readonly onDiscard: () => Promise<void>;
-  readonly onEdit: () => Promise<void>;
+@customElements('i-scom-page-blog')
+export default class ScomPageBlog extends Module {
+  private pnlCard: Panel;
+  private model: Model;
+
+  get data () {
+    return this.model.data;
+  }
+
+  set data (value: IConfig) {
+    this.model.data = value;
+  }
 
   static async create(options?: ScomBlogElement, parent?: Container) {
     let self = new this(parent, options);
@@ -61,203 +53,73 @@ export default class Blog extends Module {
 
   init() {
     super.init();
+    this.model = new Model({
+      onUpdateBlock: this.onUpdateBlock.bind(this),
+      onUpdateTheme: this.onUpdateTheme.bind(this)
+    });
     const lazyLoad = this.getAttribute('lazyLoad', true, false);
     if (!lazyLoad) {
       const data = this.getAttribute('data', true);
-      if (data) {
-        const [generalSettings] = this.splitData(data)
-        if (generalSettings) this.setData(generalSettings);
-      }
+      if (data) this.setData(data);
+
       this.setTag({
-        titleFontColor: defaultColors.dateColor,
-        descriptionFontColor: defaultColors.dateColor,
-        linkTextColor: Theme.colors.primary.main,
-        dateColor: defaultColors.dateColor,
-        userNameColor: defaultColors.userNameColor,
-        backgroundColor: defaultColors.backgroundColor
+        ...defaultSettings
       });
     }
   }
 
-  private getData() {
-    return this._data;
-  }
-
   private async setData(data: IConfig) {
-    this._data = data;
-    this.onUpdateBlock(this.tag);
+    await this.model.setData(data);
   }
 
-  private getTag() {
-    return this.tag;
-  }
-
-  private async setTag(value: any) {
-    const newValue = value || {};
-    for (let prop in newValue) {
-      if (newValue.hasOwnProperty(prop)) {
-        this.tag[prop] = newValue[prop];
-      }
-    }
-    this.onUpdateBlock(this.tag);
-  }
-
-  private splitData(userInputData: any) {
-    const {
-      titleFontColor = defaultColors.dateColor,
-      descriptionFontColor = defaultColors.dateColor,
-      linkTextColor = Theme.colors.primary.main,
-      dateColor = defaultColors.dateColor,
-      userNameColor = defaultColors.userNameColor,
-      backgroundColor = defaultColors.backgroundColor,
-      ...generalSettings
-    } = userInputData;
-    const themeSettings = {
-      titleFontColor,
-      descriptionFontColor,
-      linkTextColor,
-      dateColor,
-      userNameColor,
-      backgroundColor
-    }
-    return [generalSettings, themeSettings]
-  }
-
-  private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
-    const actions: IPageBlockAction[] = [
-      {
-        name: 'Edit',
-        icon: 'edit',
-        command: (builder: any, userInputData: any) => {
-          let _oldData: IConfig = {
-            title: '',
-            backgroundImageUrl: '',
-            backgroundImageCid: ''
-          };
-          let _oldTag = {}
-          const [generalSettings, themeSettings] = this.splitData(userInputData)
-
-          return {
-            execute: async () => {
-              _oldData = {...this._data};
-
-              if (builder?.setData) builder.setData(generalSettings)              
-              this.setData(generalSettings);
-
-              if (themeSettings) {
-                _oldTag = {...this.tag};
-                if (builder) builder.setTag(themeSettings);
-                else this.setTag(themeSettings);
-              }
-            },
-            undo: () => {
-              this._data = {..._oldData};
-              if (builder?.setData) builder.setData(_oldData);
-              this.setData(_oldData);
-              
-              if (themeSettings) {
-                this.tag = {..._oldTag};
-                if (builder) builder.setTag(this.tag);
-                else this.setTag(this.tag);
-              }              
-            },
-            redo: () => { }
-          }
-        },
-        userInputDataSchema: propertiesSchema,
-        userInputUISchema: propertiesUISchema
-      }
-    ];
-    return actions;
+  private setTag(value: ISettings) {
+    this.model.setTag(value);
   }
 
   getConfigurators() {
-    return [
-      {
-        name: 'Builder Configurator',
-        target: 'Builders',
-        getActions: () => {
-          const themeSchema: IDataSchema = {
-            type: 'object',
-            properties: {
-              titleFontColor: {
-                type: 'string',
-                format: 'color',
-              },
-              descriptionFontColor: {
-                type: 'string',
-                format: 'color',
-              },
-              linkTextColor: {
-                type: 'string',
-                format: 'color',
-              },
-              dateColor: {
-                type: 'string',
-                format: 'color',
-              },
-              userNameColor: {
-                type: 'string',
-                format: 'color',
-              },
-              backgroundColor: {
-                type: 'string',
-                format: 'color',
-              }
-            }
-          };
-          return this._getActions(propertiesSchema, themeSchema);
-        },
-        getData: this.getData.bind(this),
-        setData: async (data: IConfig) => {
-          await this.setData({...data})
-        },
-        getTag: this.getTag.bind(this),
-        setTag: this.setTag.bind(this),
-        splitData: this.splitData.bind(this)
-      },
-      {
-        name: 'Emdedder Configurator',
-        target: 'Embedders',
-        getData: this.getData.bind(this),
-        setData: this.setData.bind(this),
-        getTag: this.getTag.bind(this),
-        setTag: this.setTag.bind(this),
-        splitData: this.splitData.bind(this)
-      }
-    ]
+    return this.model.getConfigurators();
   }
 
-  private onUpdateBlock(config: any) {
+  private onUpdateBlock() {
     const {
-      titleFontColor = defaultColors.dateColor,
-      descriptionFontColor = defaultColors.dateColor,
-      linkTextColor = Theme.colors.primary.main,
-      dateColor = defaultColors.dateColor,
-      userNameColor = defaultColors.userNameColor,
-      backgroundColor = defaultColors.backgroundColor
-    } = config || {};
-    let url = this._data.backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
-    if (this._data.backgroundImageCid) {
-      url = "https://ipfs.scom.dev/ipfs/" + this._data.backgroundImageCid;
+      backgroundImageUrl = '',
+      backgroundImageCid = '',
+      avatar,
+      date,
+      userName,
+      title,
+      description,
+      link,
+      isExternal
+    } = this.data;
+
+    const {
+      titleFontSize,
+      descriptionFontSize,
+      linkTextSize,
+      dateFontSize,
+      userNameFontSize,
+      boxShadow
+    } = this.model.tag;
+
+    let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
+    if (backgroundImageCid) {
+      url = "https://ipfs.scom.dev/ipfs/" + backgroundImageCid;
     }
-    this.pnlCardBody.clearInnerHTML();
-    this.pnlCardBody.appendChild(
-      <i-grid-layout
+
+    this.pnlCard.clearInnerHTML();
+    this.pnlCard.appendChild(
+      <i-vstack
         width="100%"
         height="100%"
         class={cardItemStyle}
-        border={{ radius: 5, width: 1, style: 'solid', color: 'rgba(217,225,232,.38)' }}
-        templateAreas={
-          [
-            ["areaImg"], ["areaDate"], ["areaDetails"]
-          ]
-        }
+        border={{ radius: 6 }}
+        boxShadow={boxShadow || ''}
         overflow="hidden"
-        onClick={() => this.openLink()}
+        onClick={this.openLink}
       >
         <i-panel
-          overflow={{x: 'hidden', y: 'hidden'}}
+          overflow={"hidden"}
           position="relative"
           width={'100%'}
           padding={{top: '56.25%'}}
@@ -266,17 +128,18 @@ export default class Blog extends Module {
             class={imageStyle}
             width='100%'
             height="100%"
-            grid={{ area: "areaImg" }}
             url={url}
-            position="absolute" left="0px" top="0px"
+            position="absolute"
+            left="0px" top="0px"
+            objectFit='cover'
           ></i-image>
         </i-panel>
-        <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }} background={{ color: backgroundColor || defaultColors.backgroundColor }}>
-          <i-hstack grid={{ area: "areaDate" }} verticalAlignment="center" gap="0.938rem" margin={{bottom: '0.75rem'}}>
-            <i-panel width={50} height={50} visible={!!this._data.avatar}>
+        <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }} background={{ color: Theme.background.main }}>
+          <i-hstack verticalAlignment="center" gap="0.938rem" margin={{bottom: '0.75rem'}}>
+            <i-panel width={50} height={50} visible={!!avatar}>
               <i-image
                 width="100%" height="100%"
-                url={this._data.avatar}
+                url={avatar}
                 display="block" objectFit='cover'
                 border={{radius: '50%'}}
               ></i-image>
@@ -284,53 +147,68 @@ export default class Blog extends Module {
             <i-vstack verticalAlignment="center" gap="0.25rem">
               <i-label
                 id="dateLb"
-                visible={!!this._data.date}
-                caption={this.formatDate(this._data.date)}
-                font={{ size: '0.8125rem', color: dateColor || defaultColors.dateColor }}
+                visible={!!date}
+                caption={formatDate(date)}
+                font={{ size: dateFontSize || '0.8125rem', color: Theme.text.third }}
               ></i-label>
               <i-label
                 id="usernameLb"
-                visible={!!this._data.userName}
-                caption={this._data.userName}
-                font={{ size: '0.8125rem', color: userNameColor || defaultColors.userNameColor }}
+                visible={!!userName}
+                caption={userName}
+                font={{ size: userNameFontSize || '0.8125rem', color: Theme.text.disabled}}
               ></i-label>
             </i-vstack>
           </i-hstack>
-          <i-vstack grid={{ area: "areaDetails" }} verticalAlignment="center" gap="0.5rem" padding={{ bottom: '1rem' }}>
-            <i-label id="titleLb" caption={this._data.title || ''} font={{ weight: 700, size: '1.375rem', color: titleFontColor || defaultColors.dateColor }}></i-label>
-            <i-label id="descriptionLb" caption={this._data.description || ''} font={{ size: '0.875rem', color: descriptionFontColor || defaultColors.dateColor }}></i-label>
+          <i-vstack verticalAlignment="center" gap="0.5rem" padding={{ bottom: '1rem' }}>
+            <i-label
+              id="titleLb"
+              caption={title || ''}
+              font={{ weight: 700, size: titleFontSize || '1.375rem', color: Theme.text.primary }}
+            ></i-label>
+            <i-label
+              id="descriptionLb"
+              caption={description || ''}
+              font={{ size: descriptionFontSize || '0.875rem', color: Theme.text.secondary }}
+            ></i-label>
             <i-label
               id="linkLb"
               caption="Read More"
-              link={{ href: this._data.linkUrl, target: this._data.isExternal ? "_blank" :  "_self" }}
-              font={{ weight: 700, size: '0.875rem', color: linkTextColor || defaultColors.dateColor }}
+              link={{ href: link, target: isExternal ? "_blank" :  "_self" }}
+              font={{ weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint }}  
             ></i-label>
           </i-vstack>
         </i-panel>
-      </i-grid-layout>
+      </i-vstack>
     )
   }
 
-  private formatDate(date: any) {
-    if (!date) return '';
-    return moment(date, "YYYY-MM-DD").format('MMMM DD, YYYY');
+  private openLink() {
+    if (!this.data?.link) return;
+    if (this.data?.isExternal)
+      window.open(this.data.link);
+    else
+      window.location.href = this.data.link;
   }
 
-  private openLink() {
-    if (!this._data.linkUrl) return;
-    if (this._data.isExternal)
-      window.open(this._data.linkUrl);
-    else
-      window.location.href = this._data.linkUrl;
+  private onUpdateTheme() {
+    const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
+    this.updateStyle('--text-primary', this.model.tag[themeVar]?.titleColor);
+    this.updateStyle('--background-main', this.model.tag[themeVar]?.backgroundColor);
+    this.updateStyle('--text-secondary', this.model.tag[themeVar]?.descriptionColor);
+    this.updateStyle('--text-third', this.model.tag[themeVar]?.dateColor);
+    this.updateStyle('--text-disabled', this.model.tag[themeVar]?.userNameColor);
+    this.updateStyle('--text-hint', this.model.tag[themeVar]?.linkColor);
+  }
+
+  private updateStyle(name: string, value: any) {
+    value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
   }
 
   render() {
     return (
       <i-panel id="pnlBlock" class={cardStyle}>
-        <i-panel id="pnlCard">
-          <i-panel class={containerStyle}>
-            <i-panel id="pnlCardBody" minHeight={48}></i-panel>
-          </i-panel>
+        <i-panel class={containerStyle}>
+          <i-panel id="pnlCard" minHeight={48}></i-panel>
         </i-panel>
       </i-panel>
     )

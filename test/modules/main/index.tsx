@@ -1,14 +1,40 @@
 import { Module, customModule } from '@ijstech/components';
-import Blog from '@scom/scom-blog';
+import ScomPageBlog from '@scom/page-blog';
 
 @customModule
 export default class Main extends Module {
-  set maxWidth(value: number | string) {
-      this.style.maxWidth = "";
+  private blogEl: ScomPageBlog
+
+  init() {
+    super.init();
+    const config = this.blogEl.getConfigurators()[0];
+    if (config?.setTag) {
+      config.setTag({
+        titleFontSize: '1rem',
+        light: {
+          titleColor: 'red',
+          descriptionColor: 'blue',
+          linkColor: 'green',
+          dateColor: 'yellow',
+          userNameColor: 'purple',
+          backgroundColor: 'black'
+        },
+        dark: {
+          titleColor: 'red',
+          descriptionColor: 'blue',
+          linkColor: 'green',
+          dateColor: 'yellow',
+          userNameColor: 'purple',
+          backgroundColor: 'black'
+        }
+      })
+    }
   }
+
   render() {
     return <i-panel>
-      <i-scom-blog
+      <i-scom-page-blog
+        id="blogEl"
         display='block'
         width={300}
         data={{
@@ -17,9 +43,9 @@ export default class Main extends Module {
           "avatar": "//cdn.ijsweb.com/assets/8421b8b3-2d0d-4c79-8126-e8c80d254dda/IF_OS_TF.png",
           "userName": "IJS",
           "date": "2022-02-11",
-          "linkUrl": "https://www.ijs.network/defi2+-protocol/liquidity-queue-framework"
+          "link": "https://www.ijs.network/defi2+-protocol/liquidity-queue-framework"
       }}
-      ></i-scom-blog>
+      ></i-scom-page-blog>
     </i-panel>
   }
 }

@@ -8,6 +8,6 @@
     }
   },
   "dependencies": {
-    "@scom/scom-blog": "*"
+    "@scom/page-blog": "*"
   }
 }

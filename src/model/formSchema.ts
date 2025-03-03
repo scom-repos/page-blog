@@ -214,7 +214,38 @@ const propertiesUISchema: IUISchema = {
   ],
 };
 
+const themeSchema: IDataSchema = {
+  type: 'object',
+  properties: {
+    titleFontColor: {
+      type: 'string',
+      format: 'color',
+    },
+    descriptionFontColor: {
+      type: 'string',
+      format: 'color',
+    },
+    linkTextColor: {
+      type: 'string',
+      format: 'color',
+    },
+    dateColor: {
+      type: 'string',
+      format: 'color',
+    },
+    userNameColor: {
+      type: 'string',
+      format: 'color',
+    },
+    backgroundColor: {
+      type: 'string',
+      format: 'color',
+    }
+  }
+};
+
 export {
   propertiesSchema,
-  propertiesUISchema
+  propertiesUISchema,
+  themeSchema
 }

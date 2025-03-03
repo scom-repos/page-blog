@@ -25,31 +25,7 @@ export const cardItemStyle = Styles.style({
 export const imageStyle = Styles.style({
   $nest: {
     '> img': {
-      width: '100%',
-      objectFit: 'cover',
       objectPosition: 'center'
-    }
-  }
-})
-
-export const imageOverlayStyle = Styles.style({
-  $nest: {
-    '> img': {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      objectPosition: 'center'
-    }
-  }
-})
-
-export const avatarStyle = Styles.style({
-  $nest: {
-    '> img': {
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      objectFit: 'cover'
     }
   }
 })

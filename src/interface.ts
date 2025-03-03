@@ -1,44 +1,35 @@
 import { IconName, IDataSchema, IUISchema } from "@ijstech/components";
 
-export interface PageBlock {
-  // Properties
-  getData: () => any;
-  setData: (data: any) => Promise<void>;
-  getTag: () => any;
-  setTag: (tag: any) => Promise<void>
-  validate?: () => boolean;
-  defaultEdit?: boolean;
-  tag?: any;
-
-  // Page Events
-  readonly onEdit: () => Promise<void>;
-  readonly onConfirm: () => Promise<void>;
-  readonly onDiscard: () => Promise<void>;
-  // onClear: () => void;
-
-  // Page Block Events
-  edit: () => Promise<void>;
-  confirm: () => Promise<void>;
-  discard: () => Promise<void>;
-  config: () => Promise<void>;
-}
-
 export interface IConfig {
   title: string;
   backgroundImageCid?: string;
   backgroundImageUrl?: string;
   description?: string;
-  linkUrl?: string;
+  link?: string;
   date?: string;
   userName?: string;
   avatar?: string;
   isExternal?: boolean;
-  titleFontColor?: string;
-  descriptionFontColor?: string;
-  linkTextColor?: string;
+}
+
+interface IColors {
+  titleColor?: string;
+  descriptionColor?: string;
+  linkColor?: string;
   dateColor?: string;
   userNameColor?: string;
   backgroundColor?: string;
+}
+
+export interface ISettings {
+  titleFontSize?: string;
+  descriptionFontSize?: string;
+  linkTextSize?: string;
+  dateFontSize?: string;
+  userNameFontSize?: string;
+  boxShadow?: string;
+  light?: IColors;
+  dark?: IColors;
 }
 
 export interface ICommand {

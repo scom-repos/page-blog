@@ -10,7 +10,9 @@
     "devDependencies": {
         "@ijstech/cli": "^0.1.28",
         "@ijstech/compiler": "^0.1.22",
-        "@scom/scom-blog": "file:./ref"
+        "@scom/page-blog": "file:./ref",
+        "@scom/ton-core": "latest",
+        "@ijstech/ton-core": "latest"
     },
     "scripts": {
         "cp:libs": "rm -rf ref && mkdir ref && cp ../package.json ref/package.json && cp -r ../dist ref/dist && cp -r ../pluginTypes ref/pluginTypes",

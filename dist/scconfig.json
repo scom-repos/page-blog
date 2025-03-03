@@ -1,5 +1,5 @@
 {
-    "name": "@scom/scom-blog",
+    "name": "@scom/page-blog",
     "type": "widget",
     "version": "0.1.8",
     "dependencies": [

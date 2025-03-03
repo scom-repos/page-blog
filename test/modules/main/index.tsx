@@ -1,21 +1,51 @@
 import { Module, customModule } from '@ijstech/components';
-import Blog from '@scom/scom-blog';
+import ScomPageBlog from '@scom/page-blog';
 
 @customModule
 export default class Main extends Module {
-  set maxWidth(value: number | string) {
-      this.style.maxWidth = "";
+  private blogEl: ScomPageBlog
+
+  init() {
+    super.init();
+    const config = this.blogEl.getConfigurators()[0];
+    if (config?.setTag) {
+      config.setTag({
+        titleFontSize: '1rem',
+        light: {
+          titleColor: 'red',
+          descriptionColor: 'blue',
+          linkColor: 'green',
+          dateColor: 'yellow',
+          userNameColor: 'purple',
+          backgroundColor: 'black'
+        },
+        dark: {
+          titleColor: 'red',
+          descriptionColor: 'blue',
+          linkColor: 'green',
+          dateColor: 'yellow',
+          userNameColor: 'purple',
+          backgroundColor: 'black'
+        }
+      })
+    }
   }
+
   render() {
     return <i-panel>
-      <i-scom-blog data={{
-        title: 'Title',
-        description: 'Description',
-        backgroundImageUrl: 'https://images.unsplash.com/photo-1676715051398-ce7f932dcd5f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1146&q=80',
-        date: '01/01/2001',
-        userName: 'User',
-        avatar: 'https://images.unsplash.com/photo-1678198628337-e0f4abe54593?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80'
-      }}></i-scom-blog>
+      <i-scom-page-blog
+        id="blogEl"
+        display='block'
+        width={300}
+        data={{
+          "title": "IJS Makes Strategic Investment into Impossible Finance Leveraging OpenSwap’s Booster Queue Technology",
+          "backgroundImageUrl": "//cdn.ijsweb.com/assets/8421b8b3-2d0d-4c79-8126-e8c80d254dda/IF_OS_TF.png",
+          "avatar": "//cdn.ijsweb.com/assets/8421b8b3-2d0d-4c79-8126-e8c80d254dda/IF_OS_TF.png",
+          "userName": "IJS",
+          "date": "2022-02-11",
+          "link": "https://www.ijs.network/defi2+-protocol/liquidity-queue-framework"
+      }}
+      ></i-scom-page-blog>
     </i-panel>
   }
 }

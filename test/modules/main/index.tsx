@@ -33,7 +33,7 @@ export default class Main extends Module {
 
   render() {
     return <i-panel>
-      <i-scom-page-blog
+      <i-page-blog
         id="blogEl"
         display='block'
         width={300}
@@ -45,7 +45,7 @@ export default class Main extends Module {
           "date": "2022-02-11",
           "link": "https://www.ijs.network/defi2+-protocol/liquidity-queue-framework"
       }}
-      ></i-scom-page-blog>
+      ></i-page-blog>
     </i-panel>
   }
 }

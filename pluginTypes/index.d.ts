@@ -134,7 +134,7 @@ declare module "@scom/page-blog" {
     global {
         namespace JSX {
             interface IntrinsicElements {
-                ['i-scom-page-blog']: ScomBlogElement;
+                ['i-page-blog']: ScomBlogElement;
             }
         }
     }

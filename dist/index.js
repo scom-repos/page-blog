@@ -580,7 +580,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
     };
     ScomPageBlog = __decorate([
         components_3.customModule,
-        (0, components_3.customElements)('i-scom-page-blog')
+        (0, components_3.customElements)('i-page-blog')
     ], ScomPageBlog);
     exports.default = ScomPageBlog;
 });

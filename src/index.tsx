@@ -22,13 +22,13 @@ interface ScomBlogElement extends ControlElement {
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      ['i-scom-page-blog']: ScomBlogElement;
+      ['i-page-blog']: ScomBlogElement;
     }
   }
 }
 
 @customModule
-@customElements('i-scom-page-blog')
+@customElements('i-page-blog')
 export default class ScomPageBlog extends Module {
   private pnlCard: Panel;
   private model: Model;

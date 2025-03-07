@@ -28,6 +28,7 @@ export interface ISettings {
   dateFontSize?: string;
   userNameFontSize?: string;
   boxShadow?: string;
+  borderRadius?: string|number;
   light?: IColors;
   dark?: IColors;
 }

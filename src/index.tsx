@@ -8,7 +8,7 @@ import {
   Container
 } from '@ijstech/components';
 import { IConfig, ISettings } from './interface';
-import { cardItemStyle, cardStyle, imageStyle, containerStyle } from './index.css';
+import { cardItemStyle, cardStyle, imageStyle } from './index.css';
 import { Model } from './model/index';
 import { defaultSettings, formatDate } from './utils';
 
@@ -31,6 +31,7 @@ declare global {
 @customElements('i-page-blog')
 export default class ScomPageBlog extends Module {
   private pnlCard: Panel;
+  private pnlBlock: Panel;
   private model: Model;
 
   get data () {
@@ -99,7 +100,8 @@ export default class ScomPageBlog extends Module {
       linkTextSize,
       dateFontSize,
       userNameFontSize,
-      boxShadow
+      boxShadow,
+      borderRadius = 6
     } = this.model.tag;
 
     let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
@@ -107,14 +109,15 @@ export default class ScomPageBlog extends Module {
       url = "https://ipfs.scom.dev/ipfs/" + backgroundImageCid;
     }
 
+    if (boxShadow !== undefined) this.pnlBlock.boxShadow = boxShadow;
+
     this.pnlCard.clearInnerHTML();
     this.pnlCard.appendChild(
       <i-vstack
         width="100%"
         height="100%"
         class={cardItemStyle}
-        border={{ radius: 6 }}
-        boxShadow={boxShadow || ''}
+        border={{ radius: borderRadius }}
         overflow="hidden"
         onClick={this.openLink}
       >
@@ -134,8 +137,16 @@ export default class ScomPageBlog extends Module {
             objectFit='cover'
           ></i-image>
         </i-panel>
-        <i-panel padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }} background={{ color: Theme.background.main }}>
-          <i-hstack verticalAlignment="center" gap="0.938rem" margin={{bottom: '0.75rem'}}>
+        <i-vstack
+          padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}
+          background={{ color: Theme.background.main }}
+          stack={{grow: "1"}}
+        >
+          <i-hstack
+            verticalAlignment="center"
+            gap="0.938rem"
+            margin={{bottom: '0.75rem'}}
+          >
             <i-panel width={50} height={50} visible={!!avatar}>
               <i-image
                 width="100%" height="100%"
@@ -159,7 +170,13 @@ export default class ScomPageBlog extends Module {
               ></i-label>
             </i-vstack>
           </i-hstack>
-          <i-vstack verticalAlignment="center" gap="0.5rem" padding={{ bottom: '1rem' }}>
+          <i-vstack
+            verticalAlignment="center"
+            gap="0.5rem"
+            padding={{ bottom: '1rem' }}
+            stack={{grow: "1"}}
+            justifyContent='space-around'
+          >
             <i-label
               id="titleLb"
               caption={title || ''}
@@ -177,7 +194,7 @@ export default class ScomPageBlog extends Module {
               font={{ weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint }}  
             ></i-label>
           </i-vstack>
-        </i-panel>
+        </i-vstack>
       </i-vstack>
     )
   }
@@ -206,10 +223,8 @@ export default class ScomPageBlog extends Module {
 
   render() {
     return (
-      <i-panel id="pnlBlock" class={cardStyle}>
-        <i-panel class={containerStyle}>
-          <i-panel id="pnlCard" minHeight={48}></i-panel>
-        </i-panel>
+      <i-panel id="pnlBlock" class={cardStyle} height="100%">
+        <i-panel id="pnlCard" minHeight={48} height="100%"></i-panel>
       </i-panel>
     )
   }

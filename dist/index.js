@@ -531,23 +531,25 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
         }
         onUpdateBlock() {
             const { backgroundImageUrl = '', backgroundImageCid = '', avatar, date, userName, title, description, link, isExternal } = this.data;
-            const { titleFontSize, descriptionFontSize, linkTextSize, dateFontSize, userNameFontSize, boxShadow } = this.model.tag;
+            const { titleFontSize, descriptionFontSize, linkTextSize, dateFontSize, userNameFontSize, boxShadow, borderRadius = 6 } = this.model.tag;
             let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
             if (backgroundImageCid) {
                 url = "https://ipfs.scom.dev/ipfs/" + backgroundImageCid;
             }
+            if (boxShadow !== undefined)
+                this.pnlBlock.boxShadow = boxShadow;
             this.pnlCard.clearInnerHTML();
-            this.pnlCard.appendChild(this.$render("i-vstack", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: { radius: 6 }, boxShadow: boxShadow || '', overflow: "hidden", onClick: this.openLink },
+            this.pnlCard.appendChild(this.$render("i-vstack", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: { radius: borderRadius }, overflow: "hidden", onClick: this.openLink },
                 this.$render("i-panel", { overflow: "hidden", position: "relative", width: '100%', padding: { top: '56.25%' } },
                     this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", url: url, position: "absolute", left: "0px", top: "0px", objectFit: 'cover' })),
-                this.$render("i-panel", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: Theme.background.main } },
+                this.$render("i-vstack", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: Theme.background.main }, stack: { grow: "1" } },
                     this.$render("i-hstack", { verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!avatar },
                             this.$render("i-image", { width: "100%", height: "100%", url: avatar, display: "block", objectFit: 'cover', border: { radius: '50%' } })),
                         this.$render("i-vstack", { verticalAlignment: "center", gap: "0.25rem" },
                             this.$render("i-label", { id: "dateLb", visible: !!date, caption: (0, utils_1.formatDate)(date), font: { size: dateFontSize || '0.8125rem', color: Theme.text.third } }),
                             this.$render("i-label", { id: "usernameLb", visible: !!userName, caption: userName, font: { size: userNameFontSize || '0.8125rem', color: Theme.text.disabled } }))),
-                    this.$render("i-vstack", { verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' } },
+                    this.$render("i-vstack", { verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' }, stack: { grow: "1" }, justifyContent: 'space-around' },
                         this.$render("i-label", { id: "titleLb", caption: title || '', font: { weight: 700, size: titleFontSize || '1.375rem', color: Theme.text.primary } }),
                         this.$render("i-label", { id: "descriptionLb", caption: description || '', font: { size: descriptionFontSize || '0.875rem', color: Theme.text.secondary } }),
                         this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: link, target: isExternal ? "_blank" : "_self" }, font: { weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint } })))));
@@ -573,9 +575,8 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
         }
         render() {
-            return (this.$render("i-panel", { id: "pnlBlock", class: index_css_1.cardStyle },
-                this.$render("i-panel", { class: index_css_1.containerStyle },
-                    this.$render("i-panel", { id: "pnlCard", minHeight: 48 }))));
+            return (this.$render("i-panel", { id: "pnlBlock", class: index_css_1.cardStyle, height: "100%" },
+                this.$render("i-panel", { id: "pnlCard", minHeight: 48, height: "100%" })));
         }
     };
     ScomPageBlog = __decorate([

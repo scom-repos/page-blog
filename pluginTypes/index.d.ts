@@ -27,6 +27,7 @@ declare module "@scom/page-blog/interface.ts" {
         dateFontSize?: string;
         userNameFontSize?: string;
         boxShadow?: string;
+        borderRadius?: string | number;
         light?: IColors;
         dark?: IColors;
     }
@@ -140,6 +141,7 @@ declare module "@scom/page-blog" {
     }
     export default class ScomPageBlog extends Module {
         private pnlCard;
+        private pnlBlock;
         private model;
         get data(): IConfig;
         set data(value: IConfig);

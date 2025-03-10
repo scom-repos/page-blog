@@ -11,6 +11,7 @@ import { IConfig, ISettings } from './interface';
 import { cardItemStyle, cardStyle, imageStyle } from './index.css';
 import { Model } from './model/index';
 import { defaultSettings, formatDate } from './utils';
+import translation from './translation.json';
 
 const Theme = Styles.Theme.ThemeVars;
 
@@ -53,6 +54,7 @@ export default class ScomPageBlog extends Module {
   }
 
   init() {
+    this.i18n.init({...translation});
     super.init();
     this.model = new Model({
       onUpdateBlock: this.onUpdateBlock.bind(this),
@@ -189,7 +191,7 @@ export default class ScomPageBlog extends Module {
             ></i-label>
             <i-label
               id="linkLb"
-              caption="Read More"
+              caption="$read_more"
               link={{ href: link, target: isExternal ? "_blank" :  "_self" }}
               font={{ weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint }}  
             ></i-label>

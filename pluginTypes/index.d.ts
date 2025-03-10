@@ -124,6 +124,21 @@ declare module "@scom/page-blog/utils.ts" {
     };
     export { formatDate, defaultSettings };
 }
+/// <amd-module name="@scom/page-blog/translation.json.ts" />
+declare module "@scom/page-blog/translation.json.ts" {
+    const _default: {
+        en: {
+            read_more: string;
+        };
+        "zh-hant": {
+            read_more: string;
+        };
+        vi: {
+            read_more: string;
+        };
+    };
+    export default _default;
+}
 /// <amd-module name="@scom/page-blog" />
 declare module "@scom/page-blog" {
     import { Module, ControlElement, Container } from '@ijstech/components';

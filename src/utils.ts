@@ -1,10 +1,13 @@
-import { moment, Styles } from "@ijstech/components";
+import { moment, Styles, application } from "@ijstech/components";
 
 const Theme = Styles.Theme.currentTheme;
 
 const formatDate = (date: any) => {
   if (!date) return '';
-  return moment(date, "YYYY-MM-DD").format('MMMM DD, YYYY');
+  const currentLg = application.locale;
+  const locale = currentLg.startsWith('zh') ? 'zh-hk' : currentLg;
+  if (locale !== moment.locale()) moment.locale(locale);
+  return moment(date, 'YYYY-MM-DD').format('MMMM DD, YYYY');
 }
 
 const defaultColors = {

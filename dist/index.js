@@ -460,7 +460,11 @@ define("@scom/page-blog/utils.ts", ["require", "exports", "@ijstech/components"]
     const formatDate = (date) => {
         if (!date)
             return '';
-        return (0, components_2.moment)(date, "YYYY-MM-DD").format('MMMM DD, YYYY');
+        const currentLg = components_2.application.locale;
+        const locale = currentLg.startsWith('zh') ? 'zh-hk' : currentLg;
+        if (locale !== components_2.moment.locale())
+            components_2.moment.locale(locale);
+        return (0, components_2.moment)(date, 'YYYY-MM-DD').format('MMMM DD, YYYY');
     };
     exports.formatDate = formatDate;
     const defaultColors = {
@@ -485,7 +489,23 @@ define("@scom/page-blog/utils.ts", ["require", "exports", "@ijstech/components"]
     };
     exports.defaultSettings = defaultSettings;
 });
-define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/page-blog/index.css.ts", "@scom/page-blog/model/index.ts", "@scom/page-blog/utils.ts"], function (require, exports, components_3, index_css_1, index_1, utils_1) {
+define("@scom/page-blog/translation.json.ts", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    ///<amd-module name='@scom/page-blog/translation.json.ts'/> 
+    exports.default = {
+        "en": {
+            "read_more": "Read More"
+        },
+        "zh-hant": {
+            "read_more": "阅读更多"
+        },
+        "vi": {
+            "read_more": "Xem thêm"
+        }
+    };
+});
+define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/page-blog/index.css.ts", "@scom/page-blog/model/index.ts", "@scom/page-blog/utils.ts", "@scom/page-blog/translation.json.ts"], function (require, exports, components_3, index_css_1, index_1, utils_1, translation_json_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const Theme = components_3.Styles.Theme.ThemeVars;
@@ -505,6 +525,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             super(parent, options);
         }
         init() {
+            this.i18n.init({ ...translation_json_1.default });
             super.init();
             this.model = new index_1.Model({
                 onUpdateBlock: this.onUpdateBlock.bind(this),
@@ -552,7 +573,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
                     this.$render("i-vstack", { verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' }, stack: { grow: "1" }, justifyContent: 'space-around' },
                         this.$render("i-label", { id: "titleLb", caption: title || '', font: { weight: 700, size: titleFontSize || '1.375rem', color: Theme.text.primary } }),
                         this.$render("i-label", { id: "descriptionLb", caption: description || '', font: { size: descriptionFontSize || '0.875rem', color: Theme.text.secondary } }),
-                        this.$render("i-label", { id: "linkLb", caption: "Read More", link: { href: link, target: isExternal ? "_blank" : "_self" }, font: { weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint } })))));
+                        this.$render("i-label", { id: "linkLb", caption: "$read_more", link: { href: link, target: isExternal ? "_blank" : "_self" }, font: { weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint } })))));
         }
         openLink() {
             if (!this.data?.link)

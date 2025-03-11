@@ -525,7 +525,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             super(parent, options);
         }
         init() {
-            this.i18n.init({ ...translation_json_1.default });
+            this.i18n.init(translation_json_1.default);
             super.init();
             this.model = new index_1.Model({
                 onUpdateBlock: this.onUpdateBlock.bind(this),

@@ -54,7 +54,7 @@ export default class ScomPageBlog extends Module {
   }
 
   init() {
-    this.i18n.init({...translation});
+    this.i18n.init(translation);
     super.init();
     this.model = new Model({
       onUpdateBlock: this.onUpdateBlock.bind(this),

@@ -498,7 +498,7 @@ define("@scom/page-blog/translation.json.ts", ["require", "exports"], function (
             "read_more": "Read More"
         },
         "zh-hant": {
-            "read_more": "阅读更多"
+            "read_more": "閱讀更多"
         },
         "vi": {
             "read_more": "Xem thêm"

@@ -29,7 +29,55 @@ declare global {
 }
 
 @customModule
-@customElements('i-page-blog')
+@customElements('i-page-blog', {
+  icon: 'stop',
+  props: {
+    data: {
+      type: 'object',
+      default: {}
+    }
+  },
+  className: 'ScomPageBlog',
+  events: {},
+  dataSchema: {
+    type: 'object',
+    properties: {
+      data: {
+        type: 'object',
+        properties: {
+          title: {
+            type: 'string',
+          },
+          backgroundImageCid: {
+            type: 'string'
+          },
+          backgroundImageUrl: {
+            type: 'string'
+          },
+          description: {
+            type: 'string'
+          },
+          link: {
+            type: 'string'
+          },
+          date: {
+            format: 'date',
+            type: 'string'
+          },
+          userName: {
+            type: 'string'
+          },
+          avatar: {
+            type: 'string'
+          },
+          isExternal: {
+            type: 'boolean'
+          }
+        }
+      }
+    }
+  }
+})
 export default class ScomPageBlog extends Module {
   private pnlCard: Panel;
   private pnlBlock: Panel;
@@ -64,11 +112,13 @@ export default class ScomPageBlog extends Module {
     if (!lazyLoad) {
       const data = this.getAttribute('data', true);
       if (data) this.setData(data);
-
-      this.setTag({
-        ...defaultSettings
-      });
     }
+
+    const tag = this.getAttribute('tag', true);
+    if (tag) this.setTag(tag);
+    else this.setTag({
+      ...defaultSettings
+    });
   }
 
   private async setData(data: IConfig) {

@@ -536,10 +536,14 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
                 const data = this.getAttribute('data', true);
                 if (data)
                     this.setData(data);
+            }
+            const tag = this.getAttribute('tag', true);
+            if (tag)
+                this.setTag(tag);
+            else
                 this.setTag({
                     ...utils_1.defaultSettings
                 });
-            }
         }
         async setData(data) {
             await this.model.setData(data);
@@ -602,7 +606,55 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
     };
     ScomPageBlog = __decorate([
         components_3.customModule,
-        (0, components_3.customElements)('i-page-blog')
+        (0, components_3.customElements)('i-page-blog', {
+            icon: 'stop',
+            props: {
+                data: {
+                    type: 'object',
+                    default: {}
+                }
+            },
+            className: 'ScomPageBlog',
+            events: {},
+            dataSchema: {
+                type: 'object',
+                properties: {
+                    data: {
+                        type: 'object',
+                        properties: {
+                            title: {
+                                type: 'string',
+                            },
+                            backgroundImageCid: {
+                                type: 'string'
+                            },
+                            backgroundImageUrl: {
+                                type: 'string'
+                            },
+                            description: {
+                                type: 'string'
+                            },
+                            link: {
+                                type: 'string'
+                            },
+                            date: {
+                                format: 'date',
+                                type: 'string'
+                            },
+                            userName: {
+                                type: 'string'
+                            },
+                            avatar: {
+                                type: 'string'
+                            },
+                            isExternal: {
+                                type: 'boolean'
+                            }
+                        }
+                    }
+                }
+            }
+        })
     ], ScomPageBlog);
     exports.default = ScomPageBlog;
 });

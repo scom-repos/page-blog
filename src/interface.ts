@@ -10,6 +10,7 @@ export interface IConfig {
   userName?: string;
   avatar?: string;
   isExternal?: boolean;
+  linkText?: string;
 }
 
 interface IColors {

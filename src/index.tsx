@@ -60,6 +60,9 @@ declare global {
           link: {
             type: 'string'
           },
+          linkText: {
+            type: 'string'
+          },
           date: {
             format: 'date',
             type: 'string'
@@ -104,6 +107,7 @@ export default class ScomPageBlog extends Module {
   init() {
     this.i18n.init({...translation});
     super.init();
+    this.openLink = this.openLink.bind(this);
     this.model = new Model({
       onUpdateBlock: this.onUpdateBlock.bind(this),
       onUpdateTheme: this.onUpdateTheme.bind(this)
@@ -143,6 +147,7 @@ export default class ScomPageBlog extends Module {
       title,
       description,
       link,
+      linkText,
       isExternal
     } = this.data;
 
@@ -189,15 +194,18 @@ export default class ScomPageBlog extends Module {
             objectFit='cover'
           ></i-image>
         </i-panel>
-        <i-vstack
+        <i-grid-layout
           padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}
           background={{ color: Theme.background.main }}
           stack={{grow: "1"}}
+          autoFillInHoles
+          templateAreas={avatar ? [['date'], ['title']] : [['title'], ['date']]}
         >
           <i-hstack
             verticalAlignment="center"
             gap="0.938rem"
             margin={{bottom: '0.75rem'}}
+            grid={{area: 'date'}}
           >
             <i-panel width={50} height={50} visible={!!avatar}>
               <i-image
@@ -207,20 +215,47 @@ export default class ScomPageBlog extends Module {
                 border={{radius: '50%'}}
               ></i-image>
             </i-panel>
-            <i-vstack verticalAlignment="center" gap="0.25rem">
-              <i-label
-                id="dateLb"
-                visible={!!date}
-                caption={formatDate(date)}
-                font={{ size: dateFontSize || '0.8125rem', color: Theme.text.third }}
-              ></i-label>
-              <i-label
-                id="usernameLb"
-                visible={!!userName}
-                caption={userName}
-                font={{ size: userNameFontSize || '0.8125rem', color: Theme.text.disabled}}
-              ></i-label>
-            </i-vstack>
+            <i-stack
+              gap={avatar ? '0.25rem' : '0.675rem'}
+              direction={avatar ? 'vertical' : 'horizontal'}
+            >
+              <i-hstack
+                verticalAlignment="center"
+                gap="0.25rem"
+              >
+                <i-icon
+                  stack={{shrink: '0'}}
+                  name="calendar"
+                  fill={Theme.text.disabled}
+                  visible={!avatar}
+                  width="0.75rem" height="0.75rem"
+                ></i-icon>
+                <i-label
+                  id="dateLb"
+                  visible={!!date}
+                  caption={formatDate(date)}
+                  font={{ size: dateFontSize || '0.8125rem', color: Theme.text.third }}
+                ></i-label>
+              </i-hstack>
+              <i-hstack
+                verticalAlignment="center"
+                gap="0.25rem"
+              >
+                <i-icon
+                  stack={{shrink: '0'}}
+                  name="eye"
+                  fill={Theme.text.disabled}
+                  visible={!avatar}
+                  width="0.75rem" height="0.75rem"
+                ></i-icon>
+                <i-label
+                  id="usernameLb"
+                  visible={!!userName}
+                  caption={userName}
+                  font={{ size: userNameFontSize || '0.8125rem', color: Theme.text.disabled}}
+                ></i-label>
+              </i-hstack>
+            </i-stack>
           </i-hstack>
           <i-vstack
             verticalAlignment="center"
@@ -228,6 +263,7 @@ export default class ScomPageBlog extends Module {
             padding={{ bottom: '1rem' }}
             stack={{grow: "1"}}
             justifyContent='space-around'
+            grid={{area: 'title'}}
           >
             <i-label
               id="titleLb"
@@ -241,12 +277,13 @@ export default class ScomPageBlog extends Module {
             ></i-label>
             <i-label
               id="linkLb"
+              visible={!!linkText}
               caption="$read_more"
               link={{ href: link, target: isExternal ? "_blank" :  "_self" }}
-              font={{ weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint }}  
+              font={{ weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint }}
             ></i-label>
           </i-vstack>
-        </i-vstack>
+        </i-grid-layout>
       </i-vstack>
     )
   }

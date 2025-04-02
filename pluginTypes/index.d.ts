@@ -11,6 +11,7 @@ declare module "@scom/page-blog/interface.ts" {
         userName?: string;
         avatar?: string;
         isExternal?: boolean;
+        linkText?: string;
     }
     interface IColors {
         titleColor?: string;

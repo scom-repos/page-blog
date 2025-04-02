@@ -1,49 +1,37 @@
-import { IconName, IDataSchema, IUISchema } from "@ijstech/components";
+import { IBorder, IFont } from "@ijstech/components";
 
-export interface IConfig {
+export interface IBlogItem {
   title: string;
   backgroundImageCid?: string;
   backgroundImageUrl?: string;
   description?: string;
-  link?: string;
+  link?: {
+    caption?: string;
+    url?: string;
+  };
   date?: string;
   userName?: string;
   avatar?: string;
   isExternal?: boolean;
-  linkText?: string;
 }
 
 interface IColors {
-  titleColor?: string;
-  descriptionColor?: string;
-  linkColor?: string;
-  dateColor?: string;
-  userNameColor?: string;
-  backgroundColor?: string;
 }
 
-export interface ISettings {
-  titleFontSize?: string;
-  descriptionFontSize?: string;
-  linkTextSize?: string;
-  dateFontSize?: string;
-  userNameFontSize?: string;
+interface IStyles {
+  font?: IFont;
+}
+
+export interface IBlogSettings {
+  title?: IStyles;
+  description?: IStyles;
+  date?: IStyles;
+  userName?: IStyles;
+  link?: IStyles;
   boxShadow?: string;
-  borderRadius?: string|number;
+  border?: IBorder;
+  background?: {color?: string};
   light?: IColors;
   dark?: IColors;
 }
 
-export interface ICommand {
-  execute(): void;
-  undo(): void;
-  redo(): void;
-}
-
-export interface IPageBlockAction {
-	name?: string;
-	icon?: IconName;
-	command?: (builder: any, userInputData: any) => ICommand;
-	userInputDataSchema?: IDataSchema;
-  userInputUISchema?: IUISchema;
-}

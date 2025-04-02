@@ -1,48 +1,38 @@
 /// <amd-module name="@scom/page-blog/interface.ts" />
 declare module "@scom/page-blog/interface.ts" {
-    import { IconName, IDataSchema, IUISchema } from "@ijstech/components";
-    export interface IConfig {
+    import { IBorder, IFont } from "@ijstech/components";
+    export interface IBlogItem {
         title: string;
         backgroundImageCid?: string;
         backgroundImageUrl?: string;
         description?: string;
-        link?: string;
+        link?: {
+            caption?: string;
+            url?: string;
+        };
         date?: string;
         userName?: string;
         avatar?: string;
         isExternal?: boolean;
-        linkText?: string;
     }
     interface IColors {
-        titleColor?: string;
-        descriptionColor?: string;
-        linkColor?: string;
-        dateColor?: string;
-        userNameColor?: string;
-        backgroundColor?: string;
     }
-    export interface ISettings {
-        titleFontSize?: string;
-        descriptionFontSize?: string;
-        linkTextSize?: string;
-        dateFontSize?: string;
-        userNameFontSize?: string;
+    interface IStyles {
+        font?: IFont;
+    }
+    export interface IBlogSettings {
+        title?: IStyles;
+        description?: IStyles;
+        date?: IStyles;
+        userName?: IStyles;
+        link?: IStyles;
         boxShadow?: string;
-        borderRadius?: string | number;
+        border?: IBorder;
+        background?: {
+            color?: string;
+        };
         light?: IColors;
         dark?: IColors;
-    }
-    export interface ICommand {
-        execute(): void;
-        undo(): void;
-        redo(): void;
-    }
-    export interface IPageBlockAction {
-        name?: string;
-        icon?: IconName;
-        command?: (builder: any, userInputData: any) => ICommand;
-        userInputDataSchema?: IDataSchema;
-        userInputUISchema?: IUISchema;
     }
 }
 /// <amd-module name="@scom/page-blog/index.css.ts" />
@@ -53,17 +43,9 @@ declare module "@scom/page-blog/index.css.ts" {
     export const controlStyle: string;
     export const containerStyle: string;
 }
-/// <amd-module name="@scom/page-blog/model/formSchema.ts" />
-declare module "@scom/page-blog/model/formSchema.ts" {
-    import { IUISchema, IDataSchema } from "@ijstech/components";
-    const propertiesSchema: IDataSchema;
-    const propertiesUISchema: IUISchema;
-    const themeSchema: IDataSchema;
-    export { propertiesSchema, propertiesUISchema, themeSchema };
-}
 /// <amd-module name="@scom/page-blog/model/index.ts" />
 declare module "@scom/page-blog/model/index.ts" {
-    import { IConfig, IPageBlockAction, ISettings } from "@scom/page-blog/interface.ts";
+    import { IBlogItem, IBlogSettings } from "@scom/page-blog/interface.ts";
     interface IOptions {
         onUpdateBlock?: () => void;
         onUpdateTheme?: () => void;
@@ -73,57 +55,64 @@ declare module "@scom/page-blog/model/index.ts" {
         private _tag;
         private _options;
         constructor(options: IOptions);
-        get tag(): ISettings;
-        set tag(value: ISettings);
-        get data(): IConfig;
-        set data(value: IConfig);
-        setData(data: IConfig): Promise<void>;
+        get tag(): IBlogSettings;
+        set tag(value: IBlogSettings);
+        get data(): IBlogItem;
+        set data(value: IBlogItem);
+        setData(data: IBlogItem): Promise<void>;
         private getData;
-        setTag(value: ISettings): void;
+        setTag(value: IBlogSettings): void;
         private updateTag;
         private getTag;
-        getConfigurators(): ({
-            name: string;
-            target: string;
-            getActions: () => IPageBlockAction[];
-            getData: any;
-            setData: (data: IConfig) => Promise<void>;
-            getTag: any;
-            setTag: any;
-        } | {
+        getConfigurators(): {
             name: string;
             target: string;
             getData: any;
             setData: any;
             getTag: any;
             setTag: any;
-            getActions?: undefined;
-        })[];
-        private _getActions;
+        }[];
     }
 }
 /// <amd-module name="@scom/page-blog/utils.ts" />
 declare module "@scom/page-blog/utils.ts" {
     const formatDate: (date: any) => string;
+    const merge: (...objects: any[]) => any;
     const defaultSettings: {
-        light: {
-            titleColor: string;
-            descriptionColor: string;
-            linkColor: string;
-            dateColor: string;
-            userNameColor: string;
-            backgroundColor: string;
+        date: {
+            font: {
+                size: string;
+                color: string;
+            };
         };
-        dark: {
-            titleColor: string;
-            descriptionColor: string;
-            linkColor: string;
-            dateColor: string;
-            userNameColor: string;
-            backgroundColor: string;
+        userName: {
+            font: {
+                size: string;
+                color: string;
+            };
+        };
+        title: {
+            font: {
+                weight: number;
+                size: string;
+                color: string;
+            };
+        };
+        description: {
+            font: {
+                size: string;
+                color: string;
+            };
+        };
+        link: {
+            font: {
+                weight: number;
+                size: string;
+                color: string;
+            };
         };
     };
-    export { formatDate, defaultSettings };
+    export { formatDate, merge, defaultSettings };
 }
 /// <amd-module name="@scom/page-blog/translation.json.ts" />
 declare module "@scom/page-blog/translation.json.ts" {
@@ -143,10 +132,11 @@ declare module "@scom/page-blog/translation.json.ts" {
 /// <amd-module name="@scom/page-blog" />
 declare module "@scom/page-blog" {
     import { Module, ControlElement, Container } from '@ijstech/components';
-    import { IConfig } from "@scom/page-blog/interface.ts";
+    import { IBlogItem, IBlogSettings } from "@scom/page-blog/interface.ts";
+    export { IBlogItem, IBlogSettings };
     interface ScomBlogElement extends ControlElement {
         lazyLoad?: boolean;
-        data?: IConfig;
+        data?: IBlogItem;
     }
     global {
         namespace JSX {
@@ -159,30 +149,21 @@ declare module "@scom/page-blog" {
         private pnlCard;
         private pnlBlock;
         private model;
-        get data(): IConfig;
-        set data(value: IConfig);
+        get data(): IBlogItem;
+        set data(value: IBlogItem);
         static create(options?: ScomBlogElement, parent?: Container): Promise<ScomPageBlog>;
         constructor(parent?: Container, options?: ScomBlogElement);
         init(): void;
         private setData;
         private setTag;
-        getConfigurators(): ({
-            name: string;
-            target: string;
-            getActions: () => import("@scom/page-blog/interface.ts").IPageBlockAction[];
-            getData: any;
-            setData: (data: IConfig) => Promise<void>;
-            getTag: any;
-            setTag: any;
-        } | {
+        getConfigurators(): {
             name: string;
             target: string;
             getData: any;
             setData: any;
             getTag: any;
             setTag: any;
-            getActions?: undefined;
-        })[];
+        }[];
         private onUpdateBlock;
         private openLink;
         private onUpdateTheme;

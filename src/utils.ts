@@ -10,30 +10,38 @@ const formatDate = (date: any) => {
   return moment(date, 'YYYY-MM-DD').format('MMMM DD, YYYY');
 }
 
-const defaultColors = {
-  dateColor: '#565656',
-  userNameColor: '#565656'
-}
-
-const colors = {
-  titleColor: defaultColors.dateColor,
-  descriptionColor: defaultColors.dateColor,
-  linkColor: Theme.colors.primary.main,
-  dateColor: defaultColors.dateColor,
-  userNameColor: defaultColors.userNameColor,
-  backgroundColor: Theme.background.main
+const merge = (...objects: any[]) => {
+  return objects.reduce((prev, obj) => {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (typeof prev[key] === 'object') prev[key] = merge(prev[key], obj[key]);
+        else prev[key] = obj[key];
+      }
+    }
+    return prev;
+  }, {});
 }
 
 const defaultSettings = {
-  light: {
-    ...colors
+  date: {
+    font: {size: '0.8125rem', color: Theme.text.third}
   },
-  dark: {
-    ...colors
+  userName: {
+    font: {size: '0.8125rem', color: Theme.text.disabled}
+  },
+  title: {
+    font: { weight: 700, size:'1.375rem', color: Theme.text.primary }
+  },
+  description: {
+    font: {size: '0.875rem', color: Theme.text.secondary}
+  },
+  link: {
+    font: {weight: 700, size:'0.875rem', color: Theme.text.hint}
   }
 }
 
 export {
   formatDate,
+  merge,
   defaultSettings
 }

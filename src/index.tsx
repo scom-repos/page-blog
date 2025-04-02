@@ -108,7 +108,7 @@ export default class ScomPageBlog extends Module {
       isExternal
     } = this.data;
 
-    const mergedTag = merge(this.model.tag, defaultSettings);
+    const mergedTag = merge(defaultSettings, this.model.tag);
     const {
       boxShadow,
       border = { radius: 6 },
@@ -216,11 +216,10 @@ export default class ScomPageBlog extends Module {
             </i-stack>
           </i-hstack>
           <i-vstack
-            verticalAlignment="center"
             gap="0.5rem"
             padding={{ bottom: '1rem' }}
             stack={{grow: "1"}}
-            justifyContent='space-around'
+            justifyContent='space-between'
             grid={{area: 'title'}}
           >
             <i-label

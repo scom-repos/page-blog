@@ -263,7 +263,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
         }
         onUpdateBlock() {
             const { backgroundImageUrl = '', backgroundImageCid = '', avatar, date, userName, title, description, link, isExternal } = this.data;
-            const mergedTag = (0, utils_1.merge)(this.model.tag, utils_1.defaultSettings);
+            const mergedTag = (0, utils_1.merge)(utils_1.defaultSettings, this.model.tag);
             const { boxShadow, border = { radius: 6 }, title: titleStyles, description: descriptionStyles, date: dateStyles, userName: userNameStyles, link: linkStyles } = mergedTag;
             let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
             if (backgroundImageCid) {
@@ -286,7 +286,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
                             this.$render("i-hstack", { verticalAlignment: "center", gap: "0.25rem" },
                                 this.$render("i-icon", { stack: { shrink: '0' }, name: "eye", fill: Theme.text.disabled, visible: !avatar, width: "0.75rem", height: "0.75rem" }),
                                 this.$render("i-label", { id: "usernameLb", visible: !!userName, caption: userName, font: userNameStyles?.font })))),
-                    this.$render("i-vstack", { verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' }, stack: { grow: "1" }, justifyContent: 'space-around', grid: { area: 'title' } },
+                    this.$render("i-vstack", { gap: "0.5rem", padding: { bottom: '1rem' }, stack: { grow: "1" }, justifyContent: 'space-between', grid: { area: 'title' } },
                         this.$render("i-label", { id: "titleLb", caption: title || '', font: titleStyles?.font }),
                         this.$render("i-label", { id: "descriptionLb", caption: description || '', font: descriptionStyles?.font }),
                         this.$render("i-label", { id: "linkLb", visible: !!link?.caption, caption: "$read_more", link: { href: link.url, target: isExternal ? "_blank" : "_self" }, font: linkStyles?.font })))));

@@ -1,6 +1,4 @@
-import { IConfig, IPageBlockAction, ISettings } from '../interface';
-import { propertiesSchema, propertiesUISchema, themeSchema } from './formSchema';
-import { IDataSchema } from '@ijstech/components';
+import { IBlogItem, IBlogSettings } from '../interface';
 
 interface IOptions {
   onUpdateBlock?: () => void;
@@ -8,12 +6,12 @@ interface IOptions {
 }
 
 export class Model {
-  private _data: IConfig = {
+  private _data: IBlogItem = {
     title: '',
     backgroundImageUrl: '',
     backgroundImageCid: ''
   };
-  private _tag: ISettings = {
+  private _tag: IBlogSettings = {
     light: {},
     dark: {}
   };
@@ -27,7 +25,7 @@ export class Model {
     return this._tag;
   }
 
-  set tag(value: ISettings) {
+  set tag(value: IBlogSettings) {
     this._tag = value;
   }
 
@@ -35,11 +33,11 @@ export class Model {
     return this._data;
   }
 
-  set data(value: IConfig) {
+  set data(value: IBlogItem) {
     this._data = value;
   }
 
-  async setData(data: IConfig) {
+  async setData(data: IBlogItem) {
     this._data = data;
     this._options?.onUpdateBlock();
   }
@@ -48,7 +46,7 @@ export class Model {
     return this._data;
   }
 
-  setTag(value: ISettings) {
+  setTag(value: IBlogSettings) {
     const newValue = value || {};
     for (let prop in newValue) {
       if (newValue.hasOwnProperty(prop)) {
@@ -76,11 +74,8 @@ export class Model {
       {
         name: 'Builder Configurator',
         target: 'Builders',
-        getActions: () => {
-          return this._getActions(propertiesSchema, themeSchema);
-        },
         getData: this.getData.bind(this),
-        setData: async (data: IConfig) => {
+        setData: async (data: IBlogItem) => {
           await this.setData({ ...data })
         },
         getTag: this.getTag.bind(this),
@@ -95,53 +90,5 @@ export class Model {
         setTag: this.setTag.bind(this)
       }
     ]
-  }
-
-  private _getActions(propertiesSchema: IDataSchema, themeSchema: IDataSchema) {
-    const actions: IPageBlockAction[] = [
-      {
-        name: 'Edit',
-        icon: 'edit',
-        command: (builder: any, userInputData: any) => {
-          let _oldData: IConfig = {
-            title: '',
-            backgroundImageUrl: '',
-            backgroundImageCid: ''
-          };
-          let _oldTag = {}
-          const [generalSettings, themeSettings] = userInputData;
-
-          return {
-            execute: async () => {
-              _oldData = { ...this._data };
-
-              if (builder?.setData) builder.setData(generalSettings)
-              this.setData(generalSettings);
-
-              if (themeSettings) {
-                _oldTag = { ...this._tag };
-                if (builder) builder.setTag(themeSettings);
-                else this.setTag(themeSettings);
-              }
-            },
-            undo: () => {
-              this._data = { ..._oldData };
-              if (builder?.setData) builder.setData(_oldData);
-              this.setData(_oldData);
-
-              if (themeSettings) {
-                this._tag = { ..._oldTag };
-                if (builder) builder.setTag(this._tag);
-                else this.setTag(this._tag);
-              }
-            },
-            redo: () => { }
-          }
-        },
-        userInputDataSchema: propertiesSchema,
-        userInputUISchema: propertiesUISchema
-      }
-    ];
-    return actions;
   }
 }

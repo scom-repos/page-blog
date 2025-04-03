@@ -67,256 +67,7 @@ define("@scom/page-blog/index.css.ts", ["require", "exports", "@ijstech/componen
         margin: '0 auto'
     });
 });
-define("@scom/page-blog/model/formSchema.ts", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.themeSchema = exports.propertiesUISchema = exports.propertiesSchema = void 0;
-    const propertiesSchema = {
-        type: 'object',
-        properties: {
-            title: {
-                type: 'string'
-            },
-            titleFontColor: {
-                type: 'string',
-                format: 'color',
-            },
-            description: {
-                type: 'string'
-            },
-            descriptionFontColor: {
-                type: 'string',
-                format: 'color',
-            },
-            linkUrl: {
-                type: 'string'
-            },
-            linkTextColor: {
-                type: 'string',
-                format: 'color',
-            },
-            isExternal: {
-                type: 'boolean'
-            },
-            date: {
-                type: 'string',
-                format: 'date'
-            },
-            dateColor: {
-                type: 'string',
-                format: 'color',
-            },
-            backgroundImageCid: {
-                title: 'Background Image',
-                type: 'string',
-                format: 'data-cid'
-            },
-            backgroundImageUrl: {
-                title: 'Url',
-                type: 'string'
-            },
-            userName: {
-                type: 'string'
-            },
-            userNameColor: {
-                type: 'string',
-                format: 'color',
-            },
-            avatar: {
-                type: 'string'
-            },
-            backgroundColor: {
-                type: 'string',
-                format: 'color',
-            }
-        }
-    };
-    exports.propertiesSchema = propertiesSchema;
-    const propertiesUISchema = {
-        type: "VerticalLayout",
-        elements: [
-            {
-                type: "HorizontalLayout",
-                elements: [
-                    {
-                        type: "Categorization",
-                        elements: [
-                            {
-                                type: "Category",
-                                label: "General settings",
-                                elements: [
-                                    {
-                                        type: "VerticalLayout",
-                                        elements: [
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/title",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/description",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/linkUrl",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/isExternal",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/date",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/backgroundImageCid",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/backgroundImageUrl",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/userName",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/avatar",
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                            {
-                                type: "Category",
-                                label: "Theme settings",
-                                elements: [
-                                    {
-                                        type: "VerticalLayout",
-                                        elements: [
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/titleFontColor",
-                                                    },
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/descriptionFontColor",
-                                                    },
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/linkTextColor",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "HorizontalLayout",
-                                                elements: [
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/dateColor",
-                                                    },
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/userNameColor",
-                                                    },
-                                                    {
-                                                        type: "Control",
-                                                        scope: "#/properties/backgroundColor",
-                                                    },
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-    };
-    exports.propertiesUISchema = propertiesUISchema;
-    const themeSchema = {
-        type: 'object',
-        properties: {
-            titleFontColor: {
-                type: 'string',
-                format: 'color',
-            },
-            descriptionFontColor: {
-                type: 'string',
-                format: 'color',
-            },
-            linkTextColor: {
-                type: 'string',
-                format: 'color',
-            },
-            dateColor: {
-                type: 'string',
-                format: 'color',
-            },
-            userNameColor: {
-                type: 'string',
-                format: 'color',
-            },
-            backgroundColor: {
-                type: 'string',
-                format: 'color',
-            }
-        }
-    };
-    exports.themeSchema = themeSchema;
-});
-define("@scom/page-blog/model/index.ts", ["require", "exports", "@scom/page-blog/model/formSchema.ts"], function (require, exports, formSchema_1) {
+define("@scom/page-blog/model/index.ts", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Model = void 0;
@@ -380,9 +131,6 @@ define("@scom/page-blog/model/index.ts", ["require", "exports", "@scom/page-blog
                 {
                     name: 'Builder Configurator',
                     target: 'Builders',
-                    getActions: () => {
-                        return this._getActions(formSchema_1.propertiesSchema, formSchema_1.themeSchema);
-                    },
                     getData: this.getData.bind(this),
                     setData: async (data) => {
                         await this.setData({ ...data });
@@ -400,62 +148,13 @@ define("@scom/page-blog/model/index.ts", ["require", "exports", "@scom/page-blog
                 }
             ];
         }
-        _getActions(propertiesSchema, themeSchema) {
-            const actions = [
-                {
-                    name: 'Edit',
-                    icon: 'edit',
-                    command: (builder, userInputData) => {
-                        let _oldData = {
-                            title: '',
-                            backgroundImageUrl: '',
-                            backgroundImageCid: ''
-                        };
-                        let _oldTag = {};
-                        const [generalSettings, themeSettings] = userInputData;
-                        return {
-                            execute: async () => {
-                                _oldData = { ...this._data };
-                                if (builder?.setData)
-                                    builder.setData(generalSettings);
-                                this.setData(generalSettings);
-                                if (themeSettings) {
-                                    _oldTag = { ...this._tag };
-                                    if (builder)
-                                        builder.setTag(themeSettings);
-                                    else
-                                        this.setTag(themeSettings);
-                                }
-                            },
-                            undo: () => {
-                                this._data = { ..._oldData };
-                                if (builder?.setData)
-                                    builder.setData(_oldData);
-                                this.setData(_oldData);
-                                if (themeSettings) {
-                                    this._tag = { ..._oldTag };
-                                    if (builder)
-                                        builder.setTag(this._tag);
-                                    else
-                                        this.setTag(this._tag);
-                                }
-                            },
-                            redo: () => { }
-                        };
-                    },
-                    userInputDataSchema: propertiesSchema,
-                    userInputUISchema: formSchema_1.propertiesUISchema
-                }
-            ];
-            return actions;
-        }
     }
     exports.Model = Model;
 });
 define("@scom/page-blog/utils.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.defaultSettings = exports.formatDate = void 0;
+    exports.defaultSettings = exports.merge = exports.formatDate = void 0;
     const Theme = components_2.Styles.Theme.currentTheme;
     const formatDate = (date) => {
         if (!date)
@@ -467,24 +166,35 @@ define("@scom/page-blog/utils.ts", ["require", "exports", "@ijstech/components"]
         return (0, components_2.moment)(date, 'YYYY-MM-DD').format('MMMM DD, YYYY');
     };
     exports.formatDate = formatDate;
-    const defaultColors = {
-        dateColor: '#565656',
-        userNameColor: '#565656'
+    const merge = (...objects) => {
+        return objects.reduce((prev, obj) => {
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    if (typeof prev[key] === 'object')
+                        prev[key] = merge(prev[key], obj[key]);
+                    else
+                        prev[key] = obj[key];
+                }
+            }
+            return prev;
+        }, {});
     };
-    const colors = {
-        titleColor: defaultColors.dateColor,
-        descriptionColor: defaultColors.dateColor,
-        linkColor: Theme.colors.primary.main,
-        dateColor: defaultColors.dateColor,
-        userNameColor: defaultColors.userNameColor,
-        backgroundColor: Theme.background.main
-    };
+    exports.merge = merge;
     const defaultSettings = {
-        light: {
-            ...colors
+        date: {
+            font: { size: '0.8125rem', color: Theme.text.third }
         },
-        dark: {
-            ...colors
+        userName: {
+            font: { size: '0.8125rem', color: Theme.text.disabled }
+        },
+        title: {
+            font: { weight: 700, size: '1.375rem', color: Theme.text.primary }
+        },
+        description: {
+            font: { size: '0.875rem', color: Theme.text.secondary }
+        },
+        link: {
+            font: { weight: 700, size: '0.875rem', color: Theme.text.hint }
         }
     };
     exports.defaultSettings = defaultSettings;
@@ -541,10 +251,6 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             const tag = this.getAttribute('tag', true);
             if (tag)
                 this.setTag(tag);
-            else
-                this.setTag({
-                    ...utils_1.defaultSettings
-                });
         }
         async setData(data) {
             await this.model.setData(data);
@@ -556,8 +262,9 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             return this.model.getConfigurators();
         }
         onUpdateBlock() {
-            const { backgroundImageUrl = '', backgroundImageCid = '', avatar, date, userName, title, description, link, linkText, isExternal } = this.data;
-            const { titleFontSize, descriptionFontSize, linkTextSize, dateFontSize, userNameFontSize, boxShadow, borderRadius = 6 } = this.model.tag;
+            const { backgroundImageUrl = '', backgroundImageCid = '', avatar, date, userName, title, description, link, isExternal } = this.data;
+            const mergedTag = (0, utils_1.merge)(utils_1.defaultSettings, this.model.tag);
+            const { boxShadow, border = { radius: 6 }, title: titleStyles, description: descriptionStyles, date: dateStyles, userName: userNameStyles, link: linkStyles } = mergedTag;
             let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
             if (backgroundImageCid) {
                 url = "https://ipfs.scom.dev/ipfs/" + backgroundImageCid;
@@ -565,7 +272,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             if (boxShadow !== undefined)
                 this.pnlBlock.boxShadow = boxShadow;
             this.pnlCard.clearInnerHTML();
-            this.pnlCard.appendChild(this.$render("i-vstack", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: { radius: borderRadius }, overflow: "hidden", onClick: this.openLink },
+            this.pnlCard.appendChild(this.$render("i-vstack", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: border, overflow: "hidden", onClick: this.openLink },
                 this.$render("i-panel", { overflow: "hidden", position: "relative", width: '100%', padding: { top: '56.25%' } },
                     this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", url: url, position: "absolute", left: "0px", top: "0px", objectFit: 'cover' })),
                 this.$render("i-grid-layout", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: Theme.background.main }, stack: { grow: "1" }, autoFillInHoles: true, templateAreas: avatar ? [['date'], ['title']] : [['title'], ['date']] },
@@ -575,31 +282,30 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
                         this.$render("i-stack", { gap: avatar ? '0.25rem' : '0.675rem', direction: avatar ? 'vertical' : 'horizontal' },
                             this.$render("i-hstack", { verticalAlignment: "center", gap: "0.25rem" },
                                 this.$render("i-icon", { stack: { shrink: '0' }, name: "calendar", fill: Theme.text.disabled, visible: !avatar, width: "0.75rem", height: "0.75rem" }),
-                                this.$render("i-label", { id: "dateLb", visible: !!date, caption: (0, utils_1.formatDate)(date), font: { size: dateFontSize || '0.8125rem', color: Theme.text.third } })),
+                                this.$render("i-label", { id: "dateLb", visible: !!date, caption: (0, utils_1.formatDate)(date), font: dateStyles?.font })),
                             this.$render("i-hstack", { verticalAlignment: "center", gap: "0.25rem" },
                                 this.$render("i-icon", { stack: { shrink: '0' }, name: "eye", fill: Theme.text.disabled, visible: !avatar, width: "0.75rem", height: "0.75rem" }),
-                                this.$render("i-label", { id: "usernameLb", visible: !!userName, caption: userName, font: { size: userNameFontSize || '0.8125rem', color: Theme.text.disabled } })))),
-                    this.$render("i-vstack", { verticalAlignment: "center", gap: "0.5rem", padding: { bottom: '1rem' }, stack: { grow: "1" }, justifyContent: 'space-around', grid: { area: 'title' } },
-                        this.$render("i-label", { id: "titleLb", caption: title || '', font: { weight: 700, size: titleFontSize || '1.375rem', color: Theme.text.primary } }),
-                        this.$render("i-label", { id: "descriptionLb", caption: description || '', font: { size: descriptionFontSize || '0.875rem', color: Theme.text.secondary } }),
-                        this.$render("i-label", { id: "linkLb", visible: !!linkText, caption: "$read_more", link: { href: link, target: isExternal ? "_blank" : "_self" }, font: { weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint } })))));
+                                this.$render("i-label", { id: "usernameLb", visible: !!userName, caption: userName, font: userNameStyles?.font })))),
+                    this.$render("i-vstack", { gap: "0.5rem", padding: { bottom: '1rem' }, stack: { grow: "1" }, justifyContent: 'space-between', grid: { area: 'title' } },
+                        this.$render("i-label", { id: "titleLb", caption: title || '', font: titleStyles?.font }),
+                        this.$render("i-label", { id: "descriptionLb", caption: description || '', font: descriptionStyles?.font }),
+                        this.$render("i-label", { id: "linkLb", visible: !!link?.caption, caption: "$read_more", link: { href: link.url, target: isExternal ? "_blank" : "_self" }, font: linkStyles?.font })))));
         }
         openLink() {
-            if (!this.data?.link)
+            if (!this.data?.link?.url || this._designMode)
                 return;
             if (this.data?.isExternal)
-                window.open(this.data.link);
+                window.open(this.data.link.url);
             else
-                window.location.href = this.data.link;
+                window.location.href = this.data.link.url;
         }
         onUpdateTheme() {
-            const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
-            this.updateStyle('--text-primary', this.model.tag[themeVar]?.titleColor);
-            this.updateStyle('--background-main', this.model.tag[themeVar]?.backgroundColor);
-            this.updateStyle('--text-secondary', this.model.tag[themeVar]?.descriptionColor);
-            this.updateStyle('--text-third', this.model.tag[themeVar]?.dateColor);
-            this.updateStyle('--text-disabled', this.model.tag[themeVar]?.userNameColor);
-            this.updateStyle('--text-hint', this.model.tag[themeVar]?.linkColor);
+            this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
+            this.updateStyle('--background-main', this.model.tag?.background?.color);
+            this.updateStyle('--text-secondary', this.model.tag?.description?.font?.color);
+            this.updateStyle('--text-third', this.model.tag?.date?.font?.color);
+            this.updateStyle('--text-disabled', this.model.tag?.userName?.font?.color);
+            this.updateStyle('--text-hint', this.model.tag?.link?.font?.color);
         }
         updateStyle(name, value) {
             value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
@@ -620,48 +326,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
                 }
             },
             className: 'ScomPageBlog',
-            events: {},
-            dataSchema: {
-                type: 'object',
-                properties: {
-                    data: {
-                        type: 'object',
-                        properties: {
-                            title: {
-                                type: 'string',
-                            },
-                            backgroundImageCid: {
-                                type: 'string'
-                            },
-                            backgroundImageUrl: {
-                                type: 'string'
-                            },
-                            description: {
-                                type: 'string'
-                            },
-                            link: {
-                                type: 'string'
-                            },
-                            linkText: {
-                                type: 'string'
-                            },
-                            date: {
-                                format: 'date',
-                                type: 'string'
-                            },
-                            userName: {
-                                type: 'string'
-                            },
-                            avatar: {
-                                type: 'string'
-                            },
-                            isExternal: {
-                                type: 'boolean'
-                            }
-                        }
-                    }
-                }
-            }
+            events: {}
         })
     ], ScomPageBlog);
     exports.default = ScomPageBlog;

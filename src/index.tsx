@@ -7,17 +7,19 @@ import {
   customElements,
   Container
 } from '@ijstech/components';
-import { IConfig, ISettings } from './interface';
+import { IBlogItem, IBlogSettings } from './interface';
 import { cardItemStyle, cardStyle, imageStyle } from './index.css';
 import { Model } from './model/index';
-import { defaultSettings, formatDate } from './utils';
+import { defaultSettings, formatDate, merge } from './utils';
 import translation from './translation.json';
 
 const Theme = Styles.Theme.ThemeVars;
 
+export { IBlogItem, IBlogSettings };
+
 interface ScomBlogElement extends ControlElement {
   lazyLoad?: boolean;
-  data?: IConfig;
+  data?: IBlogItem;
 }
 
 declare global {
@@ -38,48 +40,7 @@ declare global {
     }
   },
   className: 'ScomPageBlog',
-  events: {},
-  dataSchema: {
-    type: 'object',
-    properties: {
-      data: {
-        type: 'object',
-        properties: {
-          title: {
-            type: 'string',
-          },
-          backgroundImageCid: {
-            type: 'string'
-          },
-          backgroundImageUrl: {
-            type: 'string'
-          },
-          description: {
-            type: 'string'
-          },
-          link: {
-            type: 'string'
-          },
-          linkText: {
-            type: 'string'
-          },
-          date: {
-            format: 'date',
-            type: 'string'
-          },
-          userName: {
-            type: 'string'
-          },
-          avatar: {
-            type: 'string'
-          },
-          isExternal: {
-            type: 'boolean'
-          }
-        }
-      }
-    }
-  }
+  events: {}
 })
 export default class ScomPageBlog extends Module {
   private pnlCard: Panel;
@@ -90,7 +51,7 @@ export default class ScomPageBlog extends Module {
     return this.model.data;
   }
 
-  set data (value: IConfig) {
+  set data (value: IBlogItem) {
     this.model.data = value;
   }
 
@@ -120,16 +81,13 @@ export default class ScomPageBlog extends Module {
 
     const tag = this.getAttribute('tag', true);
     if (tag) this.setTag(tag);
-    else this.setTag({
-      ...defaultSettings
-    });
   }
 
-  private async setData(data: IConfig) {
+  private async setData(data: IBlogItem) {
     await this.model.setData(data);
   }
 
-  private setTag(value: ISettings) {
+  private setTag(value: IBlogSettings) {
     this.model.setTag(value);
   }
 
@@ -147,19 +105,19 @@ export default class ScomPageBlog extends Module {
       title,
       description,
       link,
-      linkText,
       isExternal
     } = this.data;
 
+    const mergedTag = merge(defaultSettings, this.model.tag);
     const {
-      titleFontSize,
-      descriptionFontSize,
-      linkTextSize,
-      dateFontSize,
-      userNameFontSize,
       boxShadow,
-      borderRadius = 6
-    } = this.model.tag;
+      border = { radius: 6 },
+      title: titleStyles,
+      description: descriptionStyles,
+      date: dateStyles,
+      userName: userNameStyles,
+      link: linkStyles
+    } = mergedTag;
 
     let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
     if (backgroundImageCid) {
@@ -174,7 +132,7 @@ export default class ScomPageBlog extends Module {
         width="100%"
         height="100%"
         class={cardItemStyle}
-        border={{ radius: borderRadius }}
+        border={border}
         overflow="hidden"
         onClick={this.openLink}
       >
@@ -234,7 +192,7 @@ export default class ScomPageBlog extends Module {
                   id="dateLb"
                   visible={!!date}
                   caption={formatDate(date)}
-                  font={{ size: dateFontSize || '0.8125rem', color: Theme.text.third }}
+                  font={dateStyles?.font}
                 ></i-label>
               </i-hstack>
               <i-hstack
@@ -252,35 +210,34 @@ export default class ScomPageBlog extends Module {
                   id="usernameLb"
                   visible={!!userName}
                   caption={userName}
-                  font={{ size: userNameFontSize || '0.8125rem', color: Theme.text.disabled}}
+                  font={userNameStyles?.font}
                 ></i-label>
               </i-hstack>
             </i-stack>
           </i-hstack>
           <i-vstack
-            verticalAlignment="center"
             gap="0.5rem"
             padding={{ bottom: '1rem' }}
             stack={{grow: "1"}}
-            justifyContent='space-around'
+            justifyContent='space-between'
             grid={{area: 'title'}}
           >
             <i-label
               id="titleLb"
               caption={title || ''}
-              font={{ weight: 700, size: titleFontSize || '1.375rem', color: Theme.text.primary }}
+              font={titleStyles?.font}
             ></i-label>
             <i-label
               id="descriptionLb"
               caption={description || ''}
-              font={{ size: descriptionFontSize || '0.875rem', color: Theme.text.secondary }}
+              font={descriptionStyles?.font}
             ></i-label>
             <i-label
               id="linkLb"
-              visible={!!linkText}
+              visible={!!link?.caption}
               caption="$read_more"
-              link={{ href: link, target: isExternal ? "_blank" :  "_self" }}
-              font={{ weight: 700, size: linkTextSize || '0.875rem', color: Theme.text.hint }}
+              link={{ href: link.url, target: isExternal ? "_blank" :  "_self" }}
+              font={linkStyles?.font}
             ></i-label>
           </i-vstack>
         </i-grid-layout>
@@ -289,21 +246,20 @@ export default class ScomPageBlog extends Module {
   }
 
   private openLink() {
-    if (!this.data?.link) return;
+    if (!this.data?.link?.url || this._designMode) return;
     if (this.data?.isExternal)
-      window.open(this.data.link);
+      window.open(this.data.link.url);
     else
-      window.location.href = this.data.link;
+      window.location.href = this.data.link.url;
   }
 
   private onUpdateTheme() {
-    const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
-    this.updateStyle('--text-primary', this.model.tag[themeVar]?.titleColor);
-    this.updateStyle('--background-main', this.model.tag[themeVar]?.backgroundColor);
-    this.updateStyle('--text-secondary', this.model.tag[themeVar]?.descriptionColor);
-    this.updateStyle('--text-third', this.model.tag[themeVar]?.dateColor);
-    this.updateStyle('--text-disabled', this.model.tag[themeVar]?.userNameColor);
-    this.updateStyle('--text-hint', this.model.tag[themeVar]?.linkColor);
+    this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
+    this.updateStyle('--background-main', this.model.tag?.background?.color);
+    this.updateStyle('--text-secondary', this.model.tag?.description?.font?.color);
+    this.updateStyle('--text-third', this.model.tag?.date?.font?.color);
+    this.updateStyle('--text-disabled', this.model.tag?.userName?.font?.color);
+    this.updateStyle('--text-hint', this.model.tag?.link?.font?.color);
   }
 
   private updateStyle(name: string, value: any) {

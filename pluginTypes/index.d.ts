@@ -1,6 +1,6 @@
 /// <amd-module name="@scom/page-blog/interface.ts" />
 declare module "@scom/page-blog/interface.ts" {
-    import { IBorder, IFont } from "@ijstech/components";
+    import { IBorder, IFont, ISpace } from "@ijstech/components";
     export interface IBlogItem {
         title: string;
         backgroundImageCid?: string;
@@ -31,6 +31,7 @@ declare module "@scom/page-blog/interface.ts" {
         background?: {
             color?: string;
         };
+        padding?: ISpace;
         light?: IColors;
         dark?: IColors;
     }

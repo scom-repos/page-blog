@@ -1,4 +1,4 @@
-import { IBorder, IFont } from "@ijstech/components";
+import { IBorder, IFont, ISpace } from "@ijstech/components";
 
 export interface IBlogItem {
   title: string;
@@ -31,6 +31,7 @@ export interface IBlogSettings {
   boxShadow?: string;
   border?: IBorder;
   background?: {color?: string};
+  padding?: ISpace;
   light?: IColors;
   dark?: IColors;
 }

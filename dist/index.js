@@ -264,7 +264,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
         onUpdateBlock() {
             const { backgroundImageUrl = '', backgroundImageCid = '', avatar, date, userName, title, description, link, isExternal } = this.data;
             const mergedTag = (0, utils_1.merge)(utils_1.defaultSettings, this.model.tag);
-            const { boxShadow, border = { radius: 6 }, title: titleStyles, description: descriptionStyles, date: dateStyles, userName: userNameStyles, link: linkStyles } = mergedTag;
+            const { boxShadow, padding = { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, border = { radius: 6 }, title: titleStyles, description: descriptionStyles, date: dateStyles, userName: userNameStyles, link: linkStyles } = mergedTag;
             let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
             if (backgroundImageCid) {
                 url = "https://ipfs.scom.dev/ipfs/" + backgroundImageCid;
@@ -275,21 +275,21 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             this.pnlCard.appendChild(this.$render("i-vstack", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: border, overflow: "hidden", onClick: this.openLink },
                 this.$render("i-panel", { overflow: "hidden", position: "relative", width: '100%', padding: { top: '56.25%' } },
                     this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", url: url, position: "absolute", left: "0px", top: "0px", objectFit: 'cover' })),
-                this.$render("i-grid-layout", { padding: { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, background: { color: Theme.background.main }, stack: { grow: "1" }, autoFillInHoles: true, templateAreas: avatar ? [['date'], ['title']] : [['title'], ['date']] },
+                this.$render("i-grid-layout", { padding: padding, background: { color: Theme.background.main }, stack: { grow: "1" }, autoFillInHoles: true, templateAreas: avatar ? [['date'], ['title']] : [['title'], ['date']] },
                     this.$render("i-hstack", { verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' }, grid: { area: 'date' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!avatar },
                             this.$render("i-image", { width: "100%", height: "100%", url: avatar, display: "block", objectFit: 'cover', border: { radius: '50%' } })),
                         this.$render("i-stack", { gap: avatar ? '0.25rem' : '0.675rem', direction: avatar ? 'vertical' : 'horizontal' },
                             this.$render("i-hstack", { verticalAlignment: "center", gap: "0.25rem" },
-                                this.$render("i-icon", { stack: { shrink: '0' }, name: "calendar", fill: Theme.text.disabled, visible: !avatar, width: "0.75rem", height: "0.75rem" }),
+                                this.$render("i-icon", { stack: { shrink: '0' }, name: "calendar", fill: Theme.text.disabled, visible: !avatar && !!date, width: "0.75rem", height: "0.75rem" }),
                                 this.$render("i-label", { id: "dateLb", visible: !!date, caption: (0, utils_1.formatDate)(date), font: dateStyles?.font })),
                             this.$render("i-hstack", { verticalAlignment: "center", gap: "0.25rem" },
-                                this.$render("i-icon", { stack: { shrink: '0' }, name: "eye", fill: Theme.text.disabled, visible: !avatar, width: "0.75rem", height: "0.75rem" }),
+                                this.$render("i-icon", { stack: { shrink: '0' }, name: "eye", fill: Theme.text.disabled, visible: !avatar && !!userName, width: "0.75rem", height: "0.75rem" }),
                                 this.$render("i-label", { id: "usernameLb", visible: !!userName, caption: userName, font: userNameStyles?.font })))),
                     this.$render("i-vstack", { gap: "0.5rem", padding: { bottom: '1rem' }, stack: { grow: "1" }, justifyContent: 'space-between', grid: { area: 'title' } },
                         this.$render("i-label", { id: "titleLb", caption: title || '', font: titleStyles?.font }),
                         this.$render("i-label", { id: "descriptionLb", caption: description || '', font: descriptionStyles?.font }),
-                        this.$render("i-label", { id: "linkLb", visible: !!link?.caption, caption: "$read_more", link: { href: link.url, target: isExternal ? "_blank" : "_self" }, font: linkStyles?.font })))));
+                        this.$render("i-label", { id: "linkLb", visible: !!link?.caption, caption: link?.caption || '$read_more', link: { href: link?.url, target: isExternal ? "_blank" : "_self" }, font: linkStyles?.font })))));
         }
         openLink() {
             if (!this.data?.link?.url || this._designMode)

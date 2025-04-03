@@ -111,6 +111,7 @@ export default class ScomPageBlog extends Module {
     const mergedTag = merge(defaultSettings, this.model.tag);
     const {
       boxShadow,
+      padding = { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' },
       border = { radius: 6 },
       title: titleStyles,
       description: descriptionStyles,
@@ -153,7 +154,7 @@ export default class ScomPageBlog extends Module {
           ></i-image>
         </i-panel>
         <i-grid-layout
-          padding={{ top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }}
+          padding={padding}
           background={{ color: Theme.background.main }}
           stack={{grow: "1"}}
           autoFillInHoles
@@ -185,7 +186,7 @@ export default class ScomPageBlog extends Module {
                   stack={{shrink: '0'}}
                   name="calendar"
                   fill={Theme.text.disabled}
-                  visible={!avatar}
+                  visible={!avatar && !!date}
                   width="0.75rem" height="0.75rem"
                 ></i-icon>
                 <i-label
@@ -203,7 +204,7 @@ export default class ScomPageBlog extends Module {
                   stack={{shrink: '0'}}
                   name="eye"
                   fill={Theme.text.disabled}
-                  visible={!avatar}
+                  visible={!avatar && !!userName}
                   width="0.75rem" height="0.75rem"
                 ></i-icon>
                 <i-label
@@ -235,8 +236,8 @@ export default class ScomPageBlog extends Module {
             <i-label
               id="linkLb"
               visible={!!link?.caption}
-              caption="$read_more"
-              link={{ href: link.url, target: isExternal ? "_blank" :  "_self" }}
+              caption={link?.caption || '$read_more'}
+              link={{ href: link?.url, target: isExternal ? "_blank" :  "_self" }}
               font={linkStyles?.font}
             ></i-label>
           </i-vstack>

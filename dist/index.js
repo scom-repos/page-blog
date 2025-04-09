@@ -11,7 +11,7 @@ define("@scom/page-blog/interface.ts", ["require", "exports"], function (require
 define("@scom/page-blog/index.css.ts", ["require", "exports", "@ijstech/components"], function (require, exports, components_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.containerStyle = exports.controlStyle = exports.imageStyle = exports.cardItemStyle = exports.cardStyle = void 0;
+    exports.getCustomButtonStyle = exports.imageStyle = exports.cardItemStyle = exports.cardStyle = void 0;
     const Theme = components_1.Styles.Theme.ThemeVars;
     exports.cardStyle = components_1.Styles.style({
         $nest: {
@@ -39,33 +39,17 @@ define("@scom/page-blog/index.css.ts", ["require", "exports", "@ijstech/componen
             }
         }
     });
-    exports.controlStyle = components_1.Styles.style({
-        $nest: {
-            'i-button': {
-                boxShadow: 'none',
-            },
-            'i-button > span': {
-                display: 'none'
-            },
-            'i-button:not(.disabled):hover': {
-                background: 'transparent',
-                boxShadow: 'none',
-                borderColor: 'rgba(117,124,131,.68)',
-                $nest: {
-                    '> i-icon': {
-                        fill: 'rgba(117,124,131,.68) !important'
-                    }
+    const getCustomButtonStyle = (background, color) => {
+        return components_1.Styles.style({
+            $nest: {
+                '&:hover': {
+                    background: background,
+                    color: color
                 }
             }
-        }
-    });
-    exports.containerStyle = components_1.Styles.style({
-        width: Theme.layout.container.width,
-        maxWidth: Theme.layout.container.maxWidth,
-        overflow: Theme.layout.container.overflow,
-        textAlign: Theme.layout.container.textAlign,
-        margin: '0 auto'
-    });
+        });
+    };
+    exports.getCustomButtonStyle = getCustomButtonStyle;
 });
 define("@scom/page-blog/model/index.ts", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -194,7 +178,10 @@ define("@scom/page-blog/utils.ts", ["require", "exports", "@ijstech/components"]
             font: { size: '0.875rem', color: Theme.text.secondary }
         },
         link: {
-            font: { weight: 700, size: '0.875rem', color: Theme.text.hint }
+            font: { weight: 700, size: '0.875rem', color: Theme.text.hint },
+            padding: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
+            margin: { top: '0px', bottom: '0px', left: '0px', right: '0px' },
+            background: { color: 'transparent !important' }
         }
     };
     exports.defaultSettings = defaultSettings;
@@ -262,9 +249,9 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             return this.model.getConfigurators();
         }
         onUpdateBlock() {
-            const { backgroundImageUrl = '', backgroundImageCid = '', avatar, date, userName, title, description, link, isExternal } = this.data;
+            const { backgroundImageUrl = '', backgroundImageCid = '', avatar, date, userName, title, description, link } = this.data;
             const mergedTag = (0, utils_1.merge)(utils_1.defaultSettings, this.model.tag);
-            const { boxShadow, padding = { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, border = { radius: 6 }, title: titleStyles, description: descriptionStyles, date: dateStyles, userName: userNameStyles, link: linkStyles } = mergedTag;
+            const { boxShadow, padding = { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, border = { radius: 6 }, background = { color: Theme.background.main }, title: titleStyles, description: descriptionStyles, date: dateStyles, userName: userNameStyles, link: linkStyles } = mergedTag;
             let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
             if (backgroundImageCid) {
                 url = "https://ipfs.scom.dev/ipfs/" + backgroundImageCid;
@@ -275,7 +262,7 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             this.pnlCard.appendChild(this.$render("i-vstack", { width: "100%", height: "100%", class: index_css_1.cardItemStyle, border: border, overflow: "hidden", onClick: this.openLink },
                 this.$render("i-panel", { overflow: "hidden", position: "relative", width: '100%', padding: { top: '56.25%' } },
                     this.$render("i-image", { class: index_css_1.imageStyle, width: '100%', height: "100%", url: url, position: "absolute", left: "0px", top: "0px", objectFit: 'cover' })),
-                this.$render("i-grid-layout", { padding: padding, background: { color: Theme.background.main }, stack: { grow: "1" }, autoFillInHoles: true, templateAreas: avatar ? [['date'], ['title']] : [['title'], ['date']] },
+                this.$render("i-grid-layout", { padding: padding, background: background, stack: { grow: "1" }, autoFillInHoles: true, templateAreas: avatar ? [['date'], ['title']] : [['title'], ['date']] },
                     this.$render("i-hstack", { verticalAlignment: "center", gap: "0.938rem", margin: { bottom: '0.75rem' }, grid: { area: 'date' } },
                         this.$render("i-panel", { width: 50, height: 50, visible: !!avatar },
                             this.$render("i-image", { width: "100%", height: "100%", url: avatar, display: "block", objectFit: 'cover', border: { radius: '50%' } })),
@@ -289,7 +276,8 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
                     this.$render("i-vstack", { gap: "0.5rem", padding: { bottom: '1rem' }, stack: { grow: "1" }, justifyContent: 'space-between', grid: { area: 'title' } },
                         this.$render("i-label", { id: "titleLb", caption: title || '', font: titleStyles?.font }),
                         this.$render("i-label", { id: "descriptionLb", caption: description || '', font: descriptionStyles?.font }),
-                        this.$render("i-label", { id: "linkLb", visible: !!link?.caption, caption: link?.caption || '$read_more', link: { href: link?.url, target: isExternal ? "_blank" : "_self" }, font: linkStyles?.font })))));
+                        this.$render("i-hstack", null,
+                            this.$render("i-button", { id: "linkLb", visible: !!link?.caption, caption: link?.caption || '$read_more', onClick: this.openLink, font: linkStyles?.font, background: linkStyles?.background, padding: linkStyles?.padding, margin: linkStyles?.margin, boxShadow: 'none', class: (0, index_css_1.getCustomButtonStyle)(linkStyles?.background?.color, linkStyles?.font?.color) }))))));
         }
         openLink() {
             if (!this.data?.link?.url || this._designMode)
@@ -300,16 +288,16 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
                 window.location.href = this.data.link.url;
         }
         onUpdateTheme() {
-            this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
-            this.updateStyle('--background-main', this.model.tag?.background?.color);
-            this.updateStyle('--text-secondary', this.model.tag?.description?.font?.color);
-            this.updateStyle('--text-third', this.model.tag?.date?.font?.color);
-            this.updateStyle('--text-disabled', this.model.tag?.userName?.font?.color);
-            this.updateStyle('--text-hint', this.model.tag?.link?.font?.color);
+            // this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
+            // this.updateStyle('--background-main', this.model.tag?.background?.color);
+            // this.updateStyle('--text-secondary', this.model.tag?.description?.font?.color);
+            // this.updateStyle('--text-third', this.model.tag?.date?.font?.color);
+            // this.updateStyle('--text-disabled', this.model.tag?.userName?.font?.color);
+            // this.updateStyle('--text-hint', this.model.tag?.link?.font?.color);
         }
-        updateStyle(name, value) {
-            value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
-        }
+        // private updateStyle(name: string, value: any) {
+        //   value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
+        // }
         render() {
             return (this.$render("i-panel", { id: "pnlBlock", class: index_css_1.cardStyle, height: "100%" },
                 this.$render("i-panel", { id: "pnlCard", minHeight: 48, height: "100%" })));

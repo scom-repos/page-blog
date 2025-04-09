@@ -8,7 +8,7 @@ import {
   Container
 } from '@ijstech/components';
 import { IBlogItem, IBlogSettings } from './interface';
-import { cardItemStyle, cardStyle, imageStyle } from './index.css';
+import { cardItemStyle, cardStyle, getCustomButtonStyle, imageStyle } from './index.css';
 import { Model } from './model/index';
 import { defaultSettings, formatDate, merge } from './utils';
 import translation from './translation.json';
@@ -104,8 +104,7 @@ export default class ScomPageBlog extends Module {
       userName,
       title,
       description,
-      link,
-      isExternal
+      link
     } = this.data;
 
     const mergedTag = merge(defaultSettings, this.model.tag);
@@ -113,6 +112,7 @@ export default class ScomPageBlog extends Module {
       boxShadow,
       padding = { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' },
       border = { radius: 6 },
+      background = { color: Theme.background.main },
       title: titleStyles,
       description: descriptionStyles,
       date: dateStyles,
@@ -155,7 +155,7 @@ export default class ScomPageBlog extends Module {
         </i-panel>
         <i-grid-layout
           padding={padding}
-          background={{ color: Theme.background.main }}
+          background={background}
           stack={{grow: "1"}}
           autoFillInHoles
           templateAreas={avatar ? [['date'], ['title']] : [['title'], ['date']]}
@@ -233,13 +233,20 @@ export default class ScomPageBlog extends Module {
               caption={description || ''}
               font={descriptionStyles?.font}
             ></i-label>
-            <i-label
-              id="linkLb"
-              visible={!!link?.caption}
-              caption={link?.caption || '$read_more'}
-              link={{ href: link?.url, target: isExternal ? "_blank" :  "_self" }}
-              font={linkStyles?.font}
-            ></i-label>
+            <i-hstack>
+              <i-button
+                id="linkLb"
+                visible={!!link?.caption}
+                caption={link?.caption || '$read_more'}
+                onClick={this.openLink}
+                font={linkStyles?.font}
+                background={linkStyles?.background}
+                padding={linkStyles?.padding}
+                margin={linkStyles?.margin}
+                boxShadow='none'
+                class={getCustomButtonStyle(linkStyles?.background?.color, linkStyles?.font?.color)}
+              ></i-button>
+            </i-hstack>
           </i-vstack>
         </i-grid-layout>
       </i-vstack>
@@ -255,17 +262,17 @@ export default class ScomPageBlog extends Module {
   }
 
   private onUpdateTheme() {
-    this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
-    this.updateStyle('--background-main', this.model.tag?.background?.color);
-    this.updateStyle('--text-secondary', this.model.tag?.description?.font?.color);
-    this.updateStyle('--text-third', this.model.tag?.date?.font?.color);
-    this.updateStyle('--text-disabled', this.model.tag?.userName?.font?.color);
-    this.updateStyle('--text-hint', this.model.tag?.link?.font?.color);
+    // this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
+    // this.updateStyle('--background-main', this.model.tag?.background?.color);
+    // this.updateStyle('--text-secondary', this.model.tag?.description?.font?.color);
+    // this.updateStyle('--text-third', this.model.tag?.date?.font?.color);
+    // this.updateStyle('--text-disabled', this.model.tag?.userName?.font?.color);
+    // this.updateStyle('--text-hint', this.model.tag?.link?.font?.color);
   }
 
-  private updateStyle(name: string, value: any) {
-    value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
-  }
+  // private updateStyle(name: string, value: any) {
+  //   value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
+  // }
 
   render() {
     return (

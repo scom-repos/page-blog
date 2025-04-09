@@ -30,31 +30,13 @@ export const imageStyle = Styles.style({
   }
 })
 
-export const controlStyle = Styles.style({
-  $nest: {
-    'i-button': {
-      boxShadow: 'none',
-    },
-    'i-button > span': {
-      display: 'none'
-    },
-    'i-button:not(.disabled):hover': {
-      background: 'transparent',
-      boxShadow: 'none',
-      borderColor: 'rgba(117,124,131,.68)',
-      $nest: {
-        '> i-icon': {
-          fill: 'rgba(117,124,131,.68) !important'
-        }
+export const getCustomButtonStyle = (background: string, color: string) => {
+  return Styles.style({
+    $nest: {
+      '&:hover': {
+        background: background,
+        color: color
       }
     }
-  }
-})
-
-export const containerStyle = Styles.style({
-  width: Theme.layout.container.width,
-  maxWidth: Theme.layout.container.maxWidth,
-  overflow: Theme.layout.container.overflow,
-  textAlign: (Theme.layout.container.textAlign as any),
-  margin: '0 auto'
-})
+  });
+}

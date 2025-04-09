@@ -41,8 +41,7 @@ declare module "@scom/page-blog/index.css.ts" {
     export const cardStyle: string;
     export const cardItemStyle: string;
     export const imageStyle: string;
-    export const controlStyle: string;
-    export const containerStyle: string;
+    export const getCustomButtonStyle: (background: string, color: string) => string;
 }
 /// <amd-module name="@scom/page-blog/model/index.ts" />
 declare module "@scom/page-blog/model/index.ts" {
@@ -111,6 +110,21 @@ declare module "@scom/page-blog/utils.ts" {
                 size: string;
                 color: string;
             };
+            padding: {
+                top: string;
+                bottom: string;
+                left: string;
+                right: string;
+            };
+            margin: {
+                top: string;
+                bottom: string;
+                left: string;
+                right: string;
+            };
+            background: {
+                color: string;
+            };
         };
     };
     export { formatDate, merge, defaultSettings };
@@ -168,7 +182,6 @@ declare module "@scom/page-blog" {
         private onUpdateBlock;
         private openLink;
         private onUpdateTheme;
-        private updateStyle;
         render(): any;
     }
 }

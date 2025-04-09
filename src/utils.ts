@@ -30,13 +30,16 @@ const defaultSettings = {
     font: {size: '0.8125rem', color: Theme.text.disabled}
   },
   title: {
-    font: { weight: 700, size:'1.375rem', color: Theme.text.primary }
+    font: {weight: 700, size:'1.375rem', color: Theme.text.primary}
   },
   description: {
     font: {size: '0.875rem', color: Theme.text.secondary}
   },
   link: {
-    font: {weight: 700, size:'0.875rem', color: Theme.text.hint}
+    font: {weight: 700, size:'0.875rem', color: Theme.text.hint},
+    padding: {top: '0px', bottom: '0px', left: '0px', right: '0px'},
+    margin: {top: '0px', bottom: '0px', left: '0px', right: '0px'},
+    background: {color: 'transparent !important'}
   }
 }
 

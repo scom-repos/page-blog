@@ -14,11 +14,13 @@ declare module "@scom/page-blog/interface.ts" {
         userName?: string;
         avatar?: string;
         isExternal?: boolean;
+        isOverlay?: boolean;
     }
     interface IColors {
     }
     interface IStyles {
         font?: IFont;
+        opacity?: number;
     }
     export interface IBlogSettings {
         title?: IStyles;
@@ -32,6 +34,7 @@ declare module "@scom/page-blog/interface.ts" {
             color?: string;
         };
         padding?: ISpace;
+        gap?: string | number;
         light?: IColors;
         dark?: IColors;
     }

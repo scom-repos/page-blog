@@ -104,7 +104,8 @@ export default class ScomPageBlog extends Module {
       userName,
       title,
       description,
-      link
+      link,
+      isOverlay
     } = this.data;
 
     const mergedTag = merge(defaultSettings, this.model.tag);
@@ -113,6 +114,8 @@ export default class ScomPageBlog extends Module {
       padding = { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' },
       border = { radius: 6 },
       background = { color: Theme.background.main },
+      height,
+      gap = 0,
       title: titleStyles,
       description: descriptionStyles,
       date: dateStyles,
@@ -126,6 +129,7 @@ export default class ScomPageBlog extends Module {
     }
 
     if (boxShadow !== undefined) this.pnlBlock.boxShadow = boxShadow;
+    if (height !== undefined) this.height = height;
 
     this.pnlCard.clearInnerHTML();
     this.pnlCard.appendChild(
@@ -134,6 +138,7 @@ export default class ScomPageBlog extends Module {
         height="100%"
         class={cardItemStyle}
         border={border}
+        gap={gap}
         overflow="hidden"
         onClick={this.openLink}
       >
@@ -142,6 +147,7 @@ export default class ScomPageBlog extends Module {
           position="relative"
           width={'100%'}
           padding={{top: '56.25%'}}
+          height={isOverlay ? '100%' : 'auto'}
         >
           <i-image
             class={imageStyle}
@@ -158,13 +164,19 @@ export default class ScomPageBlog extends Module {
           background={background}
           stack={{grow: "1"}}
           autoFillInHoles
-          templateAreas={avatar ? [['date'], ['title']] : [['title'], ['date']]}
+          templateAreas={avatar ? [['date'], ['title']] : (!!date || !!userName) ? [['title'], ['date']] : [['title']]}
+          position={isOverlay ? 'absolute' : 'initial'}
+          left={isOverlay ? '1px' : 'initial'}
+          bottom={isOverlay ? '0px' : 'initial'}
+          maxHeight={isOverlay ? '50%' : '100%'}
+          width="100%"
         >
           <i-hstack
             verticalAlignment="center"
             gap="0.938rem"
             margin={{bottom: '0.75rem'}}
             grid={{area: 'date'}}
+            visible={!!date || !!userName}
           >
             <i-panel width={50} height={50} visible={!!avatar}>
               <i-image
@@ -185,7 +197,7 @@ export default class ScomPageBlog extends Module {
                 <i-icon
                   stack={{shrink: '0'}}
                   name="calendar"
-                  fill={Theme.text.disabled}
+                  fill={dateStyles?.font?.color}
                   visible={!avatar && !!date}
                   width="0.75rem" height="0.75rem"
                 ></i-icon>
@@ -194,6 +206,7 @@ export default class ScomPageBlog extends Module {
                   visible={!!date}
                   caption={formatDate(date)}
                   font={dateStyles?.font}
+                  opacity={dateStyles?.opacity ?? 1}
                 ></i-label>
               </i-hstack>
               <i-hstack
@@ -203,7 +216,7 @@ export default class ScomPageBlog extends Module {
                 <i-icon
                   stack={{shrink: '0'}}
                   name="eye"
-                  fill={Theme.text.disabled}
+                  fill={userNameStyles?.font?.color}
                   visible={!avatar && !!userName}
                   width="0.75rem" height="0.75rem"
                 ></i-icon>
@@ -212,13 +225,13 @@ export default class ScomPageBlog extends Module {
                   visible={!!userName}
                   caption={userName}
                   font={userNameStyles?.font}
+                  opacity={userNameStyles?.opacity ?? 1}
                 ></i-label>
               </i-hstack>
             </i-stack>
           </i-hstack>
           <i-vstack
             gap="0.5rem"
-            padding={{ bottom: '1rem' }}
             stack={{grow: "1"}}
             justifyContent='space-between'
             grid={{area: 'title'}}
@@ -227,11 +240,13 @@ export default class ScomPageBlog extends Module {
               id="titleLb"
               caption={title || ''}
               font={titleStyles?.font}
+              visible={!!title}
             ></i-label>
             <i-label
               id="descriptionLb"
               caption={description || ''}
               font={descriptionStyles?.font}
+              visible={!!description}
             ></i-label>
             <i-hstack>
               <i-button

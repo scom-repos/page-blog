@@ -22,6 +22,7 @@ interface IColors {
 interface IStyles {
   font?: IFont;
   opacity?: number;
+  lineClamp?: number;
 }
 
 export interface IBlogSettings {

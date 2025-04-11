@@ -5,7 +5,8 @@ import {
   Panel,
   ControlElement,
   customElements,
-  Container
+  Container,
+  Label
 } from '@ijstech/components';
 import { IBlogItem, IBlogSettings } from './interface';
 import { cardItemStyle, cardStyle, getCustomButtonStyle, imageStyle } from './index.css';
@@ -18,7 +19,6 @@ const Theme = Styles.Theme.ThemeVars;
 export { IBlogItem, IBlogSettings };
 
 interface ScomBlogElement extends ControlElement {
-  lazyLoad?: boolean;
   data?: IBlogItem;
 }
 
@@ -46,6 +46,7 @@ export default class ScomPageBlog extends Module {
   private pnlCard: Panel;
   private pnlBlock: Panel;
   private model: Model;
+  private titleLb: Label;
 
   get data () {
     return this.model.data;
@@ -70,25 +71,17 @@ export default class ScomPageBlog extends Module {
     super.init();
     this.openLink = this.openLink.bind(this);
     this.model = new Model({
-      onUpdateBlock: this.onUpdateBlock.bind(this),
-      onUpdateTheme: this.onUpdateTheme.bind(this)
+      onUpdateBlock: this.onUpdateBlock.bind(this)
     });
-    const lazyLoad = this.getAttribute('lazyLoad', true, false);
-    if (!lazyLoad) {
-      const data = this.getAttribute('data', true);
-      if (data) this.setData(data);
-    }
 
     const tag = this.getAttribute('tag', true);
-    if (tag) this.setTag(tag);
+    if (tag) this.model.tag = tag;
+    const data = this.getAttribute('data', true);
+    if (data) this.setData(data);
   }
 
   private async setData(data: IBlogItem) {
     await this.model.setData(data);
-  }
-
-  private setTag(value: IBlogSettings) {
-    this.model.setTag(value);
   }
 
   getConfigurators() {
@@ -108,7 +101,7 @@ export default class ScomPageBlog extends Module {
       isOverlay
     } = this.data;
 
-    const mergedTag = merge(defaultSettings, this.model.tag);
+    const mergedTag = this.model.tag ? merge(defaultSettings, this.model.tag) : defaultSettings;
     const {
       boxShadow,
       padding = { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' },
@@ -241,6 +234,7 @@ export default class ScomPageBlog extends Module {
               caption={title || ''}
               font={titleStyles?.font}
               visible={!!title}
+              width="100%"
             ></i-label>
             <i-label
               id="descriptionLb"
@@ -266,6 +260,10 @@ export default class ScomPageBlog extends Module {
         </i-grid-layout>
       </i-vstack>
     )
+
+    if (titleStyles?.lineClamp) {
+      this.titleLb.lineClamp = titleStyles?.lineClamp;
+    }
   }
 
   private openLink() {
@@ -275,19 +273,6 @@ export default class ScomPageBlog extends Module {
     else
       window.location.href = this.data.link.url;
   }
-
-  private onUpdateTheme() {
-    // this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
-    // this.updateStyle('--background-main', this.model.tag?.background?.color);
-    // this.updateStyle('--text-secondary', this.model.tag?.description?.font?.color);
-    // this.updateStyle('--text-third', this.model.tag?.date?.font?.color);
-    // this.updateStyle('--text-disabled', this.model.tag?.userName?.font?.color);
-    // this.updateStyle('--text-hint', this.model.tag?.link?.font?.color);
-  }
-
-  // private updateStyle(name: string, value: any) {
-  //   value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
-  // }
 
   render() {
     return (

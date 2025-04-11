@@ -97,7 +97,6 @@ define("@scom/page-blog/model/index.ts", ["require", "exports"], function (requi
                         this._tag[prop] = newValue[prop];
                 }
             }
-            this._options?.onUpdateTheme();
             this._options?.onUpdateBlock();
         }
         updateTag(type, value) {
@@ -226,31 +225,24 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             super.init();
             this.openLink = this.openLink.bind(this);
             this.model = new index_1.Model({
-                onUpdateBlock: this.onUpdateBlock.bind(this),
-                onUpdateTheme: this.onUpdateTheme.bind(this)
+                onUpdateBlock: this.onUpdateBlock.bind(this)
             });
-            const lazyLoad = this.getAttribute('lazyLoad', true, false);
-            if (!lazyLoad) {
-                const data = this.getAttribute('data', true);
-                if (data)
-                    this.setData(data);
-            }
             const tag = this.getAttribute('tag', true);
             if (tag)
-                this.setTag(tag);
+                this.model.tag = tag;
+            const data = this.getAttribute('data', true);
+            if (data)
+                this.setData(data);
         }
         async setData(data) {
             await this.model.setData(data);
-        }
-        setTag(value) {
-            this.model.setTag(value);
         }
         getConfigurators() {
             return this.model.getConfigurators();
         }
         onUpdateBlock() {
             const { backgroundImageUrl = '', backgroundImageCid = '', avatar, date, userName, title, description, link, isOverlay } = this.data;
-            const mergedTag = (0, utils_1.merge)(utils_1.defaultSettings, this.model.tag);
+            const mergedTag = this.model.tag ? (0, utils_1.merge)(utils_1.defaultSettings, this.model.tag) : utils_1.defaultSettings;
             const { boxShadow, padding = { top: '1rem', bottom: '1rem', left: '1rem', right: '1rem' }, border = { radius: 6 }, background = { color: Theme.background.main }, height, gap = 0, title: titleStyles, description: descriptionStyles, date: dateStyles, userName: userNameStyles, link: linkStyles } = mergedTag;
             let url = backgroundImageUrl || 'https://placehold.co/600x400?text=No+Image';
             if (backgroundImageCid) {
@@ -276,10 +268,13 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
                                 this.$render("i-icon", { stack: { shrink: '0' }, name: "eye", fill: userNameStyles?.font?.color, visible: !avatar && !!userName, width: "0.75rem", height: "0.75rem" }),
                                 this.$render("i-label", { id: "usernameLb", visible: !!userName, caption: userName, font: userNameStyles?.font, opacity: userNameStyles?.opacity ?? 1 })))),
                     this.$render("i-vstack", { gap: "0.5rem", stack: { grow: "1" }, justifyContent: 'space-between', grid: { area: 'title' } },
-                        this.$render("i-label", { id: "titleLb", caption: title || '', font: titleStyles?.font, visible: !!title }),
+                        this.$render("i-label", { id: "titleLb", caption: title || '', font: titleStyles?.font, visible: !!title, width: "100%" }),
                         this.$render("i-label", { id: "descriptionLb", caption: description || '', font: descriptionStyles?.font, visible: !!description }),
                         this.$render("i-hstack", null,
                             this.$render("i-button", { id: "linkLb", visible: !!link?.caption, caption: link?.caption || '$read_more', onClick: this.openLink, font: linkStyles?.font, background: linkStyles?.background, padding: linkStyles?.padding, margin: linkStyles?.margin, boxShadow: 'none', class: (0, index_css_1.getCustomButtonStyle)(linkStyles?.background?.color, linkStyles?.font?.color) }))))));
+            if (titleStyles?.lineClamp) {
+                this.titleLb.lineClamp = titleStyles?.lineClamp;
+            }
         }
         openLink() {
             if (!this.data?.link?.url || this._designMode)
@@ -289,17 +284,6 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
             else
                 window.location.href = this.data.link.url;
         }
-        onUpdateTheme() {
-            // this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
-            // this.updateStyle('--background-main', this.model.tag?.background?.color);
-            // this.updateStyle('--text-secondary', this.model.tag?.description?.font?.color);
-            // this.updateStyle('--text-third', this.model.tag?.date?.font?.color);
-            // this.updateStyle('--text-disabled', this.model.tag?.userName?.font?.color);
-            // this.updateStyle('--text-hint', this.model.tag?.link?.font?.color);
-        }
-        // private updateStyle(name: string, value: any) {
-        //   value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
-        // }
         render() {
             return (this.$render("i-panel", { id: "pnlBlock", class: index_css_1.cardStyle, height: "100%" },
                 this.$render("i-panel", { id: "pnlCard", minHeight: 48, height: "100%" })));

@@ -2,7 +2,6 @@ import { IBlogItem, IBlogSettings } from '../interface';
 
 interface IOptions {
   onUpdateBlock?: () => void;
-  onUpdateTheme?: () => void;
 }
 
 export class Model {
@@ -54,7 +53,6 @@ export class Model {
         else this._tag[prop] = newValue[prop];
       }
     }
-    this._options?.onUpdateTheme();
     this._options?.onUpdateBlock();
   }
 

@@ -21,6 +21,7 @@ declare module "@scom/page-blog/interface.ts" {
     interface IStyles {
         font?: IFont;
         opacity?: number;
+        lineClamp?: number;
     }
     export interface IBlogSettings {
         title?: IStyles;
@@ -51,7 +52,6 @@ declare module "@scom/page-blog/model/index.ts" {
     import { IBlogItem, IBlogSettings } from "@scom/page-blog/interface.ts";
     interface IOptions {
         onUpdateBlock?: () => void;
-        onUpdateTheme?: () => void;
     }
     export class Model {
         private _data;
@@ -153,7 +153,6 @@ declare module "@scom/page-blog" {
     import { IBlogItem, IBlogSettings } from "@scom/page-blog/interface.ts";
     export { IBlogItem, IBlogSettings };
     interface ScomBlogElement extends ControlElement {
-        lazyLoad?: boolean;
         data?: IBlogItem;
     }
     global {
@@ -167,13 +166,13 @@ declare module "@scom/page-blog" {
         private pnlCard;
         private pnlBlock;
         private model;
+        private titleLb;
         get data(): IBlogItem;
         set data(value: IBlogItem);
         static create(options?: ScomBlogElement, parent?: Container): Promise<ScomPageBlog>;
         constructor(parent?: Container, options?: ScomBlogElement);
         init(): void;
         private setData;
-        private setTag;
         getConfigurators(): {
             name: string;
             target: string;
@@ -184,7 +183,6 @@ declare module "@scom/page-blog" {
         }[];
         private onUpdateBlock;
         private openLink;
-        private onUpdateTheme;
         render(): any;
     }
 }

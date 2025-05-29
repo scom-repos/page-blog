@@ -279,10 +279,19 @@ define("@scom/page-blog", ["require", "exports", "@ijstech/components", "@scom/p
         openLink() {
             if (!this.data?.link?.url || this._designMode)
                 return;
-            if (this.data?.isExternal)
+            const href = this.data.link.url;
+            const parentSite = this.closest('i-decom-site');
+            if (this.data?.isExternal || (href.startsWith('http://') || href.startsWith('https://')))
                 window.open(this.data.link.url);
-            else
-                window.location.href = this.data.link.url;
+            else {
+                if (parentSite) {
+                    window.history.pushState('', '', `${href}`);
+                    window.dispatchEvent(new Event('popstate'));
+                }
+                else {
+                    window.location.href = href;
+                }
+            }
         }
         render() {
             return (this.$render("i-panel", { id: "pnlBlock", class: index_css_1.cardStyle, height: "100%" },
